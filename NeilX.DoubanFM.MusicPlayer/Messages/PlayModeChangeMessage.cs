@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace NeilX.DoubanFM.MusicPlayer.Messages
+{
+    [DataContract]
+    public class PlayModeChangeMessage
+    {
+        public PlayModeChangeMessage(PlayMode playmode)
+        {
+            Playmode = playmode;
+        }
+
+        [DataMember]
+        public PlayMode Playmode;
+    }
+}
