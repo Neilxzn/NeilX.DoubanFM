@@ -1,47 +1,19 @@
-﻿
-using NeilSoft.UWP;
+﻿using NeilSoft.UWP;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Media.Playback;
-using Windows.Networking.BackgroundTransfer;
 using Windows.Storage;
 using Windows.UI.Core;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using NeilX.DoubanFM.Core;
-using System.Net.Http;
-using System.Text;
-using Windows.Security.Cryptography.Core;
-using Windows.Security.Cryptography;
-using Windows.Storage.Streams;
-using System.Text.RegularExpressions;
-using Windows.Data.Json;
-
 using NeilX.DoubanFM.ViewModel;
-using GalaSoft.MvvmLight.Threading;
-using Windows.Media.Core;
 using NeilX.DoubanFM.MusicPlayer;
-using NeilX.DoubanFM.MusicPlayer.Messages;
-using Windows.ApplicationModel.Core;
 using GalaSoft.MvvmLight.Messaging;
 using Windows.UI;
-using Windows.UI.Xaml.Media.Imaging;
 using NeilX.DoubanFM.UserControls;
+using NeilX.DoubanFM.Core;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -61,6 +33,8 @@ namespace NeilX.DoubanFM.View
             InitializeMessenger();
 
             Unloaded += (sender, e) => Messenger.Default.Unregister(this);
+
+
         }
         #region Helper methods
         private void InitializeMessenger()
@@ -90,9 +64,26 @@ namespace NeilX.DoubanFM.View
         /// </summary>
         /// <param name="e">Event data that describes how this page was reached.
         /// This parameter is typically used to configure the page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-              ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.AppState, AppState.Active.ToString());
+
+            var session = new Session(new ServerConnection("02646d3fb69a52ff072d47bf23cef8fd", "cde5d61429abcd7c", "radio_iphone", "100", new Uri("http://www.douban.com/mobile/fm"), Guid.NewGuid().ToString("N")));
+            var player = new Player(session);
+            var discovery = new Discovery(session);
+            var channelGroups = await discovery.GetRecommendedChannels();
+            var newChannel = channelGroups[1].Channels[0];
+            await player.ChangeChannel(newChannel);
+            var currentSong = player.CurrentSong;
+            List<TrackInfo> tracks = new List<TrackInfo>();
+            TrackInfo track = new TrackInfo();
+            track.CoverThumbnail = currentSong.PictureUrl;
+            track.Source = new Uri( currentSong.Url);
+            track.Title = currentSong.Title;
+            track.Artist = currentSong.Artist;
+            track.Duration = TimeSpan.FromSeconds(currentSong.Length);
+            tracks.Add(track);
+            Main.PlayerSession.SetPlaylist(tracks,track);
+            ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.AppState, AppState.Active.ToString());
         }
 
      

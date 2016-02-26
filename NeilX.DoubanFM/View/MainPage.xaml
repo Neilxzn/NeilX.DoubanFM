@@ -117,7 +117,7 @@
                         </ListBoxItem>
                     </ListBox>-->
                     <StackPanel Orientation="Horizontal" RelativePanel.AlignBottomWithPanel="True" Margin="13,0,0,5">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="28" Text="&#xE713;" PointerPressed="{x:Bind Main.OpenSttingView,Mode=OneWay}"/>
+                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="28" Text="&#xE713;" PointerPressed="{x:Bind Main.OpenSettingView,Mode=OneWay}"/>
                         <TextBlock FontSize="20" Margin="20,0,0,0"> 设 置</TextBlock>
                     </StackPanel>
                 </RelativePanel>

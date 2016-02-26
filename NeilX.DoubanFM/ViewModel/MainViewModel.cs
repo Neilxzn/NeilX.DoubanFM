@@ -66,7 +66,7 @@ namespace NeilX.DoubanFM.ViewModel
             _navigationService.Navigate(typeof(View.PlayingView));
         }
 
-        public void OpenSttingView()
+        public void OpenSettingView()
         {
             MessengerInstance.Send("OpenSettingView","MainPage" );
         }
