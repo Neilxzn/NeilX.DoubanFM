@@ -17,12 +17,12 @@ namespace NeilX.DoubanFM.Core
         {
             return new Channel((int)channel["id"])
             {
-                Name = (string)channel["name"],
-                Artist = (string)channel["artist"],
-                Description = (string)channel["intro"],
-                SongCount = (int)channel["song_num"],
+            //    Name = (string)channel["name"],
+            //    Artist = (string)channel["artist"],
+            //    Description = (string)channel["intro"],
+            //    SongCount = (int)channel["song_num"],
                 CoverUrl = (string)channel["cover"],
-                Start = (string)channel["start"],
+                //Start = (string)channel["start"],
                 // TODO: 'collected'
                 // TODO: 'style'
             };

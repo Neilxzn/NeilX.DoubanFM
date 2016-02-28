@@ -143,8 +143,9 @@
             </SplitView.Content>
            
         </SplitView>
+        <Button Content="test" Click="Button_Click"/>
         <!--音乐播放界面-->
-        <Lcontrols:PlayingControl Visibility="{Binding ElementName=Player,Path=IsOpenPlayingView}"/>
+        <Lcontrols:PlayingControl Visibility="{Binding ElementName=Player,Path=IsOpenPlayingView}" CurrentTrack="{x:Bind Main.PlayerSession.CurrentTrack,Mode=OneWay}" Position="{x:Bind Main.PlayerSession.Position,Mode=OneWay}"/>
         <!--音乐播放面板-->
         <Lcontrols:PlayerControl x:Name="Player" Grid.Row="1"  PlayerSession="{x:Bind Main.PlayerSession,Mode=OneWay}"/>
       

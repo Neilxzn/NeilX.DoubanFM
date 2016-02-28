@@ -89,7 +89,7 @@ namespace NeilX.DoubanFM.Core
                     {
                         GroupId = (int)@group["group_id"],
                         GroupName = (string)@group["group_name"],
-                        Channels = @group["chls"].GetArrayOrEmpty().Select(chl => chl.ParseChannel()).ToArray(),
+                        Channels = @group["chls"].GetArrayOrEmpty()?.Select(chl => chl.ParseChannel()).ToArray(),
                     }).ToArray();
         }
 

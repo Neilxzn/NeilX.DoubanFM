@@ -22,6 +22,7 @@ namespace NeilX.DoubanFM.MusicPlayer
 
         public TimeSpan? Duration { get; set; }
 
+        public string Lyric { get; set; }
         public class ExistenceEqualityComparer : EqualityComparer<TrackInfo>
         {
             public ExistenceEqualityComparer()

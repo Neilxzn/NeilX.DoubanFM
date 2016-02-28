@@ -14,6 +14,8 @@ using GalaSoft.MvvmLight.Messaging;
 using Windows.UI;
 using NeilX.DoubanFM.UserControls;
 using NeilX.DoubanFM.Core;
+using Kfstorm.LrcParser;
+using Windows.Storage.Pickers;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -67,20 +69,27 @@ namespace NeilX.DoubanFM.View
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
 
-            var session = new Session(new ServerConnection("02646d3fb69a52ff072d47bf23cef8fd", "cde5d61429abcd7c", "radio_iphone", "100", new Uri("http://www.douban.com/mobile/fm"), Guid.NewGuid().ToString("N")));
-            var player = new Player(session);
-            var discovery = new Discovery(session);
-            var channelGroups = await discovery.GetRecommendedChannels();
-            var newChannel = channelGroups[1].Channels[0];
-            await player.ChangeChannel(newChannel);
-            var currentSong = player.CurrentSong;
+            //var session = new Session(new ServerConnection("02646d3fb69a52ff072d47bf23cef8fd", "cde5d61429abcd7c", "radio_iphone", "100", new Uri("http://www.douban.com/mobile/fm"), Guid.NewGuid().ToString("N")));
+            //var player = new Player(session);
+            //var discovery = new Discovery(session);
+            //var channelGroups = await discovery.GetRecommendedChannels();
+            //var newChannel = channelGroups[1].Channels[0];
+            //await player.ChangeChannel(newChannel);
+            //var currentSong = player.CurrentSong;
             List<TrackInfo> tracks = new List<TrackInfo>();
             TrackInfo track = new TrackInfo();
-            track.CoverThumbnail = currentSong.PictureUrl;
-            track.Source = new Uri( currentSong.Url);
-            track.Title = currentSong.Title;
-            track.Artist = currentSong.Artist;
-            track.Duration = TimeSpan.FromSeconds(currentSong.Length);
+            //track.CoverThumbnail = currentSong.PictureUrl;
+            //track.Source = new Uri( currentSong.Url);
+            //track.Title = currentSong.Title;
+            //track.Artist = currentSong.Artist;
+            //track.Duration = TimeSpan.FromSeconds(currentSong.Length);
+            //tracks.Add(track);
+            track.Title = "微光";
+            track.Artist = "张信哲";
+            track.Source = new Uri(@"ms-appx:///SampleMedias/ring4.mp3");
+            track.Lyric = @"ms-appx:///SampleMedias/ring4.lrc";
+            track.Duration = TimeSpan.FromSeconds(282);
+            track.CoverThumbnail = @"ms-appx:///SampleMedias/ring4.jpg";
             tracks.Add(track);
             Main.PlayerSession.SetPlaylist(tracks,track);
             ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.AppState, AppState.Active.ToString());
@@ -212,13 +221,20 @@ namespace NeilX.DoubanFM.View
         }
 
 
-        private  void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             //List<TrackInfo> tracks = new List<TrackInfo>();
             //Uri uri = new Uri("ms-appx:///SampleMedias/Ring01.mp3");
             //StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(uri);
             //await TryAddTrackInfo(file, tracks);    
-            InitializeSongs();
+            //   InitializeSongs();
+            FileOpenPicker picker = new FileOpenPicker();
+            picker.FileTypeFilter.Add ("*");
+          var file=  await  picker.PickSingleFileAsync();
+           
+           // var file = await StorageFile.GetFileFromPathAsync(value.Lyric);
+            var filetext = await FileIO.ReadTextAsync(file);
+             var lyricfile = LrcFile.FromText(filetext);
         }
 
         async void InitializeSongs()
