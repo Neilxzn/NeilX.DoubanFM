@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeilX.DoubanFM.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,9 +21,10 @@ namespace NeilX.DoubanFM.View
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class PlayingView : Page
+    public sealed partial class SearchView : Page
     {
-        public PlayingView()
+        public SearchViewModel SearchVM => (SearchViewModel)DataContext;
+        public SearchView()
         {
             this.InitializeComponent();
         }

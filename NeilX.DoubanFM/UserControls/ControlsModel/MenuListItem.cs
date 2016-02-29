@@ -9,6 +9,7 @@ namespace NeilX.DoubanFM.UserControls.ControlsModel
 {
     public enum MenuGotoView
     {
+        SearchView,
         RadioListView,
         MyMusicView
     };

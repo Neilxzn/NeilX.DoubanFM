@@ -36,7 +36,7 @@ namespace NeilX.DoubanFM.ViewModel
             //}
 
             SimpleIoc.Default.Register<MainViewModel>();
-
+            SimpleIoc.Default.Register<SearchViewModel>();
 
             SimpleIoc.Default.Register<PlayerSessionService>(true);
 
@@ -66,13 +66,13 @@ namespace NeilX.DoubanFM.ViewModel
             }
         }
 
-        //public PlayerViewModel Player
-        //{
-        //    get
-        //    {
-        //        return ServiceLocator.Current.GetInstance<PlayerViewModel>();
-        //    }
-        //}
+        public SearchViewModel SearchVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<SearchViewModel>();
+            }
+        }
 
         private INavigationService CreateNavigationService()
         {

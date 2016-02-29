@@ -89,7 +89,7 @@ namespace NeilX.DoubanFM.View
             track.Source = new Uri(@"ms-appx:///SampleMedias/ring4.mp3");
             track.Lyric = @"ms-appx:///SampleMedias/ring4.lrc";
             track.Duration = TimeSpan.FromSeconds(282);
-            track.CoverThumbnail = @"ms-appx:///SampleMedias/ring4.jpg";
+            track.CoverThumbnail  = @"ms-appx:///SampleMedias/ring4.jpg";
             tracks.Add(track);
             Main.PlayerSession.SetPlaylist(tracks,track);
             ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.AppState, AppState.Active.ToString());
