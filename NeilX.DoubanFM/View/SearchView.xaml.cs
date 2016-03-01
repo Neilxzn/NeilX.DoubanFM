@@ -1,4 +1,6 @@
-﻿using NeilX.DoubanFM.ViewModel;
+﻿using NeilX.DoubanFM.Core;
+using NeilX.DoubanFM.Services;
+using NeilX.DoubanFM.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,6 +29,17 @@ namespace NeilX.DoubanFM.View
         public SearchView()
         {
             this.InitializeComponent();
+        }
+
+        private void gridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var channel = e.ClickedItem as Channel;
+            DoubanFMService.ChangeFMChannel(channel);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

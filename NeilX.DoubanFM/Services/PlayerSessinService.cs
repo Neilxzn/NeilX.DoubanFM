@@ -164,7 +164,11 @@ namespace NeilX.DoubanFM.Services
             _musicPlayerController = new MusicPlayerController(this);
             _askPositionTimer = new Timer(OnAskPosition, null, Timeout.InfiniteTimeSpan, _askPositionPeriod);
             LoadState();
+            DoubanFMService.Player.CurrentChannelChanged += DoubanFM_CurrentChannelChanged;
+            DoubanFMService.Player.CurrentSongChanged += DoubanFM_CurrentSongChanged;
         }
+
+       
 
         #region Public Methods
 
@@ -396,7 +400,7 @@ namespace NeilX.DoubanFM.Services
                     }
                     _position = TimeSpan.Zero;
                    RaisePropertyChanged(nameof(Position));
-                    Duration = currentTrack.Duration;
+                    Duration = currentTrack?.Duration;
                 });
             }
         }
@@ -431,6 +435,38 @@ namespace NeilX.DoubanFM.Services
 
 
         #endregion
+
+        #region DoubanFMService Handler
+        private void DoubanFM_CurrentSongChanged(object sender, Core.EventArgs<Core.Song> e)
+        {
+
+        }
+
+        private void DoubanFM_CurrentChannelChanged(object sender, Core.EventArgs<Core.Channel> e)
+        {
+            if (DoubanFMService.Player.PendingSongs == null) return;
+            List<TrackInfo> infos = new List<TrackInfo>();
+            foreach (var song in DoubanFMService.Player.PendingSongs)
+            {
+                TrackInfo info = new TrackInfo()
+                {
+                    Album = song.AlbumTitle,
+                    Artist = song.Artist,
+                    Duration = TimeSpan.FromSeconds(song.Length),
+                    Source=new Uri (song.Url),
+                    CoverThumbnail=song.PictureUrl,
+                    Title=song.Title,
+                    AlbumArtist=song.Artist
+                };
+                infos.Add(info);
+            }
+            SetPlaylist(infos, infos[0]);
+            if (IsPlaying)
+            {
+                Play();
+            }
+        }
+        #endregion 
         public void Dispose()
         {
             if (_askPositionTimer!=null)

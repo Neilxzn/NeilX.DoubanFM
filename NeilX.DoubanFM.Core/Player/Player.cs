@@ -61,6 +61,13 @@ namespace NeilX.DoubanFM.Core
         /// </summary>
         private Queue<Song> _pendingSongs;
 
+        public Queue<Song> PendingSongs
+        {
+            get
+            {
+                return _pendingSongs;
+            }
+        }
         /// <summary>
         /// Gets the current channel.
         /// </summary>

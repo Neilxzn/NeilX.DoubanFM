@@ -21,10 +21,7 @@ namespace NeilX.DoubanFM.ViewModel
             get { return _query; }
             set
             {
-                if (Set(ref _query, value))
-                {
-                    OnQueryChange(value);
-                }
+                Set(ref _query, value);
             }
         }
 
@@ -59,6 +56,11 @@ namespace NeilX.DoubanFM.ViewModel
         public SearchViewModel()
         {
 
+        }
+
+        public async void SearchChannel()
+        {
+            Channels = new ObservableCollection<Channel>(await DoubanFMService.SearchChannelAsync(Query, 0, 20));
         }
 
         private async void OnQueryChange(string query)
