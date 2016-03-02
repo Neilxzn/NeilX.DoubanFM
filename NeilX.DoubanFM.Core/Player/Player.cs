@@ -59,9 +59,9 @@ namespace NeilX.DoubanFM.Core
         /// <summary>
         /// Stores a list of songs will be played next.
         /// </summary>
-        private Queue<Song> _pendingSongs;
+        private List<Song> _pendingSongs;
 
-        public Queue<Song> PendingSongs
+        public List<Song> PendingSongs
         {
             get
             {
@@ -247,7 +247,7 @@ namespace NeilX.DoubanFM.Core
             var uri = ServerConnection.CreateGetPlayListUri(channelId, type: type, sid: sid, start: start, formats: null, kbps: null, playedTime: null, mode: null, excludedSids: null, max: null);
             var jsonContent = await ServerConnection.Get(uri, ServerConnection.SetSessionInfoToRequest);
             var newPlayList = ServerRequests.ParseGetPlayListResult(jsonContent);
-            if (newPlayList.Length == 0)
+            if (newPlayList.Count == 0)
             {
                 if (type != ReportType.CurrentSongEnded)
                 {
@@ -261,21 +261,18 @@ namespace NeilX.DoubanFM.Core
             }
             if (channelId == AsyncExpectedChannelId)
             {
-                if (newPlayList.Length != 0)
+                if (newPlayList.Count != 0)
                 {
                     if (_pendingSongs == null)
                     {
-                        _pendingSongs = new Queue<Song>();
+                        _pendingSongs = new List<Song>();
                     }
                     _pendingSongs.Clear();
-                    foreach (var song in newPlayList)
-                    {
-                        _pendingSongs.Enqueue(song);
-                    }
+                    _pendingSongs = newPlayList;
                 }
                 if (changeCurrentSong)
                 {
-                    CurrentSong = _pendingSongs.Dequeue();
+                    CurrentSong = _pendingSongs[0];
                 }
             }
             else

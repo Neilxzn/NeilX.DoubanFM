@@ -12,12 +12,12 @@ namespace NeilX.DoubanFM.MusicPlayer.Messages
     {
 
 
-        public TrackChangedMessage(Uri trackId)
+        public TrackChangedMessage(string uri)
         {
-            this.TrackId = trackId;
+            this.SongUri = uri;
         }
 
         [DataMember]
-        public Uri TrackId;
+        public string SongUri;
     }
 }

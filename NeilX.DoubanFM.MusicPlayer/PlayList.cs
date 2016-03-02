@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeilX.DoubanFM.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace NeilX.DoubanFM.MusicPlayer
         private const string PATH_PlayerState = "player_state.json";
 
         private const string PlayListFileName = "playlist.dat";
-        public TrackInfo[] TrackLists
+        public Song[] TrackLists
         {
             get;
             set;

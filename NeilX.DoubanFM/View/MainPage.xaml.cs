@@ -76,8 +76,8 @@ namespace NeilX.DoubanFM.View
             //var newChannel = channelGroups[1].Channels[0];
             //await player.ChangeChannel(newChannel);
             //var currentSong = player.CurrentSong;
-            List<TrackInfo> tracks = new List<TrackInfo>();
-            TrackInfo track = new TrackInfo();
+            List<Song> tracks = new List<Song>();
+            Song track = new Song();
             //track.CoverThumbnail = currentSong.PictureUrl;
             //track.Source = new Uri( currentSong.Url);
             //track.Title = currentSong.Title;
@@ -86,10 +86,10 @@ namespace NeilX.DoubanFM.View
             //tracks.Add(track);
             track.Title = "微光";
             track.Artist = "张信哲";
-            track.Source = new Uri(@"ms-appx:///SampleMedias/ring4.mp3");
+            track.Url = @"ms-appx:///SampleMedias/ring4.mp3";
             track.Lyric = @"ms-appx:///SampleMedias/ring4.lrc";
-            track.Duration = TimeSpan.FromSeconds(282);
-            track.CoverThumbnail  = @"ms-appx:///SampleMedias/ring4.jpg";
+            track.Length=282;
+            track.PictureUrl  = @"ms-appx:///SampleMedias/ring4.jpg";
             tracks.Add(track);
             Main.PlayerSession.SetPlaylist(tracks,track);
             ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.AppState, AppState.Active.ToString());
@@ -239,34 +239,34 @@ namespace NeilX.DoubanFM.View
 
         async void InitializeSongs()
         {
-            List<TrackInfo> songs = new List<TrackInfo>();
-            TrackInfo song = new TrackInfo();
-            song.Title = "w1";
-            song.Artist = "T1";
-            song.Source = new Uri( "ms-appx:///SampleMedias/Ring01.mp3");
-            song.CoverThumbnail = "ms-appx:///SampleMedias/Ring01.jpg";
-            TrackInfo song2 = new TrackInfo();
-            song2.Title = "w2";
-            song2.Artist = "T2";
-            song2.Source = new Uri("ms-appx:///SampleMedias/Ring02.mp3");
-            song2.CoverThumbnail = "ms-appx:///SampleMedias/Ring02.jpg";
-            TrackInfo song3 = new TrackInfo();
-            song3.Title = "w3";
-            song3.Artist = "T3";
-            song3.Source = new Uri("ms-appx:///SampleMedias/Ring03.mp3");
-            song3.CoverThumbnail = "ms-appx:///SampleMedias/Ring02.jpg";
-            songs.Add(song);
-            songs.Add(song2);
-            songs.Add(song3);
+            //List<TrackInfo> songs = new List<TrackInfo>();
+            //TrackInfo song = new TrackInfo();
+            //song.Title = "w1";
+            //song.Artist = "T1";
+            //song.Source = new Uri( "ms-appx:///SampleMedias/Ring01.mp3");
+            //song.CoverThumbnail = "ms-appx:///SampleMedias/Ring01.jpg";
+            //TrackInfo song2 = new TrackInfo();
+            //song2.Title = "w2";
+            //song2.Artist = "T2";
+            //song2.Source = new Uri("ms-appx:///SampleMedias/Ring02.mp3");
+            //song2.CoverThumbnail = "ms-appx:///SampleMedias/Ring02.jpg";
+            //TrackInfo song3 = new TrackInfo();
+            //song3.Title = "w3";
+            //song3.Artist = "T3";
+            //song3.Source = new Uri("ms-appx:///SampleMedias/Ring03.mp3");
+            //song3.CoverThumbnail = "ms-appx:///SampleMedias/Ring02.jpg";
+            //songs.Add(song);
+            //songs.Add(song2);
+            //songs.Add(song3);
 
  
-            foreach (var item in songs)
-            {
-                StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(item.Source);
-                var info = await file.Properties.GetMusicPropertiesAsync();
-                item.Duration = info.Duration;
-            }
-            Main.PlayerSession.SetPlaylist(songs, song);
+            //foreach (var item in songs)
+            //{
+            //    StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(item.Source);
+            //    var info = await file.Properties.GetMusicPropertiesAsync();
+            //    item.Duration = info.Duration;
+            //}
+            //Main.PlayerSession.SetPlaylist(songs, song);
 
         }
 

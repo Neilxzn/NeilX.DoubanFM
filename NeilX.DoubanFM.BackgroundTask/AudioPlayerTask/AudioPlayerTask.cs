@@ -13,15 +13,14 @@ using Windows.Media.Playback;
 using Windows.Storage.Streams;
 using NeilX.DoubanFM.MusicPlayer;
 using NeilX.DoubanFM.MusicPlayer.Messages;
+using NeilX.DoubanFM.Core;
+using NeilX.DoubanFM.BackgroundTask.Helper;
 
 namespace NeilX.DoubanFM.BackgroundTask
 {
     public sealed class AudioPlayerTask : IBackgroundTask
     {
         #region Private fields, properties
-        private const string TrackIdKey = "trackid";
-        private const string TitleKey = "title";
-        private const string AlbumArtKey = "albumart";
         private SystemMediaTransportControls smtc;
         private MediaPlaybackList playbackList = new MediaPlaybackList();
         private BackgroundTaskDeferral deferral; // Used to keep task alive
@@ -30,23 +29,6 @@ namespace NeilX.DoubanFM.BackgroundTask
         private bool playbackStartedPreviously = false;
         #endregion
 
-        #region Helper methods
-        Uri GetCurrentTrackId()
-        {
-            if (playbackList == null)
-                return null;
-
-            return GetTrackId(playbackList.CurrentItem);
-        }
-
-        Uri GetTrackId(MediaPlaybackItem item)
-        {
-            if (item == null)
-                return null; // no track playing
-
-            return item.Source.CustomProperties[TrackIdKey] as Uri;
-        }
-        #endregion
 
         #region IBackgroundTask and IBackgroundTaskInstance Interface Members and handlers
         /// <summary>
@@ -129,7 +111,7 @@ namespace NeilX.DoubanFM.BackgroundTask
                 backgroundTaskStarted.Reset();
 
                 // save state
-                ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.TrackId, GetCurrentTrackId() == null ? null : GetCurrentTrackId().ToString());
+                ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.TrackId, AudioTaskHelper.GetPlayListCurrentTrackId(playbackList) == null ? null : AudioTaskHelper.GetPlayListCurrentTrackId(playbackList).ToString());
                 ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.Position, BackgroundMediaPlayer.Current.Position.ToString());
                 ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.BackgroundTaskState, BackgroundTaskState.Canceled.ToString());
                 ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.AppState, Enum.GetName(typeof(AppState), foregroundAppState));
@@ -176,9 +158,9 @@ namespace NeilX.DoubanFM.BackgroundTask
 
             smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
             smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
-            smtc.DisplayUpdater.MusicProperties.Title = item.Source.CustomProperties[TitleKey] as string;
+            smtc.DisplayUpdater.MusicProperties.Title = item.Source.CustomProperties[TaskConstant.TitleKey] as string;
 
-            var albumArtUri = item.Source.CustomProperties[AlbumArtKey] as Uri;
+            var albumArtUri = item.Source.CustomProperties[TaskConstant.AlbumArtKey] as Uri;
             if (albumArtUri != null)
                 smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(albumArtUri);
             else
@@ -269,7 +251,7 @@ namespace NeilX.DoubanFM.BackgroundTask
                     {
                         // Find the index of the item by name
                         var index = playbackList.Items.ToList().FindIndex(item =>
-                            GetTrackId(item).ToString() == (string)currentTrackId);
+                            AudioTaskHelper.GetPlaybackListItemTrackId(item).ToString() == (string)currentTrackId);
 
                         if (currentTrackPosition == null)
                         {
@@ -334,7 +316,7 @@ namespace NeilX.DoubanFM.BackgroundTask
         {
             // Get the new item
             var item = args.NewItem;
-            Debug.WriteLine("PlaybackList_CurrentItemChanged: " + (item == null ? "null" : GetTrackId(item).ToString()));
+            Debug.WriteLine("PlaybackList_CurrentItemChanged: " + (item == null ? "null" : AudioTaskHelper.GetPlaybackListItemTrackId(item).ToString()));
 
             // Update the system view
             UpdateUVCOnNewTrack(item);
@@ -342,13 +324,16 @@ namespace NeilX.DoubanFM.BackgroundTask
             // Get the current track
             Uri currentTrackId = null;
             if (item != null)
-                currentTrackId = item.Source.CustomProperties[TrackIdKey] as Uri;
-
+                currentTrackId = item.Source.CustomProperties[TaskConstant.TrackIdKey] as Uri;
+            else
+            {
+                return;
+            }
             // Notify foreground of change or persist for later
             if (foregroundAppState == AppState.Active)
-                MessageService.SendMessageToForeground(new TrackChangedMessage(currentTrackId));
+                MessageService.SendMessageToForeground(new TrackChangedMessage(currentTrackId.AbsoluteUri));
             else
-                ApplicationSettingsHelper.SaveSettingToLocalSettings(TrackIdKey, currentTrackId == null ? null : currentTrackId.ToString());
+                ApplicationSettingsHelper.SaveSettingToLocalSettings(TaskConstant.TrackIdKey, currentTrackId == null ? null : currentTrackId.ToString());
         }
 
         /// <summary>
@@ -399,7 +384,7 @@ namespace NeilX.DoubanFM.BackgroundTask
             {
                 Debug.WriteLine("App suspending"); // App is suspended, you can save your task state at this point
                 foregroundAppState = AppState.Suspended;
-                var currentTrackId = GetCurrentTrackId();
+                var currentTrackId = AudioTaskHelper.GetPlayListCurrentTrackId(playbackList);
                 ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.TrackId, currentTrackId == null ? null : currentTrackId.ToString());
                 return;
             }
@@ -442,7 +427,7 @@ namespace NeilX.DoubanFM.BackgroundTask
             TrackChangedMessage trackChangedMessage;
             if (MessageService.TryParseMessage(e.Data, out trackChangedMessage))
             {
-                var index = playbackList.Items.ToList().FindIndex(i => (Uri)i.Source.CustomProperties[TrackIdKey] == trackChangedMessage.TrackId);
+                var index = playbackList.Items.ToList().FindIndex(i => (Uri)i.Source.CustomProperties[TaskConstant.TrackIdKey] == new Uri( trackChangedMessage.SongUri));
                 Debug.WriteLine("Skipping to track " + index);
                 smtc.PlaybackStatus = MediaPlaybackStatus.Changing;
                 playbackList.MoveTo((uint)index);
@@ -466,8 +451,12 @@ namespace NeilX.DoubanFM.BackgroundTask
         /// Create a playback list from the list of songs received from the foreground app.
         /// </summary>
         /// <param name="songs"></param>
-        void CreatePlaybackList(IEnumerable<TrackInfo> tracks)
+        void CreatePlaybackList(IEnumerable<Song> tracks)
         {
+            if (playbackList!=null)
+            {
+                playbackList.CurrentItemChanged -= PlaybackList_CurrentItemChanged;
+            }
             // Make a new list and enable looping
             playbackList = new MediaPlaybackList();
             playbackList.AutoRepeatEnabled = true;
@@ -475,10 +464,11 @@ namespace NeilX.DoubanFM.BackgroundTask
             // Add playback items to the list
             foreach (var track in tracks)
             {
-                var source = MediaSource.CreateFromUri(track.Source);
-                source.CustomProperties[TrackIdKey] = track.Source;
-                source.CustomProperties[TitleKey] = track.Title;
-                source.CustomProperties[AlbumArtKey] = new Uri(track.CoverThumbnail);
+                Uri songUri = new Uri(track.Url);
+                var source = MediaSource.CreateFromUri(songUri);
+                source.CustomProperties[TaskConstant.TrackIdKey] = songUri;
+                source.CustomProperties[TaskConstant.TitleKey] = track.Title;
+                source.CustomProperties[TaskConstant.AlbumArtKey] = new Uri(track.PictureUrl);
                 playbackList.Items.Add(new MediaPlaybackItem(source));
             }
 

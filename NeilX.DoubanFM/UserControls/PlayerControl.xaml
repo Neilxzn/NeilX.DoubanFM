@@ -25,7 +25,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Image Grid.Column="0"  Width="50" Height="50" HorizontalAlignment="Left" Stretch="UniformToFill"  Source="{x:Bind PlayerSession.CurrentTrack.CoverThumbnail,Mode=OneWay,TargetNullValue='ms-appx:///Assets/Images/m51.jpg',FallbackValue='ms-appx:///Assets/Images/m51.jpg'}"  PointerPressed="{x:Bind ChangeIsOpenPlayingView}"/>
+        <Image Grid.Column="0"  Width="50" Height="50" HorizontalAlignment="Left" Stretch="UniformToFill"  Source="{x:Bind PlayerSession.CurrentTrack.PictureUrl,Mode=OneWay,TargetNullValue='ms-appx:///Assets/Images/m51.jpg',FallbackValue='ms-appx:///Assets/Images/m51.jpg'}"  PointerPressed="{x:Bind ChangeIsOpenPlayingView}"/>
         <StackPanel Grid.Column="1" Orientation="Horizontal">
             <Button  Style="{StaticResource TrackFunctionalButtonStyle}"   Content="&#xE892;"  Click="{x:Bind PlayerSession.RequestPrevious}"   />
             <Button Style="{StaticResource TrackFunctionalButtonStyle}"    Content="{x:Bind PlayerSession.IsPlaying,Mode=OneWay,Converter={StaticResource IsPlayingConverter}}"  Click="{x:Bind PlayerSession.RequestPlayOrPause}"/>

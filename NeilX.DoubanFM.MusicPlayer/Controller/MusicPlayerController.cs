@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Media.Playback;
 using NeilX.DoubanFM.MusicPlayer.Messages;
+using NeilX.DoubanFM.Core;
 
 namespace NeilX.DoubanFM.MusicPlayer.Controller
 {
@@ -12,8 +13,8 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
     {
         private readonly MusicPlayer _musicPlayer;
         private readonly IMusicPlayerControllerHandler _playerSession;
-        private IList<TrackInfo> _playlist;
-        private TrackInfo _currentTrack;
+        private IList<Song> _playlist;
+        private Song _currentTrack;
         private bool _playbackStartedPreviously ;
 
         public MusicPlayerController(IMusicPlayerControllerHandler playSession)
@@ -57,8 +58,8 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
             if (MessageService.TryParseMessage(message, out trackChangedMessage))
             {
                 // When foreground app is active change track based on background message
-                _playerSession?.NotifyCurrentTrackChanged(_playlist?.FirstOrDefault(s => s.Source == trackChangedMessage.TrackId));
-                _currentTrack = _playlist.FirstOrDefault(s => s.Source == trackChangedMessage.TrackId);
+                _playerSession?.NotifyCurrentTrackChanged(_playlist?.FirstOrDefault(s => s.Url == trackChangedMessage.SongUri));
+                _currentTrack = _playlist.FirstOrDefault(s => s.Url == trackChangedMessage.SongUri);
             }
         }
 
@@ -88,19 +89,19 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
             _musicPlayer.CurrentPlayer.Pause();
         }
 
-        public void SetPlaylist(IList<TrackInfo> tracks)
+        public void SetPlaylist(IList<Song> tracks)
         {
             _playlist = tracks;
             _playerSession.NotifyPlaylist(tracks);
             MessageService.SendMessageToBackground(new UpdatePlaylistMessage(tracks));
         }
 
-        public void SetCurrentTrack(TrackInfo track)
+        public void SetCurrentTrack(Song track)
         {
             if (_playlist!=null&& _currentTrack != track&&_playlist.Contains(track))
             {
                // _currentIndex = _playlist.IndexOf(track);
-                MessageService.SendMessageToBackground(new TrackChangedMessage(track.Source));
+                MessageService.SendMessageToBackground(new TrackChangedMessage(track.Url));
                 //_playerSession.NotifyCurrentTrackChanged(track);
 
             }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Media;
 using NeilX.DoubanFM.MusicPlayer;
+using NeilX.DoubanFM.Core;
 
 namespace NeilX.DoubanFM.Services
 {
@@ -15,7 +16,7 @@ namespace NeilX.DoubanFM.Services
         bool CanPlay { get; }
         bool IsPlaying { get; }
         bool CanNext { get; }
-        TrackInfo CurrentTrack { get; }
+        Song CurrentTrack { get; }
         MediaPlaybackStatus PlaybackStatus { get; }
         TimeSpan? Duration { get; }
         TimeSpan Position { get; set; }
@@ -26,7 +27,7 @@ namespace NeilX.DoubanFM.Services
         void RequestPlayOrPause();
         void RequestPrevious();
         void RequestNext();
-        void SetPlaylist(IList<TrackInfo> tracks, TrackInfo current);
+        void SetPlaylist(IList<Song> tracks, Song current);
         void PlayWhenOpened();
         void ScrollPlayMode();
     }

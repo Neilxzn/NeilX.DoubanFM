@@ -1,4 +1,5 @@
 ﻿using Kfstorm.LrcParser;
+using NeilX.DoubanFM.Core;
 using NeilX.DoubanFM.MusicPlayer;
 using System;
 using System.Collections.Generic;
@@ -35,9 +36,9 @@ namespace NeilX.DoubanFM.UserControls
 
 
 
-        public TrackInfo CurrentTrack
+        public Song CurrentTrack
         {
-            get { return (TrackInfo)GetValue(CurrentTrackProperty); }
+            get { return (Song)GetValue(CurrentTrackProperty); }
             set
             {
                 OnCurrentTrack(value);
@@ -47,7 +48,7 @@ namespace NeilX.DoubanFM.UserControls
 
         // Using a DependencyProperty as the backing store for CurrentTrack.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CurrentTrackProperty =
-            DependencyProperty.Register("CurrentTrack", typeof(TrackInfo), typeof(PlayingControl), new PropertyMetadata(DependencyProperty.UnsetValue));
+            DependencyProperty.Register("CurrentTrack", typeof(Song), typeof(PlayingControl), new PropertyMetadata(DependencyProperty.UnsetValue));
 
 
 
@@ -84,7 +85,7 @@ namespace NeilX.DoubanFM.UserControls
             }
         }
 
-        private async void OnCurrentTrack(TrackInfo value)
+        private async void OnCurrentTrack(Song value)
         {
             if (!string.IsNullOrEmpty(value?.Lyric))
             {

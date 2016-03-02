@@ -1,4 +1,5 @@
 ﻿using Kfstorm.LrcParser;
+using NeilX.DoubanFM.Core;
 using NeilX.DoubanFM.MusicPlayer;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace NeilX.DoubanFM.Services.LyricService
 {
     public interface ILyricsService
     {
-        TrackInfo CurrentTrack { get; set; }
+        Song CurrentTrack { get; set; }
 
         ILrcFile LyricModel { get; set; }
 

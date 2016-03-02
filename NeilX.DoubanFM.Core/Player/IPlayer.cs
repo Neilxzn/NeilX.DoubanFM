@@ -37,7 +37,7 @@ namespace NeilX.DoubanFM.Core
         /// <value>
         /// The  songs.
         /// </value>
-        Queue<Song> PendingSongs { get; }
+        List<Song> PendingSongs { get; }
         /// <summary>
         /// Gets the current channel.
         /// </summary>

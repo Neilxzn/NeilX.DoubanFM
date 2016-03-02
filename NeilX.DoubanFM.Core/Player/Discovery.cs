@@ -125,7 +125,7 @@ namespace NeilX.DoubanFM.Core
         /// <returns>
         /// The offline red heart songs.
         /// </returns>
-        public async Task<Song[]> GetOfflineRedHeartSongs(int maxSize, IEnumerable<string> excludedSids)
+        public async Task<List<Song>> GetOfflineRedHeartSongs(int maxSize, IEnumerable<string> excludedSids)
         {
             var uri = ServerConnection.CreateGetPlayListUri(-3, type: ReportType.CurrentChannelChanged, sid: null, start: null, formats: null, kbps: null, playedTime: null, mode: "offline", excludedSids: excludedSids, max: maxSize);
             var jsonContent = await ServerConnection.Get(uri, ServerConnection.SetSessionInfoToRequest);

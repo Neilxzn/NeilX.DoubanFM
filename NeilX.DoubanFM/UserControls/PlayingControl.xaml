@@ -17,7 +17,7 @@
     </UserControl.Resources>
     <Grid >
         <Grid.Background>
-            <ImageBrush  Stretch="UniformToFill"  ImageSource="{x:Bind CurrentTrack.CoverThumbnail,Mode=OneWay,TargetNullValue='ms-appx:///Assets/Images/m51.jpg',FallbackValue='ms-appx:///Assets/Images/m51.jpg'}" />
+            <ImageBrush  Stretch="UniformToFill"  ImageSource="{x:Bind CurrentTrack.PictureUrl,Mode=OneWay,TargetNullValue='ms-appx:///Assets/Images/m51.jpg',FallbackValue='ms-appx:///Assets/Images/m51.jpg'}" />
 
         </Grid.Background>
         <Grid Padding="0,20,0,0" Background="#55000000">
@@ -29,7 +29,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Text="{x:Bind CurrentTrack.Title, Mode=OneWay}" Style="{StaticResource TrackInfoTextBlockStyle}"/>
-            <TextBlock Grid.Row="1" Text="{x:Bind CurrentTrack.Album, Mode=OneWay}" Style="{StaticResource TrackInfoTextBlockStyle}"/>
+            <TextBlock Grid.Row="1" Text="{x:Bind CurrentTrack.AlbumTitle, Mode=OneWay}" Style="{StaticResource TrackInfoTextBlockStyle}"/>
             <TextBlock Grid.Row="2" Text="{x:Bind CurrentTrack.Artist, Mode=OneWay}" Style="{StaticResource TrackInfoTextBlockStyle}"/>
             <ListBox x:Name="lb_Lyrics" Grid.Row="3" Margin="0,5,0,0" Padding="10" Background="Transparent"
                          ScrollViewer.VerticalScrollBarVisibility="Disabled">

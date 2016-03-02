@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeilX.DoubanFM.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +12,8 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
         void SetupHandler();
         void Play();
         void Pause();
-        void SetPlaylist(IList<TrackInfo> tracks);
-        void SetCurrentTrack(TrackInfo track);
+        void SetPlaylist(IList<Song> tracks);
+        void SetCurrentTrack(Song track);
         void MoveNext();
         void MovePrevious();
         void SetPlayMode(PlayMode playmode);

@@ -134,6 +134,9 @@ namespace NeilX.DoubanFM.Core
         /// </value>
         public bool Like { get; set; }
 
+
+        public string Lyric { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Song"/> class.
         /// </summary>
@@ -141,6 +144,10 @@ namespace NeilX.DoubanFM.Core
         public Song(string sid)
         {
             Sid = sid;
+        }
+
+        public Song()
+        {
         }
 
 #pragma warning disable 1591

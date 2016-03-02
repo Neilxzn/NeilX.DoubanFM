@@ -46,16 +46,16 @@ namespace NeilX.DoubanFM.Core
         /// Parses the get play list result.
         /// </summary>
         /// <param name="jsonContent">Content of JSON format.</param>
-        public static Song[] ParseGetPlayListResult(string jsonContent)
+        public static List<Song> ParseGetPlayListResult(string jsonContent)
         {
             var obj = JObject.Parse(jsonContent);
             JToken songs;
             if (obj.TryGetValue("song", out songs) && songs != null)
             {
                 return (from song in songs
-                        select song.ParseSong()).ToArray();
+                        select song.ParseSong()).ToList();
             }
-            return new Song[0];
+            return new List<Song>();
         }
 
         #endregion

@@ -81,7 +81,7 @@ namespace NeilX.DoubanFM.Core
         /// <returns>
         /// The offline red heart songs.
         /// </returns>
-        Task<Song[]> GetOfflineRedHeartSongs(int maxSize, IEnumerable<string> excludedSids);
+        Task<List<Song>> GetOfflineRedHeartSongs(int maxSize, IEnumerable<string> excludedSids);
         
         /// <summary>
         /// Updates the audio URL of the song.

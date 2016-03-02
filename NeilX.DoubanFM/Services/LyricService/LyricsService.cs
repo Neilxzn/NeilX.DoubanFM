@@ -8,14 +8,15 @@ using NeilX.DoubanFM.MusicPlayer;
 using Windows.UI.Xaml.Controls;
 using GalaSoft.MvvmLight;
 using Windows.Storage;
+using NeilX.DoubanFM.Core;
 
 namespace NeilX.DoubanFM.Services.LyricService
 {
     public class LyricsService : ObservableObject, ILyricsService
     {
         private ListBox _listBox;
-        private TrackInfo _currentTrack;
-        public TrackInfo CurrentTrack
+        private Song _currentTrack;
+        public Song CurrentTrack
         {
             get
             {
@@ -83,7 +84,7 @@ namespace NeilX.DoubanFM.Services.LyricService
 
 
 
-        private async void OnCurrentTrackChanged(TrackInfo value)
+        private async void OnCurrentTrackChanged(Song value)
         {
             if (string.IsNullOrEmpty(value?.Lyric))
             {

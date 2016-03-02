@@ -125,13 +125,18 @@
     <Compile Include="PlayListType.cs" />
     <Compile Include="PlayMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TrackInfo.cs" />
     <EmbeddedResource Include="Properties\NeilX.DoubanFM.MusicPlayer.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="NeilSoft.UWP">
       <HintPath>..\..\NeilSoft.UWP\NeilSoft.UWP\bin\Debug\NeilSoft.UWP.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NeilX.DoubanFM.Core\NeilX.DoubanFM.Core.csproj">
+      <Project>{ed1a3a12-61d3-41ba-8558-e6912643c89a}</Project>
+      <Name>NeilX.DoubanFM.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

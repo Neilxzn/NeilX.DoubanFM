@@ -109,9 +109,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AudioPlayerTask\AudioPlayerTask.cs" />
+    <Compile Include="Helper\AudioTaskHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TaskConstant.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NeilX.DoubanFM.Core\NeilX.DoubanFM.Core.csproj">
+      <Project>{ed1a3a12-61d3-41ba-8558-e6912643c89a}</Project>
+      <Name>NeilX.DoubanFM.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NeilX.DoubanFM.MusicPlayer\NeilX.DoubanFM.MusicPlayer.csproj">
       <Project>{78147ada-d1f6-4c41-aced-952e250f4387}</Project>
       <Name>NeilX.DoubanFM.MusicPlayer</Name>

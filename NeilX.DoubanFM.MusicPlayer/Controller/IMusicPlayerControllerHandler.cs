@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeilX.DoubanFM.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,10 +14,10 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
         void NotifyControllerReady();
         void NotifyMediaOpened();
         void NotifyControllerStateChanged(MediaPlayerState state);
-        void NotifyCurrentTrackChanged(TrackInfo track);
+        void NotifyCurrentTrackChanged(Song track);
         void NotifyDuration(TimeSpan? duration);
         void NotifyPosition(TimeSpan position);
         void NotifySeekCompleted();
-        void NotifyPlaylist(IList<TrackInfo> playlist);
+        void NotifyPlaylist(IList<Song> playlist);
     }
 }

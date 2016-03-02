@@ -11,6 +11,7 @@ using Windows.Media.Playback;
 using GalaSoft.MvvmLight.Threading;
 using System.Threading;
 using Microsoft.Practices.ServiceLocation;
+using NeilX.DoubanFM.Core;
 
 namespace NeilX.DoubanFM.Services
 {
@@ -28,8 +29,8 @@ namespace NeilX.DoubanFM.Services
         private bool _canNext;
         private bool _isPlay;
         private MediaPlaybackStatus _playbackStatus = MediaPlaybackStatus.Closed;
-        private IList<TrackInfo> _playlist = new List<TrackInfo>();
-        private TrackInfo _currentTrack;
+        private IList<Song> _playlist = new List<Song>();
+        private Song _currentTrack;
         private TimeSpan? _duration;
         private TimeSpan _position;
         private bool _isMuted;
@@ -91,17 +92,17 @@ namespace NeilX.DoubanFM.Services
             }
         }
 
-        public IList<TrackInfo> Playlist
+        public IList<Song> Playlist
         {
             get { return _playlist; }
             private set
             {
-                if (Set(ref _playlist, value ?? new List<TrackInfo>()))
+                if (Set(ref _playlist, value ?? new List<Song>()))
                     _musicPlayerController.SetPlaylist(_playlist);
             }
         }
 
-        public TrackInfo CurrentTrack
+        public Song CurrentTrack
         {
             get { return _currentTrack; }
             private set
@@ -207,7 +208,7 @@ namespace NeilX.DoubanFM.Services
                 MovePrevious();
         }
 
-        public void SetPlaylist(IList<TrackInfo> tracks, TrackInfo current)
+        public void SetPlaylist(IList<Song> tracks, Song current)
         {
             Playlist = tracks;
             CurrentTrack = current;
@@ -386,7 +387,7 @@ namespace NeilX.DoubanFM.Services
         }
 
       
-        public async void NotifyCurrentTrackChanged(TrackInfo track)
+        public async void NotifyCurrentTrackChanged(Song track)
         {
             if (_playlist != null)
             {
@@ -400,7 +401,7 @@ namespace NeilX.DoubanFM.Services
                     }
                     _position = TimeSpan.Zero;
                    RaisePropertyChanged(nameof(Position));
-                    Duration = currentTrack?.Duration;
+                    Duration = TimeSpan.FromSeconds((double)currentTrack?.Length);
                 });
             }
         }
@@ -427,9 +428,9 @@ namespace NeilX.DoubanFM.Services
             ResumeAskPosition();
         }
 
-        public void NotifyPlaylist(IList<TrackInfo> playlist)
+        public void NotifyPlaylist(IList<Song> playlist)
         {
-            Set(ref _playlist, playlist ?? new List<TrackInfo>(), nameof(Playlist));
+            Set(ref _playlist, playlist ?? new List<Song>(), nameof(Playlist));
         }
 
 
@@ -444,22 +445,8 @@ namespace NeilX.DoubanFM.Services
 
         private void DoubanFM_CurrentChannelChanged(object sender, Core.EventArgs<Core.Channel> e)
         {
-            if (DoubanFMService.Player.PendingSongs == null) return;
-            List<TrackInfo> infos = new List<TrackInfo>();
-            foreach (var song in DoubanFMService.Player.PendingSongs)
-            {
-                TrackInfo info = new TrackInfo()
-                {
-                    Album = song.AlbumTitle,
-                    Artist = song.Artist,
-                    Duration = TimeSpan.FromSeconds(song.Length),
-                    Source=new Uri (song.Url),
-                    CoverThumbnail=song.PictureUrl,
-                    Title=song.Title,
-                    AlbumArtist=song.Artist
-                };
-                infos.Add(info);
-            }
+            if (DoubanFMService.Player.PendingSongs?.Count<1 ) return;
+            List<Song> infos = DoubanFMService.Player.PendingSongs.ToList();
             SetPlaylist(infos, infos[0]);
             if (IsPlaying)
             {
