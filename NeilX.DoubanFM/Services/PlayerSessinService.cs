@@ -175,9 +175,9 @@ namespace NeilX.DoubanFM.Services
 
         public void PlayWhenOpened()
         {
-            _autoPlay = true;
-            if (CanPlay)
-                Play();
+            //_autoPlay = true;
+            //if (CanPlay)
+            //    Play();
         }
 
         public void RequestPlayOrPause()
@@ -450,6 +450,7 @@ namespace NeilX.DoubanFM.Services
             SetPlaylist(infos, infos[0]);
             if (IsPlaying)
             {
+                Pause();
                 Play();
             }
         }

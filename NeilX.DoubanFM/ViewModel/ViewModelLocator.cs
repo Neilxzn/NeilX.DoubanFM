@@ -36,6 +36,7 @@ namespace NeilX.DoubanFM.ViewModel
             //}
 
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<RadioListViewModel>();
             SimpleIoc.Default.Register<SearchViewModel>();
 
             SimpleIoc.Default.Register<PlayerSessionService>(true);
@@ -71,6 +72,14 @@ namespace NeilX.DoubanFM.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<SearchViewModel>();
+            }
+        }
+
+        public RadioListViewModel RadioListVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<RadioListViewModel>();
             }
         }
 

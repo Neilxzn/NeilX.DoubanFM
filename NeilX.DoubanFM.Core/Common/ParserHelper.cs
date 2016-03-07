@@ -15,17 +15,18 @@ namespace NeilX.DoubanFM.Core
         /// <returns></returns>
         public static Channel ParseChannel(this JToken channel)
         {
-            return new Channel((int)channel["id"])
+            var c= new Channel((int)channel["id"])
             {
-            //    Name = (string)channel["name"],
-            //    Artist = (string)channel["artist"],
-            //    Description = (string)channel["intro"],
-            //    SongCount = (int)channel["song_num"],
+                Name = (string) channel["name"],
+                Artist = (string)(channel["artist"]??""),
+                Description = (string)channel["intro"],
+                SongCount = (int)(channel["song_num"]??0),
                 CoverUrl = (string)channel["cover"],
-                //Start = (string)channel["start"],
+                Start = (string)channel["start"],
                 // TODO: 'collected'
                 // TODO: 'style'
             };
+            return c;
         }
 
         /// <summary>
@@ -44,17 +45,14 @@ namespace NeilX.DoubanFM.Core
                 Url = (string)song["url"],
                 Company = (string)song["company"],
                 Title = (string)song["title"],
-              //  AverageRating = ParseOptional<double?>(song["rating_avg"]),
                 Length = (int)song["length"],
                 SubType = (string)song["subtype"],
-                //TODO
-                // PublishTime = ParseOptional<int?>(song["public_time"]),
-              //  SongListsCount = ParseOptional<int?>(song["songlists_count"]),
+                PublishTime = (int?)(song["public_time"]),
                 Aid = (string)song["aid"],
                 Sha256 = (string)song["sha256"],
-               // Kbps = ParseOptional<int?>(song["kbps"]),
+                Kbps = (int?)(song["kbps"]),
                 AlbumTitle = (string)song["albumtitle"],
-               // Like = ParseOptional<bool>(song["like"]),
+                Like = (int)song["like"]==0?false:true,
             };
         }
 

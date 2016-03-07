@@ -56,13 +56,7 @@ namespace NeilX.DoubanFM.Core
         /// The title.
         /// </value>
         public string Title { get; set; }
-        /// <summary>
-        /// Gets or sets the average rating.
-        /// </summary>
-        /// <value>
-        /// The average rating.
-        /// </value>
-        public double? AverageRating { get; set; }
+
         /// <summary>
         /// Gets or sets the length.
         /// </summary>
@@ -84,13 +78,7 @@ namespace NeilX.DoubanFM.Core
         /// The publish time.
         /// </value>
         public int? PublishTime { get; set; }
-        /// <summary>
-        /// Gets or sets the song lists count.
-        /// </summary>
-        /// <value>
-        /// The song lists count.
-        /// </value>
-        public int? SongListsCount { get; set; }
+
         /// <summary>
         /// Gets the SID.
         /// </summary>

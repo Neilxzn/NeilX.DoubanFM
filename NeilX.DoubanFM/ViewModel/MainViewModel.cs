@@ -31,6 +31,7 @@ namespace NeilX.DoubanFM.ViewModel
                 // Code runs "for real"
                 InitializeMenuData();
             }
+           
 
         }
 
@@ -50,6 +51,7 @@ namespace NeilX.DoubanFM.ViewModel
         {
             get
             {
+
                 return ServiceLocator.Current.GetInstance<PlayerSessionService>();
             }
 
@@ -60,14 +62,15 @@ namespace NeilX.DoubanFM.ViewModel
 
 
         #region Public  Methods
-        public void SetupNavigationService(object sender, object e)
+        public  void SetupNavigationService(object sender, object e)
         {
             _navigationService = (Frame)sender;
-            _navigationService.Navigate(typeof(View.MyMusicView));
+            _navigationService.Navigate(typeof(View.RadioListView));
         }
 
-        public void OpenSettingView()
+        public  void OpenSettingView()
         {
+
             MessengerInstance.Send("OpenSettingView","MainPage" );
         }
 

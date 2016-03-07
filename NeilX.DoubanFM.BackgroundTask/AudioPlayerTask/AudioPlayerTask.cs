@@ -31,21 +31,60 @@ namespace NeilX.DoubanFM.BackgroundTask
 
 
         #region IBackgroundTask and IBackgroundTaskInstance Interface Members and handlers
-        /// <summary>
-        /// The Run method is the entry point of a background task. 
-        /// </summary>
-        /// <param name="taskInstance"></param>
+
         public void Run(IBackgroundTaskInstance taskInstance)
         {
             Debug.WriteLine("Background Audio Task " + taskInstance.Task.Name + " starting...");
-            
+
 
             // Initialize SystemMediaTransportControls (SMTC) for integration with
             // the Universal Volume Control (UVC).
             //
             // The UI for the UVC must update even when the foreground process has been terminated
             // and therefore the SMTC is configured and updated from the background task.
-            if (smtc==null)
+
+            AttachMessageHandlers();
+            ActivateHandler();
+            InitialSTMC();
+            CheckOutAppState();
+
+            deferral = taskInstance.GetDeferral(); 
+            backgroundTaskStarted.Set();
+
+            taskInstance.Task.Completed += TaskCompleted;
+            taskInstance.Canceled += new BackgroundTaskCanceledEventHandler(OnCanceled); 
+        }
+
+
+        #endregion
+
+        private void  AttachMessageHandlers()
+        {
+            BackgroundMediaPlayer.MessageReceivedFromForeground += BackgroundMediaPlayer_MessageReceivedFromForeground;
+        }
+
+        private void ActivateHandler()
+        {
+            BackgroundMediaPlayer.Current.CurrentStateChanged += Current_CurrentStateChanged;
+        }
+
+        private void CheckOutAppState()
+        {
+            var value = ApplicationSettingsHelper.ReadResetSettingsValue(ApplicationSettingsConstants.AppState);
+            if (value == null)
+                foregroundAppState = AppState.Unknown;
+            else
+                foregroundAppState = EnumHelper.Parse<AppState>(value.ToString());
+            if (foregroundAppState != AppState.Suspended)
+                MessageService.SendMessageToForeground(new AudioTaskStartedMessage());
+
+            ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.BackgroundTaskState, BackgroundTaskState.Running.ToString());
+
+        }
+
+        private void InitialSTMC()
+        {
+            if (smtc == null)
             {
                 smtc = BackgroundMediaPlayer.Current.SystemMediaTransportControls;
             }
@@ -56,91 +95,30 @@ namespace NeilX.DoubanFM.BackgroundTask
             smtc.IsPlayEnabled = true;
             smtc.IsNextEnabled = true;
             smtc.IsPreviousEnabled = true;
-
-            // Read persisted state of foreground app
-            var value = ApplicationSettingsHelper.ReadResetSettingsValue(ApplicationSettingsConstants.AppState);
-            if (value == null)
-                foregroundAppState = AppState.Unknown;
-            else
-                foregroundAppState = EnumHelper.Parse<AppState>(value.ToString());
-
-            // Add handlers for MediaPlayer
-            BackgroundMediaPlayer.Current.CurrentStateChanged += Current_CurrentStateChanged;
-
-            // Initialize message channel 
-            BackgroundMediaPlayer.MessageReceivedFromForeground += BackgroundMediaPlayer_MessageReceivedFromForeground;
-
-            // Send information to foreground that background task has been started if app is active
-            if (foregroundAppState != AppState.Suspended)
-                MessageService.SendMessageToForeground(new AudioTaskStartedMessage());
-
-            ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.BackgroundTaskState, BackgroundTaskState.Running.ToString());
-
-            deferral = taskInstance.GetDeferral(); // This must be retrieved prior to subscribing to events below which use it
-
-            // Mark the background task as started to unblock SMTC Play operation (see related WaitOne on this signal)
-            backgroundTaskStarted.Set();
-
-            // Associate a cancellation and completed handlers with the background task.
-            taskInstance.Task.Completed += TaskCompleted;
-            taskInstance.Canceled += new BackgroundTaskCanceledEventHandler(OnCanceled); // event may raise immediately before continung thread excecution so must be at the end
         }
-
-        /// <summary>
-        /// Indicate that the background task is completed.
-        /// </summary>       
-        void TaskCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
+        private void ConfigureMediaPlayer()
         {
-            Debug.WriteLine("AudioPlayerTask " + sender.TaskId + " Completed...");
-            deferral.Complete();
+
         }
 
-        /// <summary>
-        /// Handles background task cancellation. Task cancellation happens due to:
-        /// 1. Another Media app comes into foreground and starts playing music 
-        /// 2. Resource pressure. Your task is consuming more CPU and memory than allowed.
-        /// In either case, save state so that if foreground app resumes it can know where to start.
-        /// </summary>
-        private void OnCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
+        private void Shutdown()
         {
-            // You get some time here to save your state before process and resources are reclaimed
-            Debug.WriteLine("AudioPlayerTask " + sender.Task.TaskId + " Cancel Requested...");
-            try
+            // unsubscribe from list changes
+            if (playbackList != null)
             {
-                // immediately set not running
-                backgroundTaskStarted.Reset();
-
-                // save state
-                ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.TrackId, AudioTaskHelper.GetPlayListCurrentTrackId(playbackList) == null ? null : AudioTaskHelper.GetPlayListCurrentTrackId(playbackList).ToString());
-                ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.Position, BackgroundMediaPlayer.Current.Position.ToString());
-                ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.BackgroundTaskState, BackgroundTaskState.Canceled.ToString());
-                ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.AppState, Enum.GetName(typeof(AppState), foregroundAppState));
-
-                // unsubscribe from list changes
-                if (playbackList != null)
-                {
-                    playbackList.CurrentItemChanged -= PlaybackList_CurrentItemChanged;
-                    playbackList = null;
-                }
-
-                // unsubscribe event handlers
-                BackgroundMediaPlayer.MessageReceivedFromForeground -= BackgroundMediaPlayer_MessageReceivedFromForeground;
-                smtc.ButtonPressed -= smtc_ButtonPressed;
-                smtc.PropertyChanged -= smtc_PropertyChanged;
-                if (BackgroundMediaPlayer.Current.CurrentState!=MediaPlayerState.Closed)
-                {
-                    BackgroundMediaPlayer.Shutdown(); // shutdown media pipeline
-                }
-                
+                playbackList.CurrentItemChanged -= PlaybackList_CurrentItemChanged;
+                playbackList = null;
             }
-            catch (Exception ex)
+
+            // unsubscribe event handlers
+            BackgroundMediaPlayer.MessageReceivedFromForeground -= BackgroundMediaPlayer_MessageReceivedFromForeground;
+            smtc.ButtonPressed -= smtc_ButtonPressed;
+            smtc.PropertyChanged -= smtc_PropertyChanged;
+            if (BackgroundMediaPlayer.Current.CurrentState != MediaPlayerState.Closed)
             {
-                Debug.WriteLine(ex.ToString());
+                BackgroundMediaPlayer.Shutdown(); // shutdown media pipeline
             }
-            deferral.Complete(); // signals task completion. 
-            Debug.WriteLine("AudioPlayerTask Cancel complete...");
         }
-        #endregion
 
         #region SysteMediaTransportControls related functions and handlers
         /// <summary>
@@ -307,11 +285,6 @@ namespace NeilX.DoubanFM.BackgroundTask
             }
         }
 
-        /// <summary>
-        /// Raised when playlist changes to a new track
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
         void PlaybackList_CurrentItemChanged(MediaPlaybackList sender, CurrentMediaPlaybackItemChangedEventArgs args)
         {
             // Get the new item
@@ -336,23 +309,48 @@ namespace NeilX.DoubanFM.BackgroundTask
                 ApplicationSettingsHelper.SaveSettingToLocalSettings(TaskConstant.TrackIdKey, currentTrackId == null ? null : currentTrackId.ToString());
         }
 
-        /// <summary>
-        /// Skip track and update UVC via SMTC
-        /// </summary>
         private void SkipToPrevious()
         {
             smtc.PlaybackStatus = MediaPlaybackStatus.Changing;
             playbackList.MovePrevious();
         }
 
-        /// <summary>
-        /// Skip track and update UVC via SMTC
-        /// </summary>
         private void SkipToNext()
         {
             smtc.PlaybackStatus = MediaPlaybackStatus.Changing;
             playbackList.MoveNext();
         }
+        void CreatePlaybackList(MediaPlaybackList playlist, IEnumerable<Song> tracks)
+        {
+            if (playbackList != null)
+            {
+                playbackList.CurrentItemChanged -= PlaybackList_CurrentItemChanged;
+            }
+            // Make a new list and enable looping
+            playbackList = new MediaPlaybackList();
+            playbackList.AutoRepeatEnabled = true;
+
+            // Add playback items to the list
+            foreach (var track in tracks)
+            {
+                Uri songUri = new Uri(track.Url);
+                var source = MediaSource.CreateFromUri(songUri);
+                source.CustomProperties[TaskConstant.TrackIdKey] = songUri;
+                source.CustomProperties[TaskConstant.TitleKey] = track.Title;
+                source.CustomProperties[TaskConstant.AlbumArtKey] = new Uri(track.PictureUrl);
+                playbackList.Items.Add(new MediaPlaybackItem(source));
+            }
+
+            // Don't auto start
+            BackgroundMediaPlayer.Current.AutoPlay = false;
+
+            // Assign the list to the player
+            BackgroundMediaPlayer.Current.Source = playbackList;
+
+            // Add handler for future playlist item changes
+            playbackList.CurrentItemChanged += PlaybackList_CurrentItemChanged;
+        }
+
         #endregion
 
         #region Background Media Player Handlers
@@ -372,11 +370,6 @@ namespace NeilX.DoubanFM.BackgroundTask
             }
         }
 
-        /// <summary>
-        /// Raised when a message is recieved from the foreground app
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void BackgroundMediaPlayer_MessageReceivedFromForeground(object sender, MediaPlayerDataReceivedEventArgs e)
         {
             AppSuspendedMessage appSuspendedMessage;
@@ -442,45 +435,50 @@ namespace NeilX.DoubanFM.BackgroundTask
             UpdatePlaylistMessage updatePlaylistMessage;
             if (MessageService.TryParseMessage(e.Data, out updatePlaylistMessage))
             {
-                CreatePlaybackList(updatePlaylistMessage.Tracks);
+                CreatePlaybackList(playbackList, updatePlaylistMessage.Tracks);
                 return;
             }
         }
 
-        /// <summary>
-        /// Create a playback list from the list of songs received from the foreground app.
-        /// </summary>
-        /// <param name="songs"></param>
-        void CreatePlaybackList(IEnumerable<Song> tracks)
-        {
-            if (playbackList!=null)
-            {
-                playbackList.CurrentItemChanged -= PlaybackList_CurrentItemChanged;
-            }
-            // Make a new list and enable looping
-            playbackList = new MediaPlaybackList();
-            playbackList.AutoRepeatEnabled = true;
-
-            // Add playback items to the list
-            foreach (var track in tracks)
-            {
-                Uri songUri = new Uri(track.Url);
-                var source = MediaSource.CreateFromUri(songUri);
-                source.CustomProperties[TaskConstant.TrackIdKey] = songUri;
-                source.CustomProperties[TaskConstant.TitleKey] = track.Title;
-                source.CustomProperties[TaskConstant.AlbumArtKey] = new Uri(track.PictureUrl);
-                playbackList.Items.Add(new MediaPlaybackItem(source));
-            }
-
-            // Don't auto start
-            BackgroundMediaPlayer.Current.AutoPlay = false;
-
-            // Assign the list to the player
-            BackgroundMediaPlayer.Current.Source = playbackList;
-
-            // Add handler for future playlist item changes
-            playbackList.CurrentItemChanged += PlaybackList_CurrentItemChanged;
-        }
         #endregion
+
+        #region TaskInstance Handler
+
+        void TaskCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
+        {
+            Debug.WriteLine("AudioPlayerTask " + sender.TaskId + " Completed...");
+            deferral.Complete();
+        }
+
+        /// <summary>
+        /// Handles background task cancellation. Task cancellation happens due to:
+        /// 1. Another Media app comes into foreground and starts playing music 
+        /// 2. Resource pressure. Your task is consuming more CPU and memory than allowed.
+        /// In either case, save state so that if foreground app resumes it can know where to start.
+        /// </summary>
+        private void OnCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
+        {
+            Debug.WriteLine("AudioPlayerTask " + sender.Task.TaskId + " Cancel Requested...");
+            try
+            {
+                // immediately set not running
+                backgroundTaskStarted.Reset();
+                Shutdown();
+                // save state
+                ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.TrackId, AudioTaskHelper.GetPlayListCurrentTrackId(playbackList) == null ? null : AudioTaskHelper.GetPlayListCurrentTrackId(playbackList).ToString());
+                ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.Position, BackgroundMediaPlayer.Current.Position.ToString());
+                ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.BackgroundTaskState, BackgroundTaskState.Canceled.ToString());
+                ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.AppState, Enum.GetName(typeof(AppState), foregroundAppState));
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+            deferral.Complete();
+            Debug.WriteLine("AudioPlayerTask Cancel complete...");
+        }
+
+        #endregion     
     }
 }

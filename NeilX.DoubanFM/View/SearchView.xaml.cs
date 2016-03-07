@@ -31,12 +31,6 @@ namespace NeilX.DoubanFM.View
             this.InitializeComponent();
         }
 
-        private void gridView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            var channel = e.ClickedItem as Channel;
-            DoubanFMService.ChangeFMChannel(channel);
-        }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
 

@@ -8,6 +8,7 @@ using GalaSoft.MvvmLight;
 using System.Collections.ObjectModel;
 using NeilX.DoubanFM.Core;
 using NeilX.DoubanFM.Services;
+using Windows.UI.Xaml.Controls;
 
 namespace NeilX.DoubanFM.ViewModel
 {
@@ -63,10 +64,13 @@ namespace NeilX.DoubanFM.ViewModel
             Channels = new ObservableCollection<Channel>(await DoubanFMService.SearchChannelAsync(Query, 0, 20));
         }
 
-        private async void OnQueryChange(string query)
+        public async void SelectTheChannle(object sender, ItemClickEventArgs e)
         {
-            Channels = new ObservableCollection<Channel>(await DoubanFMService.SearchChannelAsync(query, 0, 20));
+            var channel = e.ClickedItem as Channel;
+            List<Song>  songs=await   DoubanFMService.GetSongsFromChannel(channel);
+            ViewModelLocator.Instance.Main.PlayerSession.SetPlaylist(songs, songs[0]);
         }
+
 
         private void InitialHistryQuery()
         {

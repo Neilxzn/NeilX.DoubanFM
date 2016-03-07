@@ -123,6 +123,7 @@ namespace NeilX.DoubanFM.MusicPlayer
             bool result = backgroundAudioTaskStarted.WaitOne(8000);
             if (result == true)
             {
+                _isAudioPlayerTaskRunning = true;
                 //   MessageService.SendMessageToBackground(new UpdatePlaylistMessage(PlayList.TrackLists.ToList()));
             }
             else

@@ -70,6 +70,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
             throw new NotImplementedException();
         }
 
+
         public void Play()
         {
             if (!_playbackStartedPreviously)

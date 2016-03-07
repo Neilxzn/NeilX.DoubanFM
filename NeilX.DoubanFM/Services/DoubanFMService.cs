@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace NeilX.DoubanFM.Services
 {
-    public class DoubanFMService
+    public static class DoubanFMService
     {
         private static string ClientId { get; } = "02646d3fb69a52ff072d47bf23cef8fd";
         private static string ClientSecret { get; } = "cde5d61429abcd7c";
@@ -30,26 +30,25 @@ namespace NeilX.DoubanFM.Services
             Discovery = new Discovery(Session);
         }
 
+
+        public async static Task<ChannelGroup[]> GetRecommendedChannels()
+        {
+            return await Discovery.GetRecommendedChannels();
+        }
+
         public static async Task<IList<Channel>> SearchChannelAsync(string query, int start, int size)
         {
             var channels = await Discovery.SearchChannel(query, start, size);
             return  channels.CurrentList;
         }
 
-        public async static void ChangeFMChannel(Channel channel)
+
+
+        public async static Task<List<Song>> GetSongsFromChannel( Channel channel)
         {
-            await Player.ChangeChannel(channel);
-        }
-        public async static Task<Channel[]> GetRecommendedChannels()
-        {
-            var channelGroups =  await Discovery.GetRecommendedChannels();
-            return channelGroups.SelectMany(group => group.Channels).ToArray();
+            return await Discovery.GetSongs(channel);
         }
 
-        public async static void SkipToNextSong(NextCommandType commandType)
-        {
-            await Player.Next(commandType);
-        }
 
     }
 }

@@ -39,6 +39,10 @@ namespace NeilX.DoubanFM.Core
         /// <returns>A channel array with the first channel at index <paramref name="start"/>, or an empty array if no channels available.</returns>
         Task<PartialList<Channel>> SearchChannel(string query, int start, int maxSize);
 
+
+
+
+         Task<List<Song>> GetSongs(Channel newChannel, string Songsid = null, ChangeChannelCommandType type = ChangeChannelCommandType.Normal);
         /// <summary>
         /// Gets the song detail.
         /// </summary>

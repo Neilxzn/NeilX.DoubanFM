@@ -5,9 +5,52 @@
     xmlns:local="using:NeilX.DoubanFM.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
-
+    mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator},Path=RadioListVM}">
+    <Page.Resources>
+        <Style x:Key="MyFMImageStyle" TargetType="Image">
+            <Setter Property="Width" Value="80"/>
+            <Setter Property="Stretch" Value="Uniform"/>
+        </Style>
+        <Style x:Key="MyFMTextStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="spiltRecStyle" TargetType="Rectangle">
+            <Setter Property="Width" Value="1"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="Fill" Value="Gray"/>
+        </Style>
+    </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock Text="RadioListView"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+        </Grid>
+        <Grid Grid.Row="1" Margin="30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel >
+                <Image Source="{Binding MyFM.Channels[0].CoverUrl,Mode=OneWay}" Style="{StaticResource MyFMImageStyle}"/>
+                <TextBlock Text="{Binding MyFM.Channels[0].Name,Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+            <Rectangle Grid.Column="1" Style="{StaticResource spiltRecStyle}"/>
+            <StackPanel Grid.Column="2">
+                <Image Source="{Binding MyFM.Channels[1].CoverUrl,Mode=OneWay}" Style="{StaticResource MyFMImageStyle}"/>
+                <TextBlock Text="{Binding MyFM.Channels[1].Name,Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+            <Rectangle Grid.Column="3" Style="{StaticResource spiltRecStyle}"/>
+            <StackPanel Grid.Column="4">
+                <Image Source="{Binding MyFM.Channels[2].CoverUrl,Mode=OneWay}"     Style="{StaticResource MyFMImageStyle}"/>
+                <TextBlock Text="{Binding MyFM.Channels[2].Name,Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Page>

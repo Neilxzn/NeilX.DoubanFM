@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeilX.DoubanFM.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace NeilX.DoubanFM.View
     /// </summary>
     public sealed partial class RadioListView : Page
     {
+        public RadioListViewModel RadioListVM => (RadioListViewModel)DataContext;
         public RadioListView()
         {
             this.InitializeComponent();

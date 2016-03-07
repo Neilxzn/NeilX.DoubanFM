@@ -58,6 +58,24 @@ namespace NeilX.DoubanFM.Core
             return ServerRequests.ParseSearchChannelResult(jsonContent);
         }
 
+
+        public async Task<List<Song>> GetSongs(Channel newChannel,  string Songsid=null,ChangeChannelCommandType type = ChangeChannelCommandType.Normal)
+        {
+            var start = type == ChangeChannelCommandType.Normal ? newChannel.Start : null;
+            var uri = ServerConnection.CreateGetPlayListUri(newChannel.Id,  type: ReportType.CurrentChannelChanged, sid: Songsid, start: start, formats: null, kbps: null, playedTime: null, mode: null, excludedSids: null, max: null);
+            var jsonContent = await ServerConnection.Get(uri, ServerConnection.SetSessionInfoToRequest);
+            var newPlayList = ServerRequests.ParseGetPlayListResult(jsonContent);
+            if (newPlayList.Count == 0)
+            {
+                //TODO
+                return new List<Song>();
+            }
+            else
+            {
+                return newPlayList;
+            }
+        }
+
         /// <summary>
         /// Gets the song detail.
         /// </summary>

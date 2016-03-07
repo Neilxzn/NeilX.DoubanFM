@@ -10,6 +10,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
     public interface IMusicPlayerController
     {
         void SetupHandler();
+
         void Play();
         void Pause();
         void SetPlaylist(IList<Song> tracks);

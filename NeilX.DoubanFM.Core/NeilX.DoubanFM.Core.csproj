@@ -141,9 +141,7 @@
     <Compile Include="Model\UserInfo.cs" />
     <EmbeddedResource Include="Properties\NeilX.DoubanFM.Core.rd.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Lyrics\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
