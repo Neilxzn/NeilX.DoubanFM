@@ -92,6 +92,9 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\Images\搜索.png" />
+    <Content Include="Assets\Images\红心.png" />
+    <Content Include="Assets\Images\音乐.png" />
     <Content Include="SampleMedias\ring4.jpg" />
     <Content Include="SampleMedias\ring4.mp3" />
     <None Include="project.json" />

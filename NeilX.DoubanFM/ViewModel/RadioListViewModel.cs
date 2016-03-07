@@ -76,6 +76,17 @@ namespace NeilX.DoubanFM.ViewModel
             }
         }
 
+        private ChannelGroup[] _othersFMs;
+
+        public ChannelGroup[] OthersFMs
+        {
+            get { return _othersFMs; }
+            set
+            {
+                Set(ref _othersFMs, value);
+            }
+        }
+
 
         public RadioListViewModel()
         {
@@ -85,7 +96,7 @@ namespace NeilX.DoubanFM.ViewModel
         private async void InitChannelGroup()
         {
             var channelground = await DoubanFMService.GetRecommendedChannels();
-            if (channelground!=null)
+            if (channelground != null)
             {
                 MyFM = channelground[0];
                 ArtistFM = channelground[1];
@@ -94,7 +105,7 @@ namespace NeilX.DoubanFM.ViewModel
                 StyleSongFM = channelground[4];
                 MoodFM = channelground[5];
                 BrandFM = channelground[6];
-                
+                OthersFMs = channelground;
             }
             else
             {

@@ -11,6 +11,20 @@
     mc:Ignorable="d"  DataContext="{Binding Source={StaticResource Locator},Path=Main}">
     <Page.Resources>
         <convert:IsPlayingConverter x:Key="IsPlayConverter"/>
+        <SolidColorBrush x:Key="GrayForeground" Color="#FF666666"/>
+        <SolidColorBrush x:Key="PaneBackground" Color="#FFF3F3F5"/>
+        <SolidColorBrush x:Key="ContentBackground" Color="#FFFAFAFC"/>
+        <Style x:Key="paneContentTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="6,0,0,0"/>
+            <Setter Property="Foreground" Value="{StaticResource GrayForeground}"/>
+        </Style>
+        <Style x:Key="MDL2IconTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+        </Style>
         <DataTemplate x:Key="MenuListItemDataTemplate" x:DataType="controlsModel:MenuListItem">
             <Grid HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
@@ -21,27 +35,18 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-
                 <Grid Grid.Column="0"
-                      Width="44"
-                      Height="44">
-                    <Path Width="30"
-                          Height="30"
+                      Width="40"
+                      Height="40">
+                    <Path Width="20"
+                          Height="20"
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center"
                           Data="{x:Bind Icon, Mode=OneWay}"
-                          Fill="CadetBlue"
+                          Fill="{StaticResource GrayForeground}"
                           Stretch="Uniform" />
                 </Grid>
-
-                <Grid Grid.Column="1">
-                    <TextBlock Margin="6,0,0,0"
-                               VerticalAlignment="Center"
-                               FontSize="18"
-                               Foreground="CadetBlue"
-                               Text="{x:Bind Name, Mode=OneWay}" />
-                </Grid>
-
+                <TextBlock Grid.Column="1" Style="{StaticResource paneContentTextStyle}" Text="{x:Bind Name, Mode=OneWay}" />
             </Grid>
         </DataTemplate>
         <Style x:Key="ListViewItemStyle" TargetType="ListViewItem">
@@ -78,18 +83,19 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
     </Page.Resources>
-    <Grid  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{StaticResource ContentBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <SplitView x:Name="MySplitView"   DisplayMode="CompactOverlay" CompactPaneLength="48" OpenPaneLength="200">
+        <SplitView x:Name="MySplitView" Foreground="{StaticResource GrayForeground}"  PaneBackground="{StaticResource PaneBackground}"   DisplayMode="CompactOverlay" CompactPaneLength="40" OpenPaneLength="200">
             <SplitView.Pane>
-                <RelativePanel>
-                    <StackPanel  Margin="12,12" PointerPressed="Hambeger_PointerPressed" x:Name="Hambeger"  RelativePanel.AlignTopWithPanel="True">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="28" Text="&#xE700;" />
+                <RelativePanel >
+                    <StackPanel  Margin="10,10" PointerPressed="Hambeger_PointerPressed" x:Name="Hambeger"  RelativePanel.AlignTopWithPanel="True">
+                        <TextBlock  Style="{StaticResource MDL2IconTextStyle}" Text="&#xE700;" />
                     </StackPanel>
                     <StackPanel RelativePanel.Below="Hambeger">
                         <ListView x:Name="FunctionsListView"
@@ -116,10 +122,20 @@
                             </StackPanel>
                         </ListBoxItem>
                     </ListBox>-->
-                    <StackPanel Orientation="Horizontal" RelativePanel.AlignBottomWithPanel="True" Margin="13,0,0,5">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="28" Text="&#xE713;" PointerPressed="{x:Bind Main.OpenSettingView,Mode=OneWay}"/>
-                        <TextBlock FontSize="20" Margin="20,0,0,0"> 设 置</TextBlock>
-                    </StackPanel>
+                    <Grid HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  Background="Transparent" RelativePanel.AlignBottomWithPanel="True"
+                  >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0"  Width="40"  Height="40">
+                            <TextBlock Margin="10" Style="{StaticResource MDL2IconTextStyle}" Text="&#xE713;" PointerPressed="{x:Bind Main.OpenSettingView,Mode=OneWay}"/>
+                        </Grid>
+                            <TextBlock  Grid.Column="1"    Style="{StaticResource paneContentTextStyle}" Text="设置" />
+                    </Grid>
+
                 </RelativePanel>
             </SplitView.Pane>
             <SplitView.Content>
@@ -141,14 +157,14 @@
                     </StackPanel>
                 </Grid>-->
             </SplitView.Content>
-           
+
         </SplitView>
-        <Button Content="test" Click="Button_Click"/>
+        <!--<Button Content="test" Click="Button_Click"/>-->
         <!--音乐播放界面-->
         <Lcontrols:PlayingControl Visibility="{Binding ElementName=Player,Path=IsOpenPlayingView}" CurrentTrack="{x:Bind Main.PlayerSession.CurrentTrack,Mode=OneWay}" Position="{x:Bind Main.PlayerSession.Position,Mode=OneWay}"/>
         <!--音乐播放面板-->
         <Lcontrols:PlayerControl x:Name="Player" Grid.Row="1"  PlayerSession="{x:Bind Main.PlayerSession,Mode=OneWay}"/>
-      
+
     </Grid>
 
 </Page>
