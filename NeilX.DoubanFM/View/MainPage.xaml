@@ -11,20 +11,8 @@
     mc:Ignorable="d"  DataContext="{Binding Source={StaticResource Locator},Path=Main}">
     <Page.Resources>
         <convert:IsPlayingConverter x:Key="IsPlayConverter"/>
-        <SolidColorBrush x:Key="GrayForeground" Color="#FF666666"/>
-        <SolidColorBrush x:Key="PaneBackground" Color="#FFF3F3F5"/>
-        <SolidColorBrush x:Key="ContentBackground" Color="#FFFAFAFC"/>
-        <Style x:Key="paneContentTextStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="Margin" Value="6,0,0,0"/>
-            <Setter Property="Foreground" Value="{StaticResource GrayForeground}"/>
-        </Style>
-        <Style x:Key="MDL2IconTextStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
-        </Style>
+ 
+
         <DataTemplate x:Key="MenuListItemDataTemplate" x:DataType="controlsModel:MenuListItem">
             <Grid HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"

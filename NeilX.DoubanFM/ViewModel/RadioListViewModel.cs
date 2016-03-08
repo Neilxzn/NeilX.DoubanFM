@@ -3,6 +3,7 @@ using NeilX.DoubanFM.Core;
 using NeilX.DoubanFM.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,9 +77,9 @@ namespace NeilX.DoubanFM.ViewModel
             }
         }
 
-        private ChannelGroup[] _othersFMs;
+        private ObservableCollection< ChannelGroup> _othersFMs;
 
-        public ChannelGroup[] OthersFMs
+        public ObservableCollection<ChannelGroup> OthersFMs
         {
             get { return _othersFMs; }
             set
@@ -99,13 +100,13 @@ namespace NeilX.DoubanFM.ViewModel
             if (channelground != null)
             {
                 MyFM = channelground[0];
-                ArtistFM = channelground[1];
-                SingleSongFM = channelground[2];
-                YearsFM = channelground[3];
-                StyleSongFM = channelground[4];
-                MoodFM = channelground[5];
-                BrandFM = channelground[6];
-                OthersFMs = channelground;
+                //ArtistFM = channelground[1];
+                //SingleSongFM = channelground[2];
+                //YearsFM = channelground[3];
+                //StyleSongFM = channelground[4];
+                //MoodFM = channelground[5];
+                //BrandFM = channelground[6];
+                OthersFMs = new ObservableCollection<ChannelGroup>(channelground.Where(o=>o!=MyFM));
             }
             else
             {

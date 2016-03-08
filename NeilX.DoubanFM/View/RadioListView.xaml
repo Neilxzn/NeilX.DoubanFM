@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator},Path=RadioListVM}">
     <Page.Resources>
+        <CollectionViewSource x:Name="FmsCollection" IsSourceGrouped="True" ItemsPath="Channels" Source="{Binding OthersFMs}"/>
         <Style x:Key="MyFMImageStyle" TargetType="Image">
             <Setter Property="Width" Value="80"/>
             <Setter Property="Stretch" Value="Uniform"/>
@@ -15,13 +16,66 @@
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
+        <Style x:Key="MainTextStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseAppTextBlockStyle}">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
         <Style x:Key="spiltRecStyle" TargetType="Rectangle">
             <Setter Property="Width" Value="1"/>
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="Fill" Value="#FFE8EEEA"/>
         </Style>
+        <DataTemplate x:Key="FMsHeaderDataTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <!--Image-->
+                <TextBlock  Text="{Binding GroupName}" Style="{StaticResource MainTextStyle}"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="FmsChannelDataTemplate">
+            <Grid >
+                <StackPanel  Orientation="Vertical" Margin="20,10" >
+                    <Image Source="{Binding CoverUrl}" Stretch="Fill" Height="120" Width="120" />
+                    <TextBlock Margin="2" Text="{Binding Name}" Style="{StaticResource MainTextStyle}" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+        <Style x:Key="FMsGroupItemStyle" TargetType="GroupItem">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="5,2"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GroupItem">
+                        <Grid BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <ContentControl x:Name="HeaderContent" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                            Content="{TemplateBinding Content}" IsTabStop="False" Margin="{TemplateBinding Padding}" 
+                                            TabIndex="0"/>
+                            <ItemsControl x:Name="ItemsControl" IsTabStop="False" ItemsSource="{Binding GroupItems}" Grid.Row="1"
+                                          TabIndex="1" TabNavigation="Once">
+                                <ItemsControl.ItemContainerTransitions>
+                                    <TransitionCollection>
+                                        <AddDeleteThemeTransition/>
+                                        <ContentThemeTransition/>
+                                        <ReorderThemeTransition/>
+                                        <EntranceThemeTransition IsStaggeringEnabled="False"/>
+                                    </TransitionCollection>
+                                </ItemsControl.ItemContainerTransitions>
+                            </ItemsControl>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{StaticResource ContentBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -29,7 +83,7 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
         </Grid>
-        <Grid Grid.Row="1" Margin="30">
+        <Grid Grid.Row="1" Margin="40">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -52,8 +106,11 @@
                 <TextBlock Text="{Binding MyFM.Channels[2].Name,Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </StackPanel>
         </Grid>
-        <GridView Grid.Row="1">
-            
+        <GridView Grid.Row="2" Margin="40,0,0,0" ItemsSource="{Binding Source={StaticResource FmsCollection}}" ItemTemplate="{StaticResource FmsChannelDataTemplate}">
+            <GridView.GroupStyle>
+                <GroupStyle HeaderTemplate="{StaticResource FMsHeaderDataTemplate}" ContainerStyle="{StaticResource FMsGroupItemStyle}"/>
+            </GridView.GroupStyle>
+
         </GridView>
     </Grid>
 </Page>
