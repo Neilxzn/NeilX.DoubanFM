@@ -26,7 +26,7 @@ namespace NeilX.DoubanFM.View
         public RadioListViewModel RadioListVM => (RadioListViewModel)DataContext;
         public RadioListView()
         {
-            this.InitializeComponent();
+            this.InitializeComponent(); 
         }
     }
 }
