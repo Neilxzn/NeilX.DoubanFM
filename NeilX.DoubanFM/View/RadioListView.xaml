@@ -10,18 +10,8 @@
     mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator},Path=RadioListVM}">
     <Page.Resources>
         <CollectionViewSource x:Name="FmsCollection" IsSourceGrouped="True" ItemsPath="Channels" Source="{Binding OthersFMs}"/>
-        <Style x:Key="MyFMImageStyle" TargetType="Image">
-            <Setter Property="Width" Value="80"/>
-            <Setter Property="Stretch" Value="Uniform"/>
-        </Style>
-        <Style x:Key="MyFMTextStyle" TargetType="TextBlock">
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
-        <Style x:Key="MainTextStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseAppTextBlockStyle}">
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-        </Style>
+
+
         <Style x:Key="spiltRecStyle" TargetType="Rectangle">
             <Setter Property="Width" Value="1"/>
             <Setter Property="VerticalAlignment" Value="Stretch"/>
@@ -34,18 +24,19 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <!--Image-->
-                <TextBlock  Text="{Binding GroupName}" Style="{StaticResource MainTextStyle}"/>
+                <TextBlock  Text="{Binding GroupName}" Style="{StaticResource MainTextStyle18}"/>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="FmsOneChannelDataTemplate">
-            <Grid >
-                <custom:PointServiceContentControl Margin="10">
-                    <StackPanel   Background="Transparent"  Orientation="Vertical"  >
+            <custom:PointServiceContentControl>
+                <Grid>
+                    <StackPanel   Background="Transparent"   Orientation="Vertical"  >
                         <Image Source="{Binding CoverUrl}" Stretch="Fill" Height="120" Width="120" />
-                        <TextBlock Margin="2" Text="{Binding Name}" Style="{StaticResource MainTextStyle}" />
+                        <TextBlock Margin="2" Text="{Binding Name}" Style="{StaticResource MainTextStyle18}" />
                     </StackPanel>
-                </custom:PointServiceContentControl>
-            </Grid>
+                </Grid>
+            </custom:PointServiceContentControl>
+
         </DataTemplate>
         <Style x:Key="FMsGroupItemStyle" TargetType="GroupItem">
             <Setter Property="BorderThickness" Value="0"/>
@@ -120,7 +111,7 @@
                 <TextBlock Text="{Binding MyFM.Channels[2].Name,Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </StackPanel>
         </Grid>
-        <GridView Grid.Row="2" Margin="40,0,0,0"  ItemsSource="{Binding Source={StaticResource FmsCollection}}"  ItemTemplateSelector="{StaticResource FMsItemTemplateSelector}" >
+        <GridView Grid.Row="2" Margin="40,0,0,0"  ItemsSource="{Binding Source={StaticResource FmsCollection}}"  ItemTemplateSelector="{StaticResource FMsItemTemplateSelector}" ItemContainerStyle="{StaticResource FMsGridViewItemStyle}" >
             <GridView.GroupStyle>
                 <GroupStyle HeaderTemplate="{StaticResource FMsHeaderDataTemplate}"  ContainerStyle="{StaticResource FMsGroupItemStyle}"  Panel="{StaticResource FmsItemsPanelTemplate}" >
                 </GroupStyle>

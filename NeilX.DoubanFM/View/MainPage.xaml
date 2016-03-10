@@ -7,11 +7,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:convert="using:NeilX.DoubanFM.Convertors"
     xmlns:Lcontrols="using:NeilX.DoubanFM.UserControls"
+    xmlns:custom="using:NeilX.DoubanFM.CustomControl"
     xmlns:controlsModel="using:NeilX.DoubanFM.UserControls.ControlsModel"
     mc:Ignorable="d"  DataContext="{Binding Source={StaticResource Locator},Path=Main}">
     <Page.Resources>
         <convert:IsPlayingConverter x:Key="IsPlayConverter"/>
- 
 
         <DataTemplate x:Key="MenuListItemDataTemplate" x:DataType="controlsModel:MenuListItem">
             <Grid HorizontalAlignment="Stretch"
@@ -94,6 +94,7 @@
                                   SelectionChanged="{x:Bind Main.MenuListSelectionChanged,Mode=OneWay}"
                                   SelectionMode="Single"
                                   />
+                        <Ellipse x:Name="ell" Width="30"  Height="30" Fill="Red"/>
                     </StackPanel>
                     <!--<ListBox x:Name="menuList" SelectionMode="Single" SelectionChanged="menuList_SelectionChanged"
                              RelativePanel.Below="Hambeger">

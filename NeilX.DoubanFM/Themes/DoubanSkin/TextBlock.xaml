@@ -18,4 +18,12 @@
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
     </Style>
+    <Style x:Key="MyFMTextStyle" TargetType="TextBlock">
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    <Style x:Key="MainTextStyle18" TargetType="TextBlock" BasedOn="{StaticResource BaseAppTextBlockStyle}">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
 </ResourceDictionary>
