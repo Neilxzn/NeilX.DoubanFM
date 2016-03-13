@@ -16,6 +16,7 @@ using NeilX.DoubanFM.UserControls;
 using NeilX.DoubanFM.Core;
 using Kfstorm.LrcParser;
 using Windows.Storage.Pickers;
+using NeilX.DoubanFM.CustomControl;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -68,7 +69,7 @@ namespace NeilX.DoubanFM.View
         /// This parameter is typically used to configure the page.</param>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-
+            PointServiceContentControl.AnimationObject = ell;
             //var session = new Session(new ServerConnection("02646d3fb69a52ff072d47bf23cef8fd", "cde5d61429abcd7c", "radio_iphone", "100", new Uri("http://www.douban.com/mobile/fm"), Guid.NewGuid().ToString("N")));
             //var player = new Player(session);
             //var discovery = new Discovery(session);

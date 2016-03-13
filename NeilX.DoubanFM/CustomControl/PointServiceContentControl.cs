@@ -18,24 +18,7 @@ namespace NeilX.DoubanFM.CustomControl
 {
     public class PointServiceContentControl:ContentControl
     {
-        public static Ellipse Ell;
         public static UIElement  AnimationObject { get; set; }
-
-
-
-        public static UIElement GetAnimationElement(DependencyObject obj)
-        {
-            return (UIElement)obj.GetValue(AnimationElementProperty);
-        }
-
-        public static void SetAnimationElement(DependencyObject obj, UIElement value)
-        {
-            obj.SetValue(AnimationElementProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for AnimationElement.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty AnimationElementProperty =
-            DependencyProperty.RegisterAttached("AnimationElement", typeof(UIElement), typeof(PointServiceContentControl), new PropertyMetadata(null));
 
 
 
@@ -48,26 +31,26 @@ namespace NeilX.DoubanFM.CustomControl
             Debug.WriteLine(_point.Position);
             if (root != null)
             {
-                DoubleAnimation doubleanimationX = new DoubleAnimation();
-                doubleanimationX.Duration = TimeSpan.FromSeconds(0.8);
-                doubleanimationX.To = 0;
-                doubleanimationX.From = _point.Position.X;
-                doubleanimationX.AutoReverse = false;
-                Storyboard.SetTarget(doubleanimationX, Ell);
-                Storyboard.SetTargetProperty(doubleanimationX, "(UIElement.RenderTransform).(CompositeTransform.TranslateX)");
-                DoubleAnimation doubleanimationY = new DoubleAnimation();
-                doubleanimationY.Duration = TimeSpan.FromSeconds(0.8);
-                doubleanimationY.To = 500;
-                doubleanimationY.From = _point.Position.Y;
-                doubleanimationY.AutoReverse = false;
-                Storyboard.SetTarget(doubleanimationY, Ell);
-                Storyboard.SetTargetProperty(doubleanimationY, "(UIElement.RenderTransform).(CompositeTransform.TranslateY)");
-                Storyboard storyboard = new Storyboard();
-                storyboard.Children.Add(doubleanimationX);
-                storyboard.Children.Add(doubleanimationY);
-                //storyboard.Completed += Storyboard_Completed;
-                Ell.Visibility = Visibility.Visible;
-                storyboard.Begin();
+                //DoubleAnimation doubleanimationX = new DoubleAnimation();
+                //doubleanimationX.Duration = TimeSpan.FromSeconds(0.8);
+                //doubleanimationX.To = 0;
+                //doubleanimationX.From = _point.Position.X;
+                //doubleanimationX.AutoReverse = false;
+                //Storyboard.SetTarget(doubleanimationX, AnimationObject);
+                //Storyboard.SetTargetProperty(doubleanimationX, "(UIElement.RenderTransform).(CompositeTransform.TranslateX)");
+                //DoubleAnimation doubleanimationY = new DoubleAnimation();
+                //doubleanimationY.Duration = TimeSpan.FromSeconds(0.8);
+                //doubleanimationY.To = 500;
+                //doubleanimationY.From = _point.Position.Y;
+                //doubleanimationY.AutoReverse = false;
+                //Storyboard.SetTarget(doubleanimationY, AnimationObject);
+                //Storyboard.SetTargetProperty(doubleanimationY, "(UIElement.RenderTransform).(CompositeTransform.TranslateY)");
+                //Storyboard storyboard = new Storyboard();
+                //storyboard.Children.Add(doubleanimationX);
+                //storyboard.Children.Add(doubleanimationY);
+                ////storyboard.Completed += Storyboard_Completed;
+                //AnimationObject.Visibility = Visibility.Visible;
+                //storyboard.Begin();
 
 
             }

@@ -94,7 +94,14 @@
                                   SelectionChanged="{x:Bind Main.MenuListSelectionChanged,Mode=OneWay}"
                                   SelectionMode="Single"
                                   />
-                        <Ellipse x:Name="ell" Width="30"  Height="30" Fill="Red"/>
+                        <Ellipse x:Name="ell" Width="30"  Height="30" Fill="Red">
+                            <Ellipse.RenderTransform>
+                                <TransformGroup>
+                                    <TranslateTransform/>
+                                    <CompositeTransform/>
+                                </TransformGroup>
+                            </Ellipse.RenderTransform>
+                        </Ellipse>
                     </StackPanel>
                     <!--<ListBox x:Name="menuList" SelectionMode="Single" SelectionChanged="menuList_SelectionChanged"
                              RelativePanel.Below="Hambeger">
