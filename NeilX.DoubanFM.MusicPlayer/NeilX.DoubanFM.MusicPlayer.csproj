@@ -107,6 +107,8 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackgroundMediaPlayerClient.cs" />
+    <Compile Include="Controller\IMediaPlayer.cs" />
     <Compile Include="Controller\IMusicPlayerController.cs" />
     <Compile Include="Controller\IMusicPlayerControllerHandler.cs" />
     <Compile Include="Controller\MusicPlayerController.cs" />

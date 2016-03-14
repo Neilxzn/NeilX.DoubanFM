@@ -108,8 +108,10 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AudioPlayerTask\AudioPlayerTask.cs" />
-    <Compile Include="AudioPlayerTask\BackgroundMediaPlayerClient.cs" />
+    <Compile Include="AudioPlayer\AudioPlayerTask.cs" />
+    <Compile Include="AudioPlayer\BackgroundMediaPlayerServer.cs" />
+    <Compile Include="AudioPlayer\IBackgroundMediaPlayerHandler.cs" />
+    <Compile Include="AudioPlayer\IMediaPlayer.cs" />
     <Compile Include="Helper\AudioTaskHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskConstant.cs" />
