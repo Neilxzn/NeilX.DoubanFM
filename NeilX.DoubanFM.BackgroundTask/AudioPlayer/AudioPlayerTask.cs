@@ -15,6 +15,8 @@ using NeilX.DoubanFM.MusicPlayer;
 using NeilX.DoubanFM.MusicPlayer.Messages;
 using NeilX.DoubanFM.Core;
 using NeilX.DoubanFM.BackgroundTask.Helper;
+using NeilX.DoubanFM.MusicPlayer.Rpc;
+using Windows.Foundation.Collections;
 
 namespace NeilX.DoubanFM.BackgroundTask
 {
@@ -32,24 +34,17 @@ namespace NeilX.DoubanFM.BackgroundTask
 
         #region IBackgroundTask and IBackgroundTaskInstance Interface Members and handlers
 
+        private BackgroundMediaPlayerServer server;
         public void Run(IBackgroundTaskInstance taskInstance)
         {
             Debug.WriteLine("Background Audio Task " + taskInstance.Task.Name + " starting...");
+            deferral = taskInstance.GetDeferral();
+            server = new BackgroundMediaPlayerServer();
+            server.InitialServer();
+            ValueSet valueSet =  new ValueSet();
+            valueSet["MessageId"]= BackgroundMediaPlayerServer.BackgroundMediaPlayerActivatedMessageKey;
+            BackgroundMediaPlayer.SendMessageToForeground(valueSet);
 
-
-            // Initialize SystemMediaTransportControls (SMTC) for integration with
-            // the Universal Volume Control (UVC).
-            //
-            // The UI for the UVC must update even when the foreground process has been terminated
-            // and therefore the SMTC is configured and updated from the background task.
-
-            AttachMessageHandlers();
-            ActivateHandler();
-            InitialSTMC();
-            CheckOutAppState();
-
-            deferral = taskInstance.GetDeferral(); 
-            backgroundTaskStarted.Set();
 
             taskInstance.Task.Completed += TaskCompleted;
             taskInstance.Canceled += new BackgroundTaskCanceledEventHandler(OnCanceled); 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Media.Playback;
 
-namespace NeilX.DoubanFM.BackgroundTask.AudioPlayer
+namespace NeilX.DoubanFM.MusicPlayer.Rpc
 {
     interface IBackgroundMediaPlayerServerHandler
     {

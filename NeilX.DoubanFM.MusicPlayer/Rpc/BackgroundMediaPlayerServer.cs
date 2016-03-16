@@ -11,12 +11,12 @@ using Windows.Media;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 
-namespace NeilX.DoubanFM.BackgroundTask.AudioPlayer
+namespace NeilX.DoubanFM.MusicPlayer.Rpc
 {
     public sealed class BackgroundMediaPlayerServer:IMediaPlayer    
     {
-        const string BackgroundMediaPlayerActivatedMessageKey = @"Activated";
-        const string BackgroundMediaPlayerUserMessageKey = @"UserMessage";
+        public  const string BackgroundMediaPlayerActivatedMessageKey = @"Activated";
+        public const string BackgroundMediaPlayerUserMessageKey = @"UserMessage";
         private IBackgroundMediaPlayerServerHandler _audioHandler;
         private MediaPlayer mediaPlayer;
 
@@ -75,11 +75,12 @@ namespace NeilX.DoubanFM.BackgroundTask.AudioPlayer
 
         public void InitialServer()
         {
+            ActivateHandler();
             AttachMessageHandlers();
 
             ConfigureMediaPlayer();
 
-            ActivateHandler();
+          
         }
 
 
@@ -101,6 +102,7 @@ namespace NeilX.DoubanFM.BackgroundTask.AudioPlayer
 
         private void ActivateHandler()
         {
+            _audioHandler = new BackgroundMediaPlayerHandler();
             _audioHandler.OnActivated(this);
         }
 

@@ -10,7 +10,7 @@ using Windows.Media;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 
-namespace NeilX.DoubanFM.BackgroundTask.AudioPlayer
+namespace NeilX.DoubanFM.MusicPlayer.Rpc
 {
     public interface IMediaPlayer
     {

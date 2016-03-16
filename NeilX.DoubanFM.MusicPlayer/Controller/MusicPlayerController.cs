@@ -1,35 +1,87 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Media.Playback;
 using NeilX.DoubanFM.MusicPlayer.Messages;
 using NeilX.DoubanFM.Core;
+using NeilX.DoubanFM.MusicPlayer.Rpc;
 
 namespace NeilX.DoubanFM.MusicPlayer.Controller
 {
     public class MusicPlayerController:IMusicPlayerController
     {
-        private readonly MusicPlayer _musicPlayer;
-        private readonly IMusicPlayerControllerHandler _playerSession;
+        private readonly IMediaPlayer _musicPlayer;
+        private  IMusicPlayerControllerHandler _playerSession;
         private IList<Song> _playlist;
         private Song _currentTrack;
         private bool _playbackStartedPreviously ;
-
-        public MusicPlayerController(IMusicPlayerControllerHandler playSession)
+        private static MusicPlayerController _activedinstance;
+        private static int i = 0;
+        public MusicPlayerController(IMediaPlayer musicPlayer)
         {
-            _playerSession = playSession;
+            _musicPlayer = musicPlayer;
+            // _playerSession = playSession;
             _playbackStartedPreviously = false;
 
-        #region musicplayer
-        _musicPlayer = MusicPlayer.Instance;
-            _musicPlayer.CurrentPlayer.SeekCompleted += CurrentPlayer_SeekCompleted;
-            _musicPlayer.CurrentPlayer.MediaFailed += CurrentPlayer_MediaFailed;
-            _musicPlayer.CurrentPlayer.CurrentStateChanged += CurrentPlayer_CurrentStateChanged;
-            _musicPlayer.CurrentPlayer.MediaOpened += CurrentPlayer_MediaOpened;
-            _musicPlayer.OnReceiveMessage += _musicPlayer_OnReceiveMessage; 
+            #region musicplayer
+            //_musicPlayer = MusicPlayer.Instance;
+            _musicPlayer.SeekCompleted += _musicPlayer_SeekCompleted;
+            _musicPlayer.MediaOpened += _musicPlayer_MediaOpened;
+            _musicPlayer.MediaEnded += _musicPlayer_MediaEnded;
+            _musicPlayer.MediaFailed += _musicPlayer_MediaFailed;
+            _musicPlayer.CurrentStateChanged += _musicPlayer_CurrentStateChanged;
             #endregion
+            _activedinstance = this;
+            i = 1;
+        }
+
+        public static IMusicPlayerController GetActivedControllerInstance( IMusicPlayerControllerHandler handler )
+        {
+            var o = i;
+            if (_activedinstance==null)
+            {
+                throw new Exception("_activedinstance is null");
+            }
+            _activedinstance._playerSession = handler;
+            return _activedinstance;
+        }
+
+        public void OnReceiveMessage(object message)
+        {
+            
+        }
+
+        public void OnCanceled()
+        {
+            _musicPlayer.SeekCompleted -= _musicPlayer_SeekCompleted;
+            _musicPlayer.MediaOpened -= _musicPlayer_MediaOpened;
+            _musicPlayer.MediaEnded -= _musicPlayer_MediaEnded;
+            _musicPlayer.MediaFailed -= _musicPlayer_MediaFailed;
+            _musicPlayer.CurrentStateChanged -= _musicPlayer_CurrentStateChanged;
+        }
+        private void _musicPlayer_CurrentStateChanged(IMediaPlayer sender, object args)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void _musicPlayer_MediaFailed(IMediaPlayer sender, MediaPlayerFailedEventArgs args)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void _musicPlayer_MediaEnded(IMediaPlayer sender, object args)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void _musicPlayer_MediaOpened(IMediaPlayer sender, object args)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void _musicPlayer_SeekCompleted(IMediaPlayer sender, object args)
+        {
+            throw new NotImplementedException();
         }
 
         #region musicplayer event handler
@@ -80,14 +132,14 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
             }
             else
             {
-                _musicPlayer.CurrentPlayer.Play();
+               // _musicPlayer.CurrentPlayer.Play();
             }
 
         }
 
         public void Pause()
         {
-            _musicPlayer.CurrentPlayer.Pause();
+            //_musicPlayer.CurrentPlayer.Pause();
         }
 
         public void SetPlaylist(IList<Song> tracks)
@@ -124,17 +176,17 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
 
         public void AskPosition()
         {
-            _playerSession?.NotifyPosition(_musicPlayer.CurrentPlayer.Position);
+           // _playerSession?.NotifyPosition(_musicPlayer.CurrentPlayer.Position);
         }
 
         public void SetPosition(TimeSpan position)
         {
-            _musicPlayer.CurrentPlayer.Position = position;
+           // _musicPlayer.CurrentPlayer.Position = position;
         }
 
         public void SetVolume(double value)
         {
-            _musicPlayer.CurrentPlayer.Volume = value;
+            //_musicPlayer.CurrentPlayer.Volume = value;
         }
 
         public void AskPlaylist()
@@ -149,12 +201,12 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
 
         public void AskCurrentState()
         {
-            _playerSession?.NotifyControllerStateChanged(_musicPlayer.CurrentPlayer?.CurrentState ?? MediaPlayerState.Closed);
+           // _playerSession?.NotifyControllerStateChanged(_musicPlayer.CurrentPlayer?.CurrentState ?? MediaPlayerState.Closed);
         }
 
         public void AskDuration()
         {
-            _playerSession.NotifyDuration(_musicPlayer.CurrentPlayer.NaturalDuration);
+           // _playerSession.NotifyDuration(_musicPlayer.CurrentPlayer.NaturalDuration);
         }
 
 

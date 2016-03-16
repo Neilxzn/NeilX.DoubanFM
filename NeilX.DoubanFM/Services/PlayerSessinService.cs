@@ -12,6 +12,7 @@ using GalaSoft.MvvmLight.Threading;
 using System.Threading;
 using Microsoft.Practices.ServiceLocation;
 using NeilX.DoubanFM.Core;
+using NeilX.DoubanFM.MusicPlayer.Rpc;
 
 namespace NeilX.DoubanFM.Services
 {
@@ -22,6 +23,7 @@ namespace NeilX.DoubanFM.Services
         private static IMusicPlayerController _musicPlayerController;
         private readonly Timer _askPositionTimer;
         private static readonly TimeSpan _askPositionPeriod = TimeSpan.FromSeconds(0.25);
+        private readonly BackgroundMediaPlayerClient _client;
         private bool _autoPlay = false;
         private bool _canPrevious;
         private bool _canPause;
@@ -98,7 +100,7 @@ namespace NeilX.DoubanFM.Services
             private set
             {
                 if (Set(ref _playlist, value ?? new List<Song>()))
-                    _musicPlayerController.SetPlaylist(_playlist);
+                    _musicPlayerController?.SetPlaylist(_playlist);
             }
         }
 
@@ -109,7 +111,7 @@ namespace NeilX.DoubanFM.Services
             {
                 if (Set(ref _currentTrack, value))
                 {
-                    _musicPlayerController.SetCurrentTrack(value);
+                    _musicPlayerController?.SetCurrentTrack(value);
                     // _mtService.SetCurrentTrack(value);
                     OnCurrentTrackChanged();
                 }
@@ -162,14 +164,28 @@ namespace NeilX.DoubanFM.Services
         #endregion
         public PlayerSessionService()
         {
-            _musicPlayerController = new MusicPlayerController(this);
+            _client = new BackgroundMediaPlayerClient();
+            _client.MessageReceived += _client_MessageReceived;
+            _client.PlayerActivated += _client_PlayerActivated;
+           // _musicPlayerController = new MusicPlayerController(this);
             _askPositionTimer = new Timer(OnAskPosition, null, Timeout.InfiniteTimeSpan, _askPositionPeriod);
             LoadState();
-            DoubanFMService.Player.CurrentChannelChanged += DoubanFM_CurrentChannelChanged;
-            DoubanFMService.Player.CurrentSongChanged += DoubanFM_CurrentSongChanged;
+           // DoubanFMService.Player.CurrentChannelChanged += DoubanFM_CurrentChannelChanged;
+            //DoubanFMService.Player.CurrentSongChanged += DoubanFM_CurrentSongChanged;
         }
 
-       
+        private void _client_PlayerActivated(object sender, object e)
+        {
+            _musicPlayerController= MusicPlayerController.GetActivedControllerInstance(this);
+            _musicPlayerController.SetupHandler();
+        }
+
+        private void _client_MessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+            
+        }
+
+
 
         #region Public Methods
 
@@ -236,18 +252,18 @@ namespace NeilX.DoubanFM.Services
                 if (Math.Abs(oldValue.Subtract(value).TotalMilliseconds) > 100)
                 {
                     SuspendAskPosition();
-                    _musicPlayerController.SetPosition(value);
+                    _musicPlayerController?.SetPosition(value);
                 }
             }
         }
         private void OnPlayModeChanged()
         {
-            _musicPlayerController.SetPlayMode(PlayMode);
+            _musicPlayerController?.SetPlayMode(PlayMode);
         }
 
         private void OnVolumeChanged()
         {
-            _musicPlayerController.SetVolume(Math.Min(Math.Max(0.0, Volume / 100), 1.0));
+            _musicPlayerController?.SetVolume(Math.Min(Math.Max(0.0, Volume / 100), 1.0));
         }
 
         private void OnCurrentTrackChanged()
@@ -274,32 +290,32 @@ namespace NeilX.DoubanFM.Services
         private void Play()
         {
           //  PlaybackStatus = MediaPlaybackStatus.Changing;
-            _musicPlayerController.Play();
+            _musicPlayerController?.Play();
         }
 
         private void Pause()
         {
           //  PlaybackStatus = MediaPlaybackStatus.Changing;
-            _musicPlayerController.Pause();
+            _musicPlayerController?.Pause();
         }
 
         private void MoveNext()
         {
           //  PlaybackStatus = MediaPlaybackStatus.Changing;
             _autoPlay = true;
-            _musicPlayerController.MoveNext();
+            _musicPlayerController?.MoveNext();
         }
 
         private void MovePrevious()
         {
           //  PlaybackStatus = MediaPlaybackStatus.Changing;
             _autoPlay = true;
-            _musicPlayerController.MovePrevious();
+            _musicPlayerController?.MovePrevious();
         }
 
         private void OnAskPosition(object state)
         {
-            _musicPlayerController.AskPosition();
+            _musicPlayerController?.AskPosition();
         }
         private void SuspendAskPosition()
         {

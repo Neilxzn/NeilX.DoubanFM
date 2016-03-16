@@ -107,8 +107,6 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackgroundMediaPlayerClient.cs" />
-    <Compile Include="Controller\IMediaPlayer.cs" />
     <Compile Include="Controller\IMusicPlayerController.cs" />
     <Compile Include="Controller\IMusicPlayerControllerHandler.cs" />
     <Compile Include="Controller\MusicPlayerController.cs" />
@@ -122,11 +120,16 @@
     <Compile Include="Messages\StartPlaybackMessage.cs" />
     <Compile Include="Messages\TrackChangedMessage.cs" />
     <Compile Include="Messages\UpdatePlaylistMessage.cs" />
-    <Compile Include="MusicPlayer.cs" />
     <Compile Include="PlayList.cs" />
     <Compile Include="PlayListType.cs" />
     <Compile Include="PlayMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rpc\BackgroundMediaPlayerClient.cs" />
+    <Compile Include="Rpc\BackgroundMediaPlayerHandler.cs" />
+    <Compile Include="Rpc\BackgroundMediaPlayerServer.cs" />
+    <Compile Include="Rpc\IBackgroundMediaPlayerHandler.cs" />
+    <Compile Include="Rpc\IMediaPlayer.cs" />
+    <Compile Include="Rpc\MessageReceivedEventArgs.cs" />
     <EmbeddedResource Include="Properties\NeilX.DoubanFM.MusicPlayer.rd.xml" />
   </ItemGroup>
   <ItemGroup>
