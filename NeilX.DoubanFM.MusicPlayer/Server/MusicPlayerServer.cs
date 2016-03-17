@@ -11,13 +11,13 @@ using Windows.Media;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 
-namespace NeilX.DoubanFM.MusicPlayer.Rpc
+namespace NeilX.DoubanFM.MusicPlayer.Server
 {
-    public sealed class BackgroundMediaPlayerServer:IMediaPlayer    
+    public sealed class MusicPlayerServer:IMediaPlayer    
     {
         public  const string BackgroundMediaPlayerActivatedMessageKey = @"Activated";
         public const string BackgroundMediaPlayerUserMessageKey = @"UserMessage";
-        private IBackgroundMediaPlayerServerHandler _audioHandler;
+        private IMusicPlayerServerHandler _audioHandler;
         private MediaPlayer mediaPlayer;
 
         public event TypedEventHandler<IMediaPlayer, object> MediaOpened;
@@ -75,10 +75,13 @@ namespace NeilX.DoubanFM.MusicPlayer.Rpc
 
         public void InitialServer()
         {
-            ActivateHandler();
-            AttachMessageHandlers();
 
             ConfigureMediaPlayer();
+
+            ActivateHandler();
+
+            AttachMessageHandlers();
+
 
           
         }
@@ -102,7 +105,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Rpc
 
         private void ActivateHandler()
         {
-            _audioHandler = new BackgroundMediaPlayerHandler();
+            _audioHandler = new MusicPlayerServerHandler();
             _audioHandler.OnActivated(this);
         }
 
@@ -174,7 +177,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Rpc
             MediaOpened(this, args);
         }
 
-        public void SetMediaSource()
+        public void SetMediaSource(Song song )
         {
             //IMediaSource source = MediaSource.CreateFromUri(new Uri(mediaSource.Url));
             //MediaStreamSource streamSource;

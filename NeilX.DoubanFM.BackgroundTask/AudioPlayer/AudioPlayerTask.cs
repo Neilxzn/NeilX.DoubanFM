@@ -15,7 +15,7 @@ using NeilX.DoubanFM.MusicPlayer;
 using NeilX.DoubanFM.MusicPlayer.Messages;
 using NeilX.DoubanFM.Core;
 using NeilX.DoubanFM.BackgroundTask.Helper;
-using NeilX.DoubanFM.MusicPlayer.Rpc;
+using NeilX.DoubanFM.MusicPlayer.Server;
 using Windows.Foundation.Collections;
 
 namespace NeilX.DoubanFM.BackgroundTask
@@ -34,15 +34,16 @@ namespace NeilX.DoubanFM.BackgroundTask
 
         #region IBackgroundTask and IBackgroundTaskInstance Interface Members and handlers
 
-        private BackgroundMediaPlayerServer server;
+        private MusicPlayerServer server;
         public void Run(IBackgroundTaskInstance taskInstance)
         {
             Debug.WriteLine("Background Audio Task " + taskInstance.Task.Name + " starting...");
             deferral = taskInstance.GetDeferral();
-            server = new BackgroundMediaPlayerServer();
+            server = new MusicPlayerServer();
             server.InitialServer();
+
             ValueSet valueSet =  new ValueSet();
-            valueSet["MessageId"]= BackgroundMediaPlayerServer.BackgroundMediaPlayerActivatedMessageKey;
+            valueSet["MessageId"]= MusicPlayerServer.BackgroundMediaPlayerActivatedMessageKey;
             BackgroundMediaPlayer.SendMessageToForeground(valueSet);
 
 

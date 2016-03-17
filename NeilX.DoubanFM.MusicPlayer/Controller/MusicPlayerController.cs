@@ -4,46 +4,69 @@ using System.Linq;
 using Windows.Media.Playback;
 using NeilX.DoubanFM.MusicPlayer.Messages;
 using NeilX.DoubanFM.Core;
-using NeilX.DoubanFM.MusicPlayer.Rpc;
+using NeilX.DoubanFM.MusicPlayer.Server;
+using Windows.Media;
+using System.Diagnostics;
 
 namespace NeilX.DoubanFM.MusicPlayer.Controller
 {
     public class MusicPlayerController:IMusicPlayerController
     {
-        private readonly IMediaPlayer _musicPlayer;
-        private  IMusicPlayerControllerHandler _playerSession;
+        private readonly IMediaPlayer _player;
+        private  IMusicPlayerControllerHandler _controllerHandler;
         private IList<Song> _playlist;
+        private readonly MediaTransportControls _mtControls;
         private Song _currentTrack;
         private bool _playbackStartedPreviously ;
-        private static MusicPlayerController _activedinstance;
-        private static int i = 0;
+
         public MusicPlayerController(IMediaPlayer musicPlayer)
         {
-            _musicPlayer = musicPlayer;
-            // _playerSession = playSession;
+            _player = musicPlayer;
+            _controllerHandler = new MusicPlayerControllerHandler();
             _playbackStartedPreviously = false;
 
             #region musicplayer
-            //_musicPlayer = MusicPlayer.Instance;
-            _musicPlayer.SeekCompleted += _musicPlayer_SeekCompleted;
-            _musicPlayer.MediaOpened += _musicPlayer_MediaOpened;
-            _musicPlayer.MediaEnded += _musicPlayer_MediaEnded;
-            _musicPlayer.MediaFailed += _musicPlayer_MediaFailed;
-            _musicPlayer.CurrentStateChanged += _musicPlayer_CurrentStateChanged;
+            _player.SeekCompleted += _musicPlayer_SeekCompleted;
+            _player.MediaOpened += _musicPlayer_MediaOpened;
+            _player.MediaEnded += _musicPlayer_MediaEnded;
+            _player.MediaFailed += _musicPlayer_MediaFailed;
+            _player.CurrentStateChanged += _musicPlayer_CurrentStateChanged;
             #endregion
-            _activedinstance = this;
-            i = 1;
+
+            _mtControls = new MediaTransportControls(_player.SystemMediaTransportControls);
+            _mtControls.IsEnabled = _mtControls.IsPauseEnabled = _mtControls.IsPlayEnabled = true;
+            _mtControls.ButtonPressed += _mtControls_ButtonPressed;
+
         }
 
-        public static IMusicPlayerController GetActivedControllerInstance( IMusicPlayerControllerHandler handler )
+        private void _mtControls_ButtonPressed(object sender, SystemMediaTransportControlsButtonPressedEventArgs e)
         {
-            var o = i;
-            if (_activedinstance==null)
+            switch (e.Button)
             {
-                throw new Exception("_activedinstance is null");
+                case SystemMediaTransportControlsButton.Play:
+                    Debug.WriteLine("UVC play button pressed");
+                    //StartPlayback();
+                    break;
+                case SystemMediaTransportControlsButton.Pause:
+                    Debug.WriteLine("UVC pause button pressed");
+                    try
+                    {
+                        BackgroundMediaPlayer.Current.Pause();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                    }
+                    break;
+                case SystemMediaTransportControlsButton.Next:
+                    Debug.WriteLine("UVC next button pressed");
+                    //SkipToNext();
+                    break;
+                case SystemMediaTransportControlsButton.Previous:
+                    Debug.WriteLine("UVC previous button pressed");
+                    //SkipToPrevious();
+                    break;
             }
-            _activedinstance._playerSession = handler;
-            return _activedinstance;
         }
 
         public void OnReceiveMessage(object message)
@@ -53,67 +76,52 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
 
         public void OnCanceled()
         {
-            _musicPlayer.SeekCompleted -= _musicPlayer_SeekCompleted;
-            _musicPlayer.MediaOpened -= _musicPlayer_MediaOpened;
-            _musicPlayer.MediaEnded -= _musicPlayer_MediaEnded;
-            _musicPlayer.MediaFailed -= _musicPlayer_MediaFailed;
-            _musicPlayer.CurrentStateChanged -= _musicPlayer_CurrentStateChanged;
+            _player.SeekCompleted -= _musicPlayer_SeekCompleted;
+            _player.MediaOpened -= _musicPlayer_MediaOpened;
+            _player.MediaEnded -= _musicPlayer_MediaEnded;
+            _player.MediaFailed -= _musicPlayer_MediaFailed;
+            _player.CurrentStateChanged -= _musicPlayer_CurrentStateChanged;
         }
+        #region Player Event Handler
         private void _musicPlayer_CurrentStateChanged(IMediaPlayer sender, object args)
         {
-            throw new NotImplementedException();
+            // _controllerHandler?.NotifyControllerStateChanged(sender.CurrentState);
         }
 
         private void _musicPlayer_MediaFailed(IMediaPlayer sender, MediaPlayerFailedEventArgs args)
         {
-            throw new NotImplementedException();
+            _controllerHandler?.NotifyMediaFailed();
         }
 
         private void _musicPlayer_MediaEnded(IMediaPlayer sender, object args)
         {
-            throw new NotImplementedException();
+            _controllerHandler?.NotifyMediaEnd();
         }
 
         private void _musicPlayer_MediaOpened(IMediaPlayer sender, object args)
         {
-            throw new NotImplementedException();
+            _controllerHandler?.NotifyMediaOpened();
         }
 
         private void _musicPlayer_SeekCompleted(IMediaPlayer sender, object args)
         {
-            throw new NotImplementedException();
-        }
+            _controllerHandler?.NotifySeekCompleted();
+        } 
+        #endregion
 
         #region musicplayer event handler
 
-        private void CurrentPlayer_SeekCompleted(Windows.Media.Playback.MediaPlayer sender, object args)
-        {
-            _playerSession?.NotifySeekCompleted();
-        }
 
-        private void CurrentPlayer_MediaFailed(Windows.Media.Playback.MediaPlayer sender, Windows.Media.Playback.MediaPlayerFailedEventArgs args)
-        {
-            
-        }
-
-        private void CurrentPlayer_CurrentStateChanged(Windows.Media.Playback.MediaPlayer sender, object args)
-        {
-            _playerSession?.NotifyControllerStateChanged(sender.CurrentState);
-        }
-        private void CurrentPlayer_MediaOpened(Windows.Media.Playback.MediaPlayer sender, object args)
-        {
-            _playerSession?.NotifyMediaOpened();
-        }
-        private void _musicPlayer_OnReceiveMessage(Windows.Foundation.Collections.ValueSet message)
-        {
-            TrackChangedMessage trackChangedMessage;
-            if (MessageService.TryParseMessage(message, out trackChangedMessage))
-            {
-                // When foreground app is active change track based on background message
-                _playerSession?.NotifyCurrentTrackChanged(_playlist?.FirstOrDefault(s => s.Url == trackChangedMessage.SongUri));
-                _currentTrack = _playlist.FirstOrDefault(s => s.Url == trackChangedMessage.SongUri);
-            }
-        }
+        //private void _musicPlayer_OnReceiveMessage(Windows.Foundation.Collections.ValueSet message)
+        //{
+        //    TrackChangedMessage trackChangedMessage;
+        //    if (MessageService.TryParseMessage(message, out trackChangedMessage))
+        //    {
+        //        // When foreground app is active change track based on background message
+        //        _controllerHandler?.NotifyCurrentTrackChanged(_playlist?.FirstOrDefault(s => s.Url == trackChangedMessage.SongUri));
+        //        _currentTrack = _playlist.FirstOrDefault(s => s.Url == trackChangedMessage.SongUri);
+        //    }
+        //}
 
         #endregion
 
@@ -145,7 +153,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
         public void SetPlaylist(IList<Song> tracks)
         {
             _playlist = tracks;
-            _playerSession.NotifyPlaylist(tracks);
+            _controllerHandler.NotifyPlaylist(tracks);
             MessageService.SendMessageToBackground(new UpdatePlaylistMessage(tracks));
         }
 
@@ -191,12 +199,12 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
 
         public void AskPlaylist()
         {
-            _playerSession?.NotifyPlaylist(_playlist);
+            _controllerHandler?.NotifyPlaylist(_playlist);
         }
 
         public void AskCurrentTrack()
         {
-            _playerSession.NotifyCurrentTrackChanged(_currentTrack);
+            _controllerHandler.NotifyCurrentTrackChanged(_currentTrack);
         }
 
         public void AskCurrentState()

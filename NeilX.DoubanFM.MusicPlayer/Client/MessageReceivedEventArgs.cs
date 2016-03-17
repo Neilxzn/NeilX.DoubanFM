@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NeilX.DoubanFM.MusicPlayer.Rpc
+namespace NeilX.DoubanFM.MusicPlayer.Client
 {
      public sealed class MessageReceivedEventArgs
     {

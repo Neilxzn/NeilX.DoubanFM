@@ -1,0 +1,132 @@
+﻿using NeilX.DoubanFM.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Windows.Media;
+
+namespace NeilX.DoubanFM.MusicPlayer.Server
+{
+    public class MediaTransportControls
+    {
+        private readonly SystemMediaTransportControls _smtc;
+
+        public bool IsEnabled
+        {
+            get { return _smtc.IsEnabled; }
+            set { _smtc.IsEnabled = value; }
+        }
+
+        public bool IsPlayEnabled
+        {
+            get { return _smtc.IsPlayEnabled; }
+            set { _smtc.IsPlayEnabled = value; }
+        }
+
+        public bool IsPauseEnabled
+        {
+            get { return _smtc.IsPauseEnabled; }
+            set { _smtc.IsPauseEnabled = value; }
+        }
+
+        public MediaPlaybackStatus PlaybackStatus
+        {
+            get { return _smtc.PlaybackStatus; }
+            set { _smtc.PlaybackStatus = value; }
+        }
+
+        public bool CanNext
+        {
+            get { return _smtc.IsNextEnabled; }
+            set { _smtc.IsNextEnabled = value; }
+        }
+
+        public bool CanPrevious
+        {
+            get { return _smtc.IsPreviousEnabled; }
+            set { _smtc.IsPreviousEnabled = value; }
+        }
+
+        public event EventHandler<SystemMediaTransportControlsButtonPressedEventArgs> ButtonPressed;
+
+        public MediaTransportControls(SystemMediaTransportControls smtc)
+        {
+            _smtc = smtc;
+            PlaybackStatus = MediaPlaybackStatus.Closed;
+            _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
+            _smtc.DisplayUpdater.Update();
+            _smtc.ButtonPressed += _smtc_ButtonPressed;
+        }
+
+        public MediaTransportControls()
+            :this(SystemMediaTransportControls.GetForCurrentView())
+        {
+
+        }
+
+        private void _smtc_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
+        {
+            ButtonPressed?.Invoke(this, args);
+        }
+
+        public void SetCurrentTrack(Song value)
+        {
+            var updater = _smtc.DisplayUpdater;
+            var musicProp = updater.MusicProperties;
+            if (value != null)
+            {
+                musicProp.Title = value.Title;
+                musicProp.Artist = value.Artist;
+                musicProp.AlbumTitle = value.AlbumTitle;
+                musicProp.AlbumArtist = value.Artist;
+            }
+            else
+            {
+                updater.ClearAll();
+                PlaybackStatus = MediaPlaybackStatus.Closed;
+            }
+            updater.Update();
+            //if (item == null)
+            //{
+            //    smtc.PlaybackStatus = MediaPlaybackStatus.Stopped;
+            //    smtc.DisplayUpdater.MusicProperties.Title = string.Empty;
+            //    smtc.DisplayUpdater.Update();
+            //    return;
+            //}
+
+            //smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
+            //smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
+            //smtc.DisplayUpdater.MusicProperties.Title = item.Source.CustomProperties[TaskConstant.TitleKey] as string;
+
+            //var albumArtUri = item.Source.CustomProperties[TaskConstant.AlbumArtKey] as Uri;
+            //if (albumArtUri != null)
+            //    smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(albumArtUri);
+            //else
+            //    smtc.DisplayUpdater.Thumbnail = null;
+        }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // 要检测冗余调用
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    PlaybackStatus = MediaPlaybackStatus.Closed;
+                    _smtc.ButtonPressed -= _smtc_ButtonPressed;
+                }
+                disposedValue = true;
+            }
+        }
+
+        // 添加此代码以正确实现可处置模式。
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
+    }
+}

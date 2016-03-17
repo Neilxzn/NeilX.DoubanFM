@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeilX.DoubanFM.MusicPlayer.Controller;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -7,16 +8,17 @@ using System.Threading.Tasks;
 using Windows.Foundation.Collections;
 using Windows.Media.Playback;
 
-namespace NeilX.DoubanFM.MusicPlayer.Rpc
+namespace NeilX.DoubanFM.MusicPlayer.Client
 {
-    public sealed class BackgroundMediaPlayerClient
+    public sealed class MusicPlayerClient
     {
         const int RPC_S_SERVER_UNAVAILABLE = -2147023174; // 0x800706BA
         private const string BackgroundMediaPlayerActivatedMessageKey = @"Activated";
         private const string BackgroundMediaPlayerUserMessageKey = @"UserMessage";
-       public  event EventHandler<object> PlayerActivated;
+        public IMusicPlayerController Proxy { get; set; }
+        public  event EventHandler<object> PlayerActivated;
        public  event EventHandler<MessageReceivedEventArgs> MessageReceived;
-        public BackgroundMediaPlayerClient()
+        public MusicPlayerClient()
         {
             AttachMessageListener();
         }
@@ -35,7 +37,10 @@ namespace NeilX.DoubanFM.MusicPlayer.Rpc
             var valueset = e.Data;
             string key = valueset["MessageId"] as string;
             if (key == BackgroundMediaPlayerActivatedMessageKey)
-                PlayerActivated(this,null);
+            {
+                Proxy = new MusicPlayerClientProxy(BackgroundMediaPlayer.Current );
+                PlayerActivated(this, null);
+            }
             else if (key == BackgroundMediaPlayerUserMessageKey)
                 MessageReceived(this, new MessageReceivedEventArgs(valueset["MessageTag"] as string, valueset["MessageContent"] as string));
         }

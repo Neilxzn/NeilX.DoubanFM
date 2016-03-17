@@ -110,6 +110,7 @@
     <Compile Include="Controller\IMusicPlayerController.cs" />
     <Compile Include="Controller\IMusicPlayerControllerHandler.cs" />
     <Compile Include="Controller\MusicPlayerController.cs" />
+    <Compile Include="Controller\MusicPlayerControllerHandler.cs" />
     <Compile Include="Messages\AppResumedMessage.cs" />
     <Compile Include="Messages\AppSuspendedMessage.cs" />
     <Compile Include="Messages\AudioTaskStartedMessage.cs" />
@@ -124,12 +125,14 @@
     <Compile Include="PlayListType.cs" />
     <Compile Include="PlayMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rpc\BackgroundMediaPlayerClient.cs" />
-    <Compile Include="Rpc\BackgroundMediaPlayerHandler.cs" />
-    <Compile Include="Rpc\BackgroundMediaPlayerServer.cs" />
-    <Compile Include="Rpc\IBackgroundMediaPlayerHandler.cs" />
-    <Compile Include="Rpc\IMediaPlayer.cs" />
-    <Compile Include="Rpc\MessageReceivedEventArgs.cs" />
+    <Compile Include="Client\MusicPlayerClient.cs" />
+    <Compile Include="Server\MediaTransportControls.cs" />
+    <Compile Include="Server\MusicPlayerServerHandler.cs" />
+    <Compile Include="Server\MusicPlayerServer.cs" />
+    <Compile Include="Server\IMusicPlayerServerHandler.cs" />
+    <Compile Include="Server\IMediaPlayer.cs" />
+    <Compile Include="Client\MusicPlayerClientProxy.cs" />
+    <Compile Include="Client\MessageReceivedEventArgs.cs" />
     <EmbeddedResource Include="Properties\NeilX.DoubanFM.MusicPlayer.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +146,7 @@
       <Name>NeilX.DoubanFM.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

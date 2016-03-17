@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Media.Playback;
 
-namespace NeilX.DoubanFM.MusicPlayer.Rpc
+namespace NeilX.DoubanFM.MusicPlayer.Server
 {
-    interface IBackgroundMediaPlayerServerHandler
+    interface IMusicPlayerServerHandler
     {
-        void OnActivated(BackgroundMediaPlayerServer mediaPlayer);
+        void OnActivated(MusicPlayerServer mediaPlayer);
         void OnReceiveMessage(string tag,string messege);
         void OnCanceled();
     }

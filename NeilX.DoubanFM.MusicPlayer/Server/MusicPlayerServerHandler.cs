@@ -6,14 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NeilX.DoubanFM.MusicPlayer.Rpc
+namespace NeilX.DoubanFM.MusicPlayer.Server
 {
-    public class BackgroundMediaPlayerHandler : IBackgroundMediaPlayerServerHandler
+    public class MusicPlayerServerHandler : IMusicPlayerServerHandler
     {
         private MusicPlayerController _musicPlayerController;
 
 
-        public void OnActivated(BackgroundMediaPlayerServer mediaPlayer)
+        public void OnActivated(MusicPlayerServer mediaPlayer)
         {
             _musicPlayerController = new MusicPlayerController(mediaPlayer);
         }

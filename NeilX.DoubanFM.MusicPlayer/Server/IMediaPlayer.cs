@@ -10,7 +10,7 @@ using Windows.Media;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 
-namespace NeilX.DoubanFM.MusicPlayer.Rpc
+namespace NeilX.DoubanFM.MusicPlayer.Server
 {
     public interface IMediaPlayer
     {
@@ -18,7 +18,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Rpc
         bool IsMuted { get; set; }
         TimeSpan Position { set; get; }
         double Volume { get; set; }
-        void SetMediaSource();
+        void SetMediaSource(Song song);
         void SetMediaStreamSource(MediaStreamSource streamSource);
         void Play();
         void Pause();

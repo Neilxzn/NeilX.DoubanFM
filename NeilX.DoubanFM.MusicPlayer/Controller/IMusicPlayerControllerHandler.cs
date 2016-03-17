@@ -13,6 +13,8 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
 
         void NotifyControllerReady();
         void NotifyMediaOpened();
+        void NotifyMediaEnd();
+        void NotifyMediaFailed();
         void NotifyControllerStateChanged(MediaPlayerState state);
         void NotifyCurrentTrackChanged(Song track);
         void NotifyDuration(TimeSpan? duration);
