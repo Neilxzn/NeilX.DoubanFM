@@ -18,6 +18,8 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
         bool IsMuted { get; set; }
         TimeSpan Position { set; get; }
         double Volume { get; set; }
+
+        MediaPlayerState CurrentState { get; }
         void SetMediaSource(Song song);
         void SetMediaStreamSource(MediaStreamSource streamSource);
         void Play();

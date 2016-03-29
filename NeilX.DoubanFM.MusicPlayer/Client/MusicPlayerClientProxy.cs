@@ -9,90 +9,185 @@ using Windows.Media;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using NeilX.DoubanFM.Core;
+using NeilX.DoubanFM.MusicPlayer.Messages;
+using NeilX.DoubanFM.MusicPlayer.Server;
+using NeilSoft.UWP;
 
 namespace NeilX.DoubanFM.MusicPlayer.Client
 {
-    public class MusicPlayerClientProxy : IMusicPlayerController
+    public class MusicPlayerClientProxy : IMediaPlayer
     {
-        private readonly MediaPlayer currentMediaPlayer;
+        private readonly MediaPlayer currentPlayer;
+        private readonly MusicPlayerClient client;
 
-        public void AskCurrentState()
+        public event TypedEventHandler<IMediaPlayer, object> MediaOpened;
+        public event TypedEventHandler<IMediaPlayer, object> MediaEnded;
+        public event TypedEventHandler<IMediaPlayer, MediaPlayerFailedEventArgs> MediaFailed;
+        public event TypedEventHandler<IMediaPlayer, object> CurrentStateChanged;
+        public event TypedEventHandler<IMediaPlayer, object> SeekCompleted;
+        public event TypedEventHandler<IMediaPlayer, Song> CurrentTrackChanged;
+
+        public SystemMediaTransportControls SystemMediaTransportControls
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public bool IsMuted
+        {
+            get
+            {
+                return currentPlayer.IsMuted;
+            }
+            set
+            {
+                currentPlayer.IsMuted = value;
+            }
+        }
+
+        public TimeSpan Position
+        {
+            get
+            {
+                return currentPlayer.Position;
+            }
+            set
+            {
+                currentPlayer.Position = value;
+            }
+        }
+
+        public double Volume
+        {
+            get
+            {
+                return currentPlayer.Volume;
+            }
+
+            set
+            {
+                currentPlayer.Volume = value;
+            }
+        }
+
+        public MediaPlayerState CurrentState
+        {
+            get
+            {
+                return currentPlayer.CurrentState;
+            }
+        }
+
+        public PlayMode PlayMode
+        {
+            get;
+            set;
+        }
+
+        public MusicPlayerClientProxy(MusicPlayerClient _client)
+        {
+            currentPlayer = BackgroundMediaPlayer.Current;
+            client = _client;
+            client.MessageReceived += Client_MessageReceived;
+        }
+
+
+
+        public void SetMediaSource(Song song)
+        {
+            if (client != null)
+            {
+                MessageService.SendMessageToServer(new TrackChangedMessage(song));
+            }
+        }
+
+        public void SetMediaStreamSource(MediaStreamSource streamSource)
         {
             throw new NotImplementedException();
         }
 
-        public void AskCurrentTrack()
+        public void SetPlaylist(IList<Song> songs)
         {
-            throw new NotImplementedException();
+            if (client != null)
+            {
+                MessageService.SendMessageToServer(new UpdatePlaylistMessage(songs));
+            }
         }
 
-        public void AskDuration()
-        {
-            throw new NotImplementedException();
-        }
 
-        public void AskPlaylist()
+        public void Play()
         {
-            throw new NotImplementedException();
-        }
-
-        public void AskPosition()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void MoveNext()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void MovePrevious()
-        {
-            throw new NotImplementedException();
+            currentPlayer?.Play();
         }
 
         public void Pause()
         {
-            throw new NotImplementedException();
+            currentPlayer?.Pause();
         }
 
-        public void Play()
+        public void MovePrevious()
         {
-            throw new NotImplementedException();
+            if (client != null)
+            {
+                MessageService.SendMessageToServer(new SkipPreviousMessage());
+            }
+        }
+        public void MoveNext()
+        {
+            if (client != null)
+            {
+                MessageService.SendMessageToServer(new SkipNextMessage());
+            }
+        }
+        #region Client Handle Message Methods 
+
+        private void Client_MessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+            switch (e.Type)
+            {
+                case MessageType.AppResumedMessage:
+                    break;
+                case MessageType.AppSuspendedMessage:
+                    break;
+                case MessageType.AudioTaskStartedMessage:
+                    break;
+                case MessageType.PlayModeChangeMessage:
+                    break;
+                case MessageType.SkipNextMessage:
+                    break;
+                case MessageType.SkipPreviousMessage:
+                    break;
+                case MessageType.StartPlaybackMessage:
+                    break;
+                case MessageType.TrackChangedMessage:
+                    if (CurrentTrackChanged != null)
+                        CurrentTrackChanged(this, JsonHelper.FromJson<TrackChangedMessage>(e.MessegeContent).Song);
+                    break;
+                case MessageType.UpdatePlaylistMessage:
+                    break;
+                case MessageType.PlayerEventMessage:
+                    HandlePlayerEvent(e.MessegeContent);
+                    break;
+                case MessageType.CurrentStateChangedMessage:
+                    if (CurrentStateChanged != null)
+                        CurrentStateChanged(this, e.MessegeContent);
+                    break;
+                default:
+                    break;
+            }
         }
 
-        public void SetCurrentTrack(Song track)
-        {
-            throw new NotImplementedException();
-        }
 
-        public void SetPlaylist(IList<Song> tracks)
+        private void HandlePlayerEvent(string message)
         {
-            throw new NotImplementedException();
-        }
+            PlayerEventMessage playerEventevent = JsonHelper.FromJson<PlayerEventMessage>(message);
+            if (playerEventevent.EventName == "")
+            {
 
-        public void SetPlayMode(PlayMode playmode)
-        {
-            throw new NotImplementedException();
+            }
         }
-
-        public void SetPosition(TimeSpan position)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetupHandler()
-        {
-            
-        }
-
-        public void SetVolume(double value)
-        {
-            throw new NotImplementedException();
-        }
-        public MusicPlayerClientProxy(MediaPlayer player)
-        {
-            currentMediaPlayer = player;
-        }
+        #endregion
     }
 }

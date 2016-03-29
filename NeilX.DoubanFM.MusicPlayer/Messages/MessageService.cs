@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation.Collections;
@@ -10,65 +11,63 @@ using Windows.Media.Playback;
 
 namespace NeilX.DoubanFM.MusicPlayer.Messages
 {
-    /// <summary>
-    /// MessageService makes it easy to send strongly typed messages
-    /// between the foreground and background processes.
-    /// </summary>
-    /// <remarks>
-    /// JSON is used as the underlying serialization mechanism,
-    /// but you don't need to know JSON formatting to create new
-    /// messages.
-    /// 
-    /// See some of the related Message implementations which are
-    /// simple data objects serialized through the standard DataContract
-    /// interface.
-    /// </remarks>
     public static class MessageService
     {
-        // The underlying BMP methods can pass a ValueSet. MessageService
-        // relies on this to pass a type and body payload.
-        const string MessageType = "MessageType";
-        const string MessageBody = "MessageBody";
+        const int RPC_S_SERVER_UNAVAILABLE = -2147023174; // 0x800706BA
+        public const string MessageId = "MessageId";
+        public const string MessageType = "MessageType";
+        public const string MessageContent = "MessageContent";
 
-        public static void SendMessageToForeground<T>(T message)
+        public const string BackgroundMediaPlayerActivatedMessageKey = @"Activated";
+        public const string BackgroundMediaPlayerUserMessageKey = @"UserMessage";
+
+
+        public static void SendMessageToServer<T>(T message)
         {
-            var payload = new ValueSet();
-            payload.Add(MessageType, typeof(T).FullName);
-            payload.Add(MessageBody, JsonHelper.ToJson(message));
-            BackgroundMediaPlayer.SendMessageToForeground(payload);
-        }
-    
-        public static void SendMessageToBackground<T>(T message)
-        {
-            var payload = new ValueSet();
-            payload.Add(MessageType, typeof(T).FullName);
-            payload.Add(MessageBody, JsonHelper.ToJson(message));
-            BackgroundMediaPlayer.SendMessageToBackground(payload);
-        }
+            ValueSet valueset = new ValueSet();
+            valueset.Add(MessageId, BackgroundMediaPlayerUserMessageKey);
+            valueset.Add(MessageType, typeof(T).Name);
+            valueset.Add(MessageContent, JsonHelper.ToJson(message));
+            bool failed = true;
+            int retryCount = 2;
 
-        public static bool TryParseMessage<T>(ValueSet valueSet, out T message)
-        {
-            object messageTypeValue;
-            object messageBodyValue;
-
-            message = default(T);
-
-            // Get message payload
-            if (valueSet.TryGetValue(MessageType, out messageTypeValue)
-                && valueSet.TryGetValue(MessageBody, out messageBodyValue))
+            while (--retryCount >= 0)
             {
-                // Validate type
-                if ((string)messageTypeValue != typeof(T).FullName)
+                try
                 {
-                    Debug.WriteLine("Message type was {0} but expected type was {1}", (string)messageTypeValue, typeof(T).FullName);
-                    return false;
+                    BackgroundMediaPlayer.SendMessageToBackground(valueset);
+                    failed = false;
+                    break;
                 }
-
-                message = JsonHelper.FromJson<T>(messageBodyValue.ToString());
-                return true;
+                catch (Exception ex)
+                {
+                    if (ex.HResult == RPC_S_SERVER_UNAVAILABLE)
+                        BackgroundMediaPlayer.SendMessageToBackground(valueset);
+                    else
+                        throw;
+                }
+                try
+                {
+                    BackgroundMediaPlayer.Shutdown();
+                   //  AttachMessageListener();
+                }
+                catch (Exception ex)
+                {
+                }
             }
+            if (failed)
+                throw new COMException(RPC_S_SERVER_UNAVAILABLE.ToString());
+        }
 
-            return false;
+        public static void SendMessageToClient<T>(T message)
+        {
+            ValueSet valueset = new ValueSet();
+            valueset.Add(MessageId, BackgroundMediaPlayerUserMessageKey);
+            valueset.Add(MessageType, typeof(T).Name);
+            valueset.Add(MessageContent, JsonHelper.ToJson(message));
+            BackgroundMediaPlayer.SendMessageToForeground(valueset);
         }
     }
+
+   
 }

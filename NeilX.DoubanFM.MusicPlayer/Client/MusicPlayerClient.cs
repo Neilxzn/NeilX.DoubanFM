@@ -1,4 +1,6 @@
-﻿using NeilX.DoubanFM.MusicPlayer.Controller;
+﻿using NeilSoft.UWP;
+using NeilX.DoubanFM.MusicPlayer.Controller;
+using NeilX.DoubanFM.MusicPlayer.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +14,8 @@ namespace NeilX.DoubanFM.MusicPlayer.Client
 {
     public sealed class MusicPlayerClient
     {
-        const int RPC_S_SERVER_UNAVAILABLE = -2147023174; // 0x800706BA
-        private const string BackgroundMediaPlayerActivatedMessageKey = @"Activated";
-        private const string BackgroundMediaPlayerUserMessageKey = @"UserMessage";
-        public IMusicPlayerController Proxy { get; set; }
+        
+        public MusicPlayerClientProxy Proxy { get; set; }
         public  event EventHandler<object> PlayerActivated;
        public  event EventHandler<MessageReceivedEventArgs> MessageReceived;
         public MusicPlayerClient()
@@ -35,51 +35,19 @@ namespace NeilX.DoubanFM.MusicPlayer.Client
         private void OnMessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
         {
             var valueset = e.Data;
-            string key = valueset["MessageId"] as string;
-            if (key == BackgroundMediaPlayerActivatedMessageKey)
+            string key = valueset[MessageService.MessageId] as string;
+            if (key ==MessageService.BackgroundMediaPlayerActivatedMessageKey)
             {
-                Proxy = new MusicPlayerClientProxy(BackgroundMediaPlayer.Current );
+                Proxy = new MusicPlayerClientProxy(this );
                 PlayerActivated(this, null);
             }
-            else if (key == BackgroundMediaPlayerUserMessageKey)
-                MessageReceived(this, new MessageReceivedEventArgs(valueset["MessageTag"] as string, valueset["MessageContent"] as string));
-        }
-        public void SendMessageToClient(string tag, string message)
-        {
-            ValueSet valueset = new ValueSet();
-            valueset.Add("MessageId", BackgroundMediaPlayerUserMessageKey);
-            valueset.Add("MessageTag", tag);
-            valueset.Add("MessageContent", message);
-            bool failed = true;
-            int retryCount = 2;
-
-            while (--retryCount >= 0)
+            else if (key == MessageService.BackgroundMediaPlayerUserMessageKey)
             {
-                try
-                {
-                    BackgroundMediaPlayer.SendMessageToForeground(valueset);
-                    failed = false;
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    if (ex.HResult == RPC_S_SERVER_UNAVAILABLE)
-                        ;//do again
-                    else
-                        throw;
-                }
-                try
-                {
-                    BackgroundMediaPlayer.Shutdown();
-                    AttachMessageListener();
-                }
-                catch (Exception ex)
-                {
-                }
+                MessageType type =EnumHelper.Parse<MessageType>(valueset[MessageService.MessageType] as string);
+                MessageReceived(this, new MessageReceivedEventArgs(type, valueset[MessageService.MessageContent] as string));
             }
-            if (failed)
-                throw  new COMException(RPC_S_SERVER_UNAVAILABLE.ToString());
         }
+
     }
 
 

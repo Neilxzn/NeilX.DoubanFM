@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NeilX.DoubanFM.Core;
 using Windows.Media.Playback;
+using NeilX.DoubanFM.MusicPlayer.Messages;
 
 namespace NeilX.DoubanFM.MusicPlayer.Controller
 {
@@ -12,50 +13,61 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
     {
         public void NotifyControllerReady()
         {
-            throw new NotImplementedException();
+            
         }
+
+
+
 
         public void NotifyControllerStateChanged(MediaPlayerState state)
         {
-            throw new NotImplementedException();
+            MessageService.SendMessageToClient(new CurrentStateChangedMessage(state));
+
         }
+
+
+
 
         public void NotifyCurrentTrackChanged(Song track)
         {
-            throw new NotImplementedException();
+            MessageService.SendMessageToClient(new TrackChangedMessage(track));
+
         }
 
-        public void NotifyDuration(TimeSpan? duration)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public void NotifyMediaEnd()
         {
-            throw new NotImplementedException();
+            MessageService.SendMessageToClient(new PlayerEventMessage("SeekCompleted", ""));
+
         }
 
         public void NotifyMediaFailed()
         {
-            throw new NotImplementedException();
+            MessageService.SendMessageToClient(new PlayerEventMessage("SeekCompleted", ""));
+
         }
 
         public void NotifyMediaOpened()
         {
-            throw new NotImplementedException();
+            MessageService.SendMessageToClient(new PlayerEventMessage("SeekCompleted", ""));
+
         }
 
+        public void NotifySeekCompleted()
+        {
+            MessageService.SendMessageToClient(new PlayerEventMessage("SeekCompleted", ""));
+        }
         public void NotifyPlaylist(IList<Song> playlist)
         {
-            throw new NotImplementedException();
+
         }
 
         public void NotifyPosition(TimeSpan position)
         {
-            throw new NotImplementedException();
-        }
 
-        public void NotifySeekCompleted()
+        }
+        public void NotifyDuration(TimeSpan? duration)
         {
             throw new NotImplementedException();
         }

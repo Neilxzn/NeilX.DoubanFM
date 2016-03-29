@@ -114,7 +114,10 @@
     <Compile Include="Messages\AppResumedMessage.cs" />
     <Compile Include="Messages\AppSuspendedMessage.cs" />
     <Compile Include="Messages\AudioTaskStartedMessage.cs" />
+    <Compile Include="Messages\CurrentStateChangedMessage.cs" />
     <Compile Include="Messages\MessageService.cs" />
+    <Compile Include="Messages\MessageType.cs" />
+    <Compile Include="Messages\PlayerEventMessage.cs" />
     <Compile Include="Messages\PlayModeChangeMessage.cs" />
     <Compile Include="Messages\SkipNextMessage.cs" />
     <Compile Include="Messages\SkipPreviousMessage.cs" />

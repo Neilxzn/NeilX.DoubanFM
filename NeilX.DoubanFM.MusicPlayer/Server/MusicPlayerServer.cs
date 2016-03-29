@@ -10,14 +10,16 @@ using Windows.Foundation.Collections;
 using Windows.Media;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.Storage;
+using NeilX.DoubanFM.MusicPlayer.Messages;
+using NeilSoft.UWP;
 
 namespace NeilX.DoubanFM.MusicPlayer.Server
 {
-    public sealed class MusicPlayerServer:IMediaPlayer    
+    public sealed class MusicPlayerServer : IMediaPlayer
     {
-        public  const string BackgroundMediaPlayerActivatedMessageKey = @"Activated";
-        public const string BackgroundMediaPlayerUserMessageKey = @"UserMessage";
-        private IMusicPlayerServerHandler _audioHandler;
+
+        private IMusicPlayerServerHandler _musicPlayerHandler;
         private MediaPlayer mediaPlayer;
 
         public event TypedEventHandler<IMediaPlayer, object> MediaOpened;
@@ -30,7 +32,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
         {
             get
             {
-                return  mediaPlayer?.SystemMediaTransportControls;
+                return mediaPlayer?.SystemMediaTransportControls;
             }
         }
 
@@ -73,6 +75,14 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
             }
         }
 
+        public MediaPlayerState CurrentState
+        {
+            get
+            {
+                return mediaPlayer.CurrentState;
+            }
+        }
+
         public void InitialServer()
         {
 
@@ -83,30 +93,14 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
             AttachMessageHandlers();
 
 
-          
+
         }
-
-
-
-
-        void SendMessageToClient(string tag,string message)
-        {
-            ValueSet valueset = new ValueSet();
-            valueset.Add("MessageId", BackgroundMediaPlayerUserMessageKey);
-            valueset.Add("MessageTag", tag);
-            valueset.Add("MessageContent", message);
-            BackgroundMediaPlayer.SendMessageToForeground(valueset);
-        }
-
-
-
-
 
 
         private void ActivateHandler()
         {
-            _audioHandler = new MusicPlayerServerHandler();
-            _audioHandler.OnActivated(this);
+            _musicPlayerHandler = new MusicPlayerServerHandler();
+            _musicPlayerHandler.OnActivated(this);
         }
 
         private void AttachMessageHandlers()
@@ -120,7 +114,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
         private void ConfigureMediaPlayer()
         {
             mediaPlayer = BackgroundMediaPlayer.Current;
-           // mediaPlayer.AudioCategory = MediaPlayerAudioCategory.Media;
+            // mediaPlayer.AudioCategory = MediaPlayerAudioCategory.Media;
             mediaPlayer.AudioDeviceType = MediaPlayerAudioDeviceType.Multimedia;
             mediaPlayer.AutoPlay = false;
 
@@ -131,7 +125,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
             mediaPlayer.CurrentStateChanged += MediaPlayer_CurrentStateChanged;
         }
 
-       
+
 
         private void Shutdown()
         {
@@ -147,13 +141,15 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
         private void BackgroundMediaPlayer_MessageReceivedFromForeground(object sender, MediaPlayerDataReceivedEventArgs e)
         {
             var valueset = e.Data;
-            if (valueset["MessageId"] as string==BackgroundMediaPlayerUserMessageKey)
+            if (valueset[MessageService.MessageId] as string == MessageService.BackgroundMediaPlayerUserMessageKey)
             {
-                _audioHandler?.OnReceiveMessage(valueset["MessageTag"] as string, valueset["MessageContent"] as string);
+                MessageType type = EnumHelper.Parse<MessageType>(valueset[MessageService.MessageType] as string);
+                _musicPlayerHandler?.OnReceiveMessage(type, valueset[MessageService.MessageContent] as string);
             }
         }
         private void MediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
         {
+            
             CurrentStateChanged(this, args);
         }
 
@@ -177,11 +173,22 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
             MediaOpened(this, args);
         }
 
-        public void SetMediaSource(Song song )
+        public  void SetMediaSource(Song song)
         {
+            Uri uri;
+            if (Uri.TryCreate(song.Url,UriKind.RelativeOrAbsolute,out uri))
+            {
+                mediaPlayer.SetUriSource(uri);
+            }
+            else
+            {
+                throw new NotSupportedException("Not supported uri.");
+            }
+            
             //IMediaSource source = MediaSource.CreateFromUri(new Uri(mediaSource.Url));
             //MediaStreamSource streamSource;
             //mediaPlayer?.SetMediaSource(source);
+
         }
 
         public void SetMediaStreamSource(MediaStreamSource streamSource)
@@ -196,7 +203,20 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
 
         public void Pause()
         {
-            mediaPlayer?.Pause();
+            if (mediaPlayer.CanPause)
+                mediaPlayer?.Pause();
+        }
+
+        private async void SetMediaSourceByUri(Uri uri)
+        {
+            StorageFile file;
+            if (uri.Scheme == "ms-appx")
+                file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+            else if (uri.IsFile)
+                file = await StorageFile.GetFileFromPathAsync(uri.LocalPath);
+            else
+                throw new NotSupportedException("Not supported uri.");
+           
         }
     }
 }

@@ -85,18 +85,18 @@ namespace NeilX.DoubanFM.View
             //track.Artist = currentSong.Artist;
             //track.Duration = TimeSpan.FromSeconds(currentSong.Length);
             //tracks.Add(track);
-            track.Title = "微光";
-            track.Artist = "张信哲";
-            track.Url = @"ms-appx:///SampleMedias/ring4.mp3";
-            track.Lyric = @"ms-appx:///SampleMedias/ring4.lrc";
-            track.Length=282;
-            track.PictureUrl  = @"ms-appx:///SampleMedias/ring4.jpg";
-            tracks.Add(track);
-            Main.PlayerSession.SetPlaylist(tracks,track);
+            //track.Title = "微光";
+            //track.Artist = "张信哲";
+            //track.Url = @"ms-appx:///SampleMedias/ring4.mp3";
+            //track.Lyric = @"ms-appx:///SampleMedias/ring4.lrc";
+            //track.Length=282;
+            //track.PictureUrl  = @"ms-appx:///SampleMedias/ring4.jpg";
+            //tracks.Add(track);
+            //Main.PlayerSession.SetPlaylist(tracks,track);
             ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.AppState, AppState.Active.ToString());
         }
 
-     
+        
 
 
 
@@ -219,6 +219,16 @@ namespace NeilX.DoubanFM.View
         private void Hambeger_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             MySplitView.IsPaneOpen = !MySplitView.IsPaneOpen;
+            List<Song> tracks = new List<Song>();
+            Song track = new Song();
+            track.Title = "微光";
+            track.Artist = "张信哲";
+            track.Url = @"ms-appx:///SampleMedias/ring4.mp3";
+            track.Lyric = @"ms-appx:///SampleMedias/ring4.lrc";
+            track.Length = 282;
+            track.PictureUrl = @"ms-appx:///SampleMedias/ring4.jpg";
+            tracks.Add(track);
+            Main.PlayerSession.SetPlaylist(tracks, track);
         }
 
 
@@ -229,13 +239,13 @@ namespace NeilX.DoubanFM.View
             //StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(uri);
             //await TryAddTrackInfo(file, tracks);    
             //   InitializeSongs();
-            FileOpenPicker picker = new FileOpenPicker();
-            picker.FileTypeFilter.Add ("*");
-          var file=  await  picker.PickSingleFileAsync();
+          //  FileOpenPicker picker = new FileOpenPicker();
+          //  picker.FileTypeFilter.Add ("*");
+          //var file=  await  picker.PickSingleFileAsync();
            
-           // var file = await StorageFile.GetFileFromPathAsync(value.Lyric);
-            var filetext = await FileIO.ReadTextAsync(file);
-             var lyricfile = LrcFile.FromText(filetext);
+          // // var file = await StorageFile.GetFileFromPathAsync(value.Lyric);
+          //  var filetext = await FileIO.ReadTextAsync(file);
+          //   var lyricfile = LrcFile.FromText(filetext);
         }
 
         async void InitializeSongs()

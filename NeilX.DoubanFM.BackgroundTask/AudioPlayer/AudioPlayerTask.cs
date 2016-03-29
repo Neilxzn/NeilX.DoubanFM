@@ -39,11 +39,12 @@ namespace NeilX.DoubanFM.BackgroundTask
         {
             Debug.WriteLine("Background Audio Task " + taskInstance.Task.Name + " starting...");
             deferral = taskInstance.GetDeferral();
+           // AttachMessageHandlers();
             server = new MusicPlayerServer();
             server.InitialServer();
-
+        
             ValueSet valueSet =  new ValueSet();
-            valueSet["MessageId"]= MusicPlayerServer.BackgroundMediaPlayerActivatedMessageKey;
+            valueSet["MessageId"]= MessageService.BackgroundMediaPlayerActivatedMessageKey;
             BackgroundMediaPlayer.SendMessageToForeground(valueSet);
 
 
@@ -71,8 +72,8 @@ namespace NeilX.DoubanFM.BackgroundTask
                 foregroundAppState = AppState.Unknown;
             else
                 foregroundAppState = EnumHelper.Parse<AppState>(value.ToString());
-            if (foregroundAppState != AppState.Suspended)
-                MessageService.SendMessageToForeground(new AudioTaskStartedMessage());
+            //if (foregroundAppState != AppState.Suspended)
+            //    MessageService.SendMessageToForeground(new AudioTaskStartedMessage());
 
             ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.BackgroundTaskState, BackgroundTaskState.Running.ToString());
 
@@ -299,10 +300,10 @@ namespace NeilX.DoubanFM.BackgroundTask
                 return;
             }
             // Notify foreground of change or persist for later
-            if (foregroundAppState == AppState.Active)
-                MessageService.SendMessageToForeground(new TrackChangedMessage(currentTrackId.AbsoluteUri));
-            else
-                ApplicationSettingsHelper.SaveSettingToLocalSettings(TaskConstant.TrackIdKey, currentTrackId == null ? null : currentTrackId.ToString());
+            //if (foregroundAppState == AppState.Active)
+            //    MessageService.SendMessageToForeground(new TrackChangedMessage(currentTrackId.AbsoluteUri));
+            //else
+            //    ApplicationSettingsHelper.SaveSettingToLocalSettings(TaskConstant.TrackIdKey, currentTrackId == null ? null : currentTrackId.ToString());
         }
 
         private void SkipToPrevious()
@@ -339,7 +340,7 @@ namespace NeilX.DoubanFM.BackgroundTask
 
             // Don't auto start
             BackgroundMediaPlayer.Current.AutoPlay = false;
-
+            
             // Assign the list to the player
             BackgroundMediaPlayer.Current.Source = playbackList;
 
@@ -368,72 +369,72 @@ namespace NeilX.DoubanFM.BackgroundTask
 
         void BackgroundMediaPlayer_MessageReceivedFromForeground(object sender, MediaPlayerDataReceivedEventArgs e)
         {
-            AppSuspendedMessage appSuspendedMessage;
-            if (MessageService.TryParseMessage(e.Data, out appSuspendedMessage))
-            {
-                Debug.WriteLine("App suspending"); // App is suspended, you can save your task state at this point
-                foregroundAppState = AppState.Suspended;
-                var currentTrackId = AudioTaskHelper.GetPlayListCurrentTrackId(playbackList);
-                ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.TrackId, currentTrackId == null ? null : currentTrackId.ToString());
-                return;
-            }
+            //AppSuspendedMessage appSuspendedMessage;
+            //if (MessageConstant.TryParseMessage(e.Data, out appSuspendedMessage))
+            //{
+            //    Debug.WriteLine("App suspending"); // App is suspended, you can save your task state at this point
+            //    foregroundAppState = AppState.Suspended;
+            //    var currentTrackId = AudioTaskHelper.GetPlayListCurrentTrackId(playbackList);
+            //    ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.TrackId, currentTrackId == null ? null : currentTrackId.ToString());
+            //    return;
+            //}
 
-            AppResumedMessage appResumedMessage;
-            if (MessageService.TryParseMessage(e.Data, out appResumedMessage))
-            {
-                Debug.WriteLine("App resuming"); // App is resumed, now subscribe to message channel
-                foregroundAppState = AppState.Active;
-                return;
-            }
+            //AppResumedMessage appResumedMessage;
+            //if (MessageConstant.TryParseMessage(e.Data, out appResumedMessage))
+            //{
+            //    Debug.WriteLine("App resuming"); // App is resumed, now subscribe to message channel
+            //    foregroundAppState = AppState.Active;
+            //    return;
+            //}
 
-            StartPlaybackMessage startPlaybackMessage;
-            if (MessageService.TryParseMessage(e.Data, out startPlaybackMessage))
-            {
-                //Foreground App process has signalled that it is ready for playback
-                Debug.WriteLine("Starting Playback");
-                StartPlayback();
-                return;
-            }
+            //StartPlaybackMessage startPlaybackMessage;
+            //if (MessageConstant.TryParseMessage(e.Data, out startPlaybackMessage))
+            //{
+            //    //Foreground App process has signalled that it is ready for playback
+            //    Debug.WriteLine("Starting Playback");
+            //    StartPlayback();
+            //    return;
+            //}
 
-            SkipNextMessage skipNextMessage;
-            if (MessageService.TryParseMessage(e.Data, out skipNextMessage))
-            {
-                // User has chosen to skip track from app context.
-                Debug.WriteLine("Skipping to next");
-                SkipToNext();
-                return;
-            }
+            //SkipNextMessage skipNextMessage;
+            //if (MessageConstant.TryParseMessage(e.Data, out skipNextMessage))
+            //{
+            //    // User has chosen to skip track from app context.
+            //    Debug.WriteLine("Skipping to next");
+            //    SkipToNext();
+            //    return;
+            //}
 
-            SkipPreviousMessage skipPreviousMessage;
-            if (MessageService.TryParseMessage(e.Data, out skipPreviousMessage))
-            {
-                // User has chosen to skip track from app context.
-                Debug.WriteLine("Skipping to previous");
-                SkipToPrevious();
-                return;
-            }
+            //SkipPreviousMessage skipPreviousMessage;
+            //if (MessageConstant.TryParseMessage(e.Data, out skipPreviousMessage))
+            //{
+            //    // User has chosen to skip track from app context.
+            //    Debug.WriteLine("Skipping to previous");
+            //    SkipToPrevious();
+            //    return;
+            //}
 
-            TrackChangedMessage trackChangedMessage;
-            if (MessageService.TryParseMessage(e.Data, out trackChangedMessage))
-            {
-                var index = playbackList.Items.ToList().FindIndex(i => (Uri)i.Source.CustomProperties[TaskConstant.TrackIdKey] == new Uri( trackChangedMessage.SongUri));
-                Debug.WriteLine("Skipping to track " + index);
-                smtc.PlaybackStatus = MediaPlaybackStatus.Changing;
-                playbackList.MoveTo((uint)index);
-                return;
-            }
-            PlayModeChangeMessage playModeChangeMessage;
-            if (MessageService.TryParseMessage(e.Data, out playModeChangeMessage))
-            {
-                //TODO
-                return;
-            }
-            UpdatePlaylistMessage updatePlaylistMessage;
-            if (MessageService.TryParseMessage(e.Data, out updatePlaylistMessage))
-            {
-                CreatePlaybackList(playbackList, updatePlaylistMessage.Tracks);
-                return;
-            }
+            //TrackChangedMessage trackChangedMessage;
+            //if (MessageConstant.TryParseMessage(e.Data, out trackChangedMessage))
+            //{
+            //    var index = playbackList.Items.ToList().FindIndex(i => (Uri)i.Source.CustomProperties[TaskConstant.TrackIdKey] == new Uri( trackChangedMessage.SongUri));
+            //    Debug.WriteLine("Skipping to track " + index);
+            //    smtc.PlaybackStatus = MediaPlaybackStatus.Changing;
+            //    playbackList.MoveTo((uint)index);
+            //    return;
+            //}
+            //PlayModeChangeMessage playModeChangeMessage;
+            //if (MessageConstant.TryParseMessage(e.Data, out playModeChangeMessage))
+            //{
+            //    //TODO
+            //    return;
+            //}
+            //UpdatePlaylistMessage updatePlaylistMessage;
+            //if (MessageConstant.TryParseMessage(e.Data, out updatePlaylistMessage))
+            //{
+            //    CreatePlaybackList(playbackList, updatePlaylistMessage.Tracks);
+            //    return;
+            //}
         }
 
         #endregion

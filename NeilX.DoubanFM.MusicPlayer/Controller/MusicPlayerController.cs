@@ -17,20 +17,18 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
         private IList<Song> _playlist;
         private readonly MediaTransportControls _mtControls;
         private Song _currentTrack;
-        private bool _playbackStartedPreviously ;
 
         public MusicPlayerController(IMediaPlayer musicPlayer)
         {
             _player = musicPlayer;
             _controllerHandler = new MusicPlayerControllerHandler();
-            _playbackStartedPreviously = false;
 
             #region musicplayer
-            _player.SeekCompleted += _musicPlayer_SeekCompleted;
-            _player.MediaOpened += _musicPlayer_MediaOpened;
-            _player.MediaEnded += _musicPlayer_MediaEnded;
-            _player.MediaFailed += _musicPlayer_MediaFailed;
-            _player.CurrentStateChanged += _musicPlayer_CurrentStateChanged;
+            _player.SeekCompleted += _player_SeekCompleted;
+            _player.MediaOpened += _player_MediaOpened;
+            _player.MediaEnded += _player_MediaEnded;
+            _player.MediaFailed += _player_MediaFailed;
+            _player.CurrentStateChanged += _player_CurrentStateChanged;
             #endregion
 
             _mtControls = new MediaTransportControls(_player.SystemMediaTransportControls);
@@ -69,43 +67,64 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
             }
         }
 
-        public void OnReceiveMessage(object message)
-        {
-            
-        }
+       
 
         public void OnCanceled()
         {
-            _player.SeekCompleted -= _musicPlayer_SeekCompleted;
-            _player.MediaOpened -= _musicPlayer_MediaOpened;
-            _player.MediaEnded -= _musicPlayer_MediaEnded;
-            _player.MediaFailed -= _musicPlayer_MediaFailed;
-            _player.CurrentStateChanged -= _musicPlayer_CurrentStateChanged;
-        }
-        #region Player Event Handler
-        private void _musicPlayer_CurrentStateChanged(IMediaPlayer sender, object args)
-        {
-            // _controllerHandler?.NotifyControllerStateChanged(sender.CurrentState);
+            _player.SeekCompleted -= _player_SeekCompleted;
+            _player.MediaOpened -= _player_MediaOpened;
+            _player.MediaEnded -= _player_MediaEnded;
+            _player.MediaFailed -= _player_MediaFailed;
+            _player.CurrentStateChanged -= _player_CurrentStateChanged;
         }
 
-        private void _musicPlayer_MediaFailed(IMediaPlayer sender, MediaPlayerFailedEventArgs args)
+        #region Player Event Handler
+        private void _player_CurrentStateChanged(IMediaPlayer sender, object args)
+        {
+             _controllerHandler?.NotifyControllerStateChanged(sender.CurrentState);
+            switch (sender.CurrentState)
+            {
+                case MediaPlayerState.Closed:
+                    _mtControls.PlaybackStatus = MediaPlaybackStatus.Closed;
+                    break;
+                case MediaPlayerState.Opening:
+                    _mtControls.PlaybackStatus = MediaPlaybackStatus.Changing;
+                    break;
+                case MediaPlayerState.Buffering:
+                    _mtControls.PlaybackStatus = MediaPlaybackStatus.Changing;
+                    break;
+                case MediaPlayerState.Playing:
+                    _mtControls.PlaybackStatus = MediaPlaybackStatus.Playing;
+                    break;
+                case MediaPlayerState.Paused:
+                    _mtControls.PlaybackStatus = MediaPlaybackStatus.Paused;
+                    break;
+                case MediaPlayerState.Stopped:
+                    _mtControls.PlaybackStatus = MediaPlaybackStatus.Stopped;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void _player_MediaFailed(IMediaPlayer sender, MediaPlayerFailedEventArgs args)
         {
             _controllerHandler?.NotifyMediaFailed();
         }
 
-        private void _musicPlayer_MediaEnded(IMediaPlayer sender, object args)
+        private void _player_MediaEnded(IMediaPlayer sender, object args)
         {
             _controllerHandler?.NotifyMediaEnd();
         }
 
-        private void _musicPlayer_MediaOpened(IMediaPlayer sender, object args)
+        private void _player_MediaOpened(IMediaPlayer sender, object args)
         {
             _controllerHandler?.NotifyMediaOpened();
         }
 
-        private void _musicPlayer_SeekCompleted(IMediaPlayer sender, object args)
+        private void _player_SeekCompleted(IMediaPlayer sender, object args)
         {
-            _controllerHandler?.NotifySeekCompleted();
+          _controllerHandler?.NotifySeekCompleted();
         } 
         #endregion
 
@@ -125,77 +144,78 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
 
         #endregion
 
-        public void SetupHandler()
+        public void SetupHandler(IMusicPlayerControllerHandler handler)
         {
-            throw new NotImplementedException();
+            //todo
         }
 
 
         public void Play()
         {
-            if (!_playbackStartedPreviously)
-            {
-                _playbackStartedPreviously = true;
-                MessageService.SendMessageToBackground(new StartPlaybackMessage());
-            }
-            else
-            {
-               // _musicPlayer.CurrentPlayer.Play();
-            }
-
+            _player.Play();
         }
 
         public void Pause()
         {
-            //_musicPlayer.CurrentPlayer.Pause();
+            _player.Pause();
         }
 
         public void SetPlaylist(IList<Song> tracks)
         {
             _playlist = tracks;
-            _controllerHandler.NotifyPlaylist(tracks);
-            MessageService.SendMessageToBackground(new UpdatePlaylistMessage(tracks));
+            _controllerHandler?.NotifyPlaylist(tracks);
         }
 
-        public void SetCurrentTrack(Song track)
+        public void SetCurrentTrack(Song song)
         {
-            if (_playlist!=null&& _currentTrack != track&&_playlist.Contains(track))
-            {
-               // _currentIndex = _playlist.IndexOf(track);
-                MessageService.SendMessageToBackground(new TrackChangedMessage(track.Url));
-                //_playerSession.NotifyCurrentTrackChanged(track);
+            //if (_playlist!=null&& _currentTrack != track&&_playlist.Contains(track))
+            //{
+            //   // _currentIndex = _playlist.IndexOf(track);
+            //    //MessageService.SendMessageToBackground(new TrackChangedMessage(track.Url));
+            //    _controllerHandler?.NotifyCurrentTrackChanged(track);
 
-            }
+            //}
+            _player.SetMediaSource(song);
+            _controllerHandler?.NotifyCurrentTrackChanged(song);
         }
         public void MoveNext()
         {
-            MessageService.SendMessageToBackground(new SkipNextMessage());
+            //TODO
+            //MessageService.SendMessageToBackground(new SkipNextMessage());
         }
 
         public void MovePrevious()
         {
-            MessageService.SendMessageToBackground(new SkipPreviousMessage());
+           // MessageService.SendMessageToBackground(new SkipPreviousMessage());
         }
 
         public void SetPlayMode(PlayMode playmode)
         {
-            MessageService.SendMessageToBackground(new PlayModeChangeMessage(playmode));
+           // MessageService.SendMessageToBackground(new PlayModeChangeMessage(playmode));
         }
+
+        #region  not Use 
 
         public void AskPosition()
         {
-           // _playerSession?.NotifyPosition(_musicPlayer.CurrentPlayer.Position);
+            // _playerSession?.NotifyPosition(_musicPlayer.CurrentPlayer.Position);
         }
 
         public void SetPosition(TimeSpan position)
         {
-           // _musicPlayer.CurrentPlayer.Position = position;
+            // _musicPlayer.CurrentPlayer.Position = position;
         }
 
         public void SetVolume(double value)
         {
             //_musicPlayer.CurrentPlayer.Volume = value;
         }
+
+        public void AskDuration()
+        {
+            // _playerSession.NotifyDuration(_musicPlayer.CurrentPlayer.NaturalDuration);
+        }
+        #endregion
 
         public void AskPlaylist()
         {
@@ -212,10 +232,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
            // _playerSession?.NotifyControllerStateChanged(_musicPlayer.CurrentPlayer?.CurrentState ?? MediaPlayerState.Closed);
         }
 
-        public void AskDuration()
-        {
-           // _playerSession.NotifyDuration(_musicPlayer.CurrentPlayer.NaturalDuration);
-        }
+
 
 
     }

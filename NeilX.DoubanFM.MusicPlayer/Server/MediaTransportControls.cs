@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Media;
+using Windows.Storage.Streams;
 
 namespace NeilX.DoubanFM.MusicPlayer.Server
 {
@@ -80,20 +81,19 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
                 musicProp.Artist = value.Artist;
                 musicProp.AlbumTitle = value.AlbumTitle;
                 musicProp.AlbumArtist = value.Artist;
+                if (value.PictureUrl != null)
+                    updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(value.PictureUrl));
+                else
+                    updater.Thumbnail = null;
+                PlaybackStatus = MediaPlaybackStatus.Playing;
             }
             else
             {
                 updater.ClearAll();
                 PlaybackStatus = MediaPlaybackStatus.Closed;
+                musicProp.Title = string.Empty;
             }
             updater.Update();
-            //if (item == null)
-            //{
-            //    smtc.PlaybackStatus = MediaPlaybackStatus.Stopped;
-            //    smtc.DisplayUpdater.MusicProperties.Title = string.Empty;
-            //    smtc.DisplayUpdater.Update();
-            //    return;
-            //}
 
             //smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
             //smtc.DisplayUpdater.Type = MediaPlaybackType.Music;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeilX.DoubanFM.MusicPlayer.Messages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,13 +10,13 @@ namespace NeilX.DoubanFM.MusicPlayer.Client
      public sealed class MessageReceivedEventArgs
     {
 
-        public MessageReceivedEventArgs(string tag, string messege)
+        public MessageReceivedEventArgs(MessageType type, string messege)
         {
-            this.Tag = tag;
+            this.Type = type;
             this.MessegeContent = messege;
         }
 
-        public string Tag { get; set; }
+        public MessageType Type { get; set; }
         public string MessegeContent { get; set; }
     }
 }

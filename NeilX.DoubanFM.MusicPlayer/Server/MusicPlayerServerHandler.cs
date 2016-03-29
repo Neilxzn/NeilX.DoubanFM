@@ -1,4 +1,7 @@
-﻿using NeilX.DoubanFM.MusicPlayer.Controller;
+﻿using NeilSoft.UWP;
+using NeilX.DoubanFM.Core;
+using NeilX.DoubanFM.MusicPlayer.Controller;
+using NeilX.DoubanFM.MusicPlayer.Messages;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,14 +26,39 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
             _musicPlayerController.OnCanceled();
         }
 
-        public void OnReceiveMessage(string tag, string message)
+        public void OnReceiveMessage(MessageType type, string message)
         {
-            if (tag =="")
-                _musicPlayerController?.OnReceiveMessage(message);
-            else
+            switch (type)
             {
-                Debug.WriteLine($"Client Message: {tag}, {message}");
+                case MessageType.AppResumedMessage:
+                    break;
+                case MessageType.AppSuspendedMessage:
+                    break;
+                case MessageType.AudioTaskStartedMessage:
+                    break;
+                case MessageType.PlayModeChangeMessage:
+                    break;
+                case MessageType.SkipNextMessage:
+                    break;
+                case MessageType.SkipPreviousMessage:
+                    break;
+                case MessageType.StartPlaybackMessage:
+                    break;
+                case MessageType.TrackChangedMessage:
+                    _musicPlayerController?.SetCurrentTrack(JsonHelper.FromJson<TrackChangedMessage>(message).Song);
+                    break;
+                case MessageType.UpdatePlaylistMessage:
+                    _musicPlayerController?.SetPlaylist(JsonHelper.FromJson<UpdatePlaylistMessage>(message).Tracks);
+                    break;
+                default:
+                    break;
             }
+            //if (type == "1")
+            //    _musicPlayerController?.OnReceiveMessage( message);
+            //else
+            //{
+            //    Debug.WriteLine($"Server: Client Message: {tag}, {message}");
+            //}
         }
     }
 }

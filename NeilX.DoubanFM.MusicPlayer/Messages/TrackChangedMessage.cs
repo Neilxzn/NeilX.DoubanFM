@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeilX.DoubanFM.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -12,12 +13,12 @@ namespace NeilX.DoubanFM.MusicPlayer.Messages
     {
 
 
-        public TrackChangedMessage(string uri)
+        public TrackChangedMessage(Song song)
         {
-            this.SongUri = uri;
+            this.Song = song;
         }
 
         [DataMember]
-        public string SongUri;
+        public Song Song;
     }
 }

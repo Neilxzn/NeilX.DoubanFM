@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeilX.DoubanFM.MusicPlayer.Messages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
     interface IMusicPlayerServerHandler
     {
         void OnActivated(MusicPlayerServer mediaPlayer);
-        void OnReceiveMessage(string tag,string messege);
+        void OnReceiveMessage(MessageType Type,string messege);
         void OnCanceled();
     }
 }
