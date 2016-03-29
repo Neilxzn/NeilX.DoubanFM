@@ -94,7 +94,7 @@
                                   SelectionChanged="{x:Bind Main.MenuListSelectionChanged,Mode=OneWay}"
                                   SelectionMode="Single"
                                   />
-                        <Ellipse x:Name="ell" Width="30"  Height="30" Fill="Red">
+                        <Ellipse x:Name="ell" Width="30"  Height="30" Fill="Red" Visibility="Collapsed">
                             <Ellipse.RenderTransform>
                                 <TransformGroup>
                                     <TranslateTransform/>
@@ -119,9 +119,9 @@
                         </ListBoxItem>
                     </ListBox>-->
                     <Grid HorizontalAlignment="Stretch"
-                  VerticalAlignment="Stretch"
-                  Background="Transparent" RelativePanel.AlignBottomWithPanel="True"
-                  >
+                          VerticalAlignment="Stretch"
+                          Background="Transparent" 
+                          RelativePanel.AlignBottomWithPanel="True"  >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
@@ -159,7 +159,10 @@
         <!--音乐播放界面-->
         <Lcontrols:PlayingControl Visibility="{Binding ElementName=Player,Path=IsOpenPlayingView}" CurrentTrack="{x:Bind Main.PlayerSession.CurrentTrack,Mode=OneWay}" Position="{x:Bind Main.PlayerSession.Position,Mode=OneWay}"/>
         <!--音乐播放面板-->
-        <Lcontrols:PlayerControl x:Name="Player" Grid.Row="1"  PlayerSession="{x:Bind Main.PlayerSession,Mode=OneWay}"/>
+        <Lcontrols:PlayerControl x:Name="Player"
+                                 Grid.Row="1"  
+                                 PlayerSession="{x:Bind Main.PlayerSession,Mode=OneWay}"
+                                 Background="{StaticResource PaneBackground}"/>
 
     </Grid>
 

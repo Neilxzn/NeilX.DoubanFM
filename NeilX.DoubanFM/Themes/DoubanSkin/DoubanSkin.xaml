@@ -6,5 +6,7 @@
         <ResourceDictionary Source="/Themes/DoubanSkin/TextBlock.xaml"/>
         <ResourceDictionary Source="/Themes/DoubanSkin/Image.xaml"/>
         <ResourceDictionary Source="/Themes/DoubanSkin/GridView.xaml"/>
+        <ResourceDictionary Source="/Themes/DoubanSkin/Slider.xaml"/>
+        <ResourceDictionary Source="/Themes/DoubanSkin/Button.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

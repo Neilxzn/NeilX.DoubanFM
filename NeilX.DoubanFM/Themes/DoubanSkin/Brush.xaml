@@ -4,4 +4,5 @@
     <SolidColorBrush x:Key="GrayForeground" Color="#FF666666"/>
     <SolidColorBrush x:Key="PaneBackground" Color="#FFF3F3F5"/>
     <SolidColorBrush x:Key="ContentBackground" Color="#FFFAFAFC"/>
+    <SolidColorBrush x:Key="DoubanGreenBrush" Color="#1AC96A"/>
 </ResourceDictionary>

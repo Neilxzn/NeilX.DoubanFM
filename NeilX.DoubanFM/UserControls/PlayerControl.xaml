@@ -7,74 +7,145 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:convert="using:NeilX.DoubanFM.Convertors"
     mc:Ignorable="d"
-    d:DesignHeight="50"
+    d:DesignHeight="60" 
     d:DesignWidth="450">
     <UserControl.Resources>
         <convert:TimeSpanToDoubleConverter x:Key="TimeSpanToDoubleConverter"/>
         <convert:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter"/>
         <convert:IsPlayingConverter x:Key="IsPlayingConverter"/>
+
         <Style x:Key="TrackFunctionalButtonStyle" TargetType="Button">
             <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
             <Setter Property="Margin" Value="5"/>
+            <Setter Property="Background" Value="{StaticResource DoubanGreenBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="root" Background="Transparent" BorderThickness="0" >
+                            <Grid  HorizontalAlignment="Stretch" 
+                                  VerticalAlignment="Stretch"
+                                  >
+                                <Ellipse x:Name="ellipse"
+                                         Width="{TemplateBinding Width}"
+                                          Height="{TemplateBinding Width}"
+                                         Fill="{TemplateBinding Background}"
+                                         StrokeThickness="0"
+                                         RenderTransformOrigin="0.5,0.5"/>
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </UserControl.Resources>
-    <Grid  Height="50" Background="#FF758AD4" >
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <Image Grid.Column="0"  Width="50" Height="50" HorizontalAlignment="Left" Stretch="UniformToFill"  Source="{x:Bind PlayerSession.CurrentTrack.PictureUrl,Mode=OneWay,TargetNullValue='ms-appx:///Assets/Images/m51.jpg',FallbackValue='ms-appx:///Assets/Images/m51.jpg'}"  PointerPressed="{x:Bind ChangeIsOpenPlayingView}"/>
-        <StackPanel Grid.Column="1" Orientation="Horizontal">
-            <Button  Style="{StaticResource TrackFunctionalButtonStyle}"   Content="&#xE892;"  Click="{x:Bind PlayerSession.RequestPrevious}"   />
-            <Button Style="{StaticResource TrackFunctionalButtonStyle}"    Content="{x:Bind PlayerSession.IsPlaying,Mode=OneWay,Converter={StaticResource IsPlayingConverter}}"  Click="{x:Bind PlayerSession.RequestPlayOrPause}"/>
-            <Button Style="{StaticResource TrackFunctionalButtonStyle}"    Content="&#xE893;"  Click="{x:Bind PlayerSession.RequestNext}" />
-        </StackPanel>
-        <Grid Grid.Column="2" >
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+    <Border BorderThickness="0,0.4,0,0" BorderBrush="{StaticResource PaneBackground}">
+        <Grid  Height="60"   >
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Name="txtSongName" Tag="歌名" Text="{x:Bind PlayerSession.CurrentTrack.Title,Mode=OneWay}"/>
-                <TextBlock  Text="--"/>
-                <TextBlock Name="txtSinger" Tag="歌手"  Text="{x:Bind PlayerSession.CurrentTrack.Artist,Mode=OneWay}"/>
+            <Image Grid.Column="0"  
+               Width="55" 
+               Height="55"
+               Margin="5"
+               HorizontalAlignment="Left"
+               Stretch="UniformToFill"
+               Source="{x:Bind PlayerSession.CurrentTrack.PictureUrl,Mode=OneWay,TargetNullValue='ms-appx:///Assets/Images/m51.jpg',FallbackValue='ms-appx:///Assets/Images/m51.jpg'}"
+               PointerPressed="{x:Bind ChangeIsOpenPlayingView}"/>
+            <StackPanel Grid.Column="1" 
+                    Orientation="Horizontal"
+                    Margin="10,0,0,0">
+                <Button Width="35" Height="35" 
+                    Style="{StaticResource TrackFunctionalButtonStyle}"   
+                     Content="&#xE892;" 
+                     Click="{x:Bind PlayerSession.RequestPrevious}"   />
+                <Button Width="40" Height="40" 
+                    Style="{StaticResource TrackFunctionalButtonStyle}" 
+                    Content="{x:Bind PlayerSession.IsPlaying,Mode=OneWay,Converter={StaticResource IsPlayingConverter}}"
+                    Click="{x:Bind PlayerSession.RequestPlayOrPause}"/>
+                <Button Width="35" Height="35"
+                    Style="{StaticResource TrackFunctionalButtonStyle}" 
+                    Content="&#xE893;"  
+                    Click="{x:Bind PlayerSession.RequestNext}" />
             </StackPanel>
-            <StackPanel Grid.Column="1" Orientation="Horizontal">
-                <TextBlock  Text="{x:Bind PlayerSession.Position,Mode=OneWay,Converter={StaticResource TimeSpanToStringConverter}}"/>
-                <TextBlock  Text="/"/>
-                <TextBlock  Text="{x:Bind PlayerSession.Duration,Mode=OneWay,Converter={StaticResource TimeSpanToStringConverter}}"/>
+            <Grid Grid.Column="2" Margin="10,3" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Name="txtSongName"
+                           Style="{StaticResource paneContentTextStyle}"
+                           Tag="歌名" 
+                           Text="{x:Bind PlayerSession.CurrentTrack.Title,Mode=OneWay}"/>
+                    <TextBlock  Text="-"  Style="{StaticResource paneContentTextStyle}"/>
+                    <TextBlock Name="txtSinger"
+                           Tag="歌手" 
+                            Style="{StaticResource paneContentTextStyle}"
+                           Text="{x:Bind PlayerSession.CurrentTrack.Artist,Mode=OneWay}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" >
+                    <TextBlock   Style="{StaticResource paneContentTextStyle}"
+                    Text="{x:Bind PlayerSession.Position,Mode=OneWay,Converter={StaticResource TimeSpanToStringConverter}}"/>
+                    <TextBlock  Style="{StaticResource paneContentTextStyle}" Text="/"/>
+                    <TextBlock  Style="{StaticResource paneContentTextStyle}" Text="{x:Bind PlayerSession.Duration,Mode=OneWay,Converter={StaticResource TimeSpanToStringConverter}}"/>
+                </StackPanel>
+                <Slider Grid.Row="1" 
+                    Grid.ColumnSpan="2"
+ 
+                    VerticalAlignment="Top"
+                     Style="{StaticResource PlayerSliderStyle}"
+                    Value="{x:Bind PlayerSession.Position,Mode=TwoWay,Converter={StaticResource TimeSpanToDoubleConverter}}"
+                    Maximum="{x:Bind PlayerSession.Duration,Mode=OneWay,Converter={StaticResource TimeSpanToDoubleConverter}}"  />
+            </Grid>
+            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button Style="{StaticResource PlayerActionButtonStyle}" 
+                    Content="&#xE72C;"
+                    Click="{x:Bind PlayerSession.ScrollPlayMode}"/>
+                <Button Style="{StaticResource PlayerActionButtonStyle}" 
+                    Content="&#xE006;"/>
+                <Button   Content="&#xE767;" 
+                      Style="{StaticResource PlayerActionButtonStyle}" >
+                    <Button.Flyout>
+                        <Flyout Placement="Top">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="音量调节" 
+                                       Margin="10"
+                                       HorizontalAlignment="Center"/>
+                                <RelativePanel Grid.Row="1">
+                                    <TextBlock Name="txtSound" 
+                                           Margin="8" 
+                                           FontFamily="Segoe MDL2 Assets" 
+                                           FontSize="20" Text="&#xE767;" />
+                                    <Slider Maximum="100"  
+                                        Minimum="0" 
+                                        Value="{x:Bind PlayerSession.Volume,Mode=TwoWay}" Width="100" RelativePanel.RightOf="txtSound"/>
+                                </RelativePanel>
+                            </Grid>
+
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+
             </StackPanel>
-            <Slider Grid.Row="1" Grid.ColumnSpan="2"  HorizontalAlignment="Stretch"   Value="{x:Bind PlayerSession.Position,Mode=TwoWay,Converter={StaticResource TimeSpanToDoubleConverter}}" Maximum="{x:Bind PlayerSession.Duration,Mode=OneWay,Converter={StaticResource TimeSpanToDoubleConverter}}"  />
         </Grid>
-        <StackPanel Grid.Column="3" Orientation="Horizontal">
-            <TextBlock PointerPressed="{x:Bind PlayerSession.ScrollPlayMode}"   Margin="8" FontFamily="Segoe MDL2 Assets" FontSize="32" Text="&#xE72C;"  />
-            <TextBlock    Margin="8" FontFamily="Segoe MDL2 Assets" FontSize="32" Text="&#xE006;" />
-            <Button   Margin="8" FontFamily="Segoe MDL2 Assets"  Content="&#xE767;" >
-                <Button.Flyout>
-                    <Flyout Placement="Top">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock Text="音量调节" Margin="10" HorizontalAlignment="Center"/>
-                            <RelativePanel Grid.Row="1">
-                                <TextBlock Name="txtSound" Margin="8" FontFamily="Segoe MDL2 Assets" FontSize="20" Text="&#xE767;" />
-                                <Slider Maximum="100"  Minimum="0" Value="{x:Bind PlayerSession.Volume,Mode=TwoWay}" Width="100" RelativePanel.RightOf="txtSound"/>
-                            </RelativePanel>
-                        </Grid>
-
-                    </Flyout>
-                </Button.Flyout>
-            </Button>
-
-        </StackPanel>
-    </Grid>
+    </Border>
+   
 
 </UserControl>

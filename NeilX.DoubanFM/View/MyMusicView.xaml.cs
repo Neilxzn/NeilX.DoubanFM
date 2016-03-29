@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -25,6 +26,38 @@ namespace NeilX.DoubanFM.View
         public MyMusicView()
         {
             this.InitializeComponent();
+        }
+
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+
+            ContentDialog d = new ContentDialog();
+            d.Title = "删除？";
+            d.PrimaryButtonText = "确认";
+            d.SecondaryButtonText = "取消";
+            d.ShowAsync();
+        }
+
+        private void MenuFlyoutItem_Click_1(object sender, RoutedEventArgs e)
+        {
+            ContentDialog d = new ContentDialog();
+            d.Title = "歌曲信息";
+            d.IsSecondaryButtonEnabled = false;
+            d.PrimaryButtonText = "确认";
+            d.Content = "微光 数据格式:MP3，长度：3:30";
+            d.ShowAsync();
+        }
+
+        private void MenuFlyoutItem_Click_2(object sender, RoutedEventArgs e)
+        {
+            TextBox tb = new TextBox();
+            tb.Text = "列表1";
+            ContentDialog d = new ContentDialog();
+            d.Title = "重命名";
+            d.SecondaryButtonText = "取消";
+            d.PrimaryButtonText = "确认";
+            d.Content = tb;
+            d.ShowAsync();
         }
     }
 }

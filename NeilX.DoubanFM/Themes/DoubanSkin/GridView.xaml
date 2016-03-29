@@ -10,7 +10,7 @@
         <Setter Property="IsHoldingEnabled" Value="True"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="20"/>
+        <Setter Property="Margin" Value="15"/>
         <Setter Property="MinWidth" Value="{ThemeResource GridViewItemMinWidth}"/>
         <Setter Property="MinHeight" Value="{ThemeResource GridViewItemMinHeight}"/>
         <Setter Property="Template">
@@ -24,7 +24,7 @@
                                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" 
                                            ReorderHintOffset="{ThemeResource GridViewItemReorderHintThemeOffset}" 
                                            SelectionCheckMarkVisualEnabled="True" 
-                                           VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" PointerOverBackground="#FFD12D2D" SelectedBackground="#FF3472B0">
+                                           VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
                         <ListViewItemPresenter.CheckBoxBrush>
                             <SolidColorBrush Color="{ThemeResource SystemAltHighColor}"/>
                         </ListViewItemPresenter.CheckBoxBrush>
