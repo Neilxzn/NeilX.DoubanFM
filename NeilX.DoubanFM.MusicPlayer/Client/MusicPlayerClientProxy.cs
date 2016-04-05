@@ -183,9 +183,34 @@ namespace NeilX.DoubanFM.MusicPlayer.Client
         private void HandlePlayerEvent(string message)
         {
             PlayerEventMessage playerEventevent = JsonHelper.FromJson<PlayerEventMessage>(message);
-            if (playerEventevent.EventName == "")
+            switch (playerEventevent.EventName)
             {
-
+                case PlayerEventMessage.SeekCompleted:
+                    if (SeekCompleted != null)
+                    {
+                        SeekCompleted(this, null);
+                    }
+                    break;
+                case PlayerEventMessage.MediaEnd:
+                    if (MediaEnded != null)
+                    {
+                        MediaEnded(this, null);
+                    }                    
+                    break;
+                case PlayerEventMessage.MediaFailed:
+                    if (MediaFailed != null)
+                    {
+                        MediaFailed(this, null);
+                    }
+                    break;
+                case PlayerEventMessage.MediaOpened:
+                    if (MediaOpened != null)
+                    {
+                        MediaOpened(this, null);
+                    }
+                    break;
+                default:
+                    break;
             }
         }
         #endregion

@@ -76,6 +76,8 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
             _player.MediaEnded -= _player_MediaEnded;
             _player.MediaFailed -= _player_MediaFailed;
             _player.CurrentStateChanged -= _player_CurrentStateChanged;
+            _mtControls.ButtonPressed -= _mtControls_ButtonPressed;
+            _mtControls?.Dispose();
         }
 
         #region Player Event Handler
@@ -128,21 +130,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
         } 
         #endregion
 
-        #region musicplayer event handler
 
-
-        //private void _musicPlayer_OnReceiveMessage(Windows.Foundation.Collections.ValueSet message)
-        //{
-        //    TrackChangedMessage trackChangedMessage;
-        //    if (MessageService.TryParseMessage(message, out trackChangedMessage))
-        //    {
-        //        // When foreground app is active change track based on background message
-        //        _controllerHandler?.NotifyCurrentTrackChanged(_playlist?.FirstOrDefault(s => s.Url == trackChangedMessage.SongUri));
-        //        _currentTrack = _playlist.FirstOrDefault(s => s.Url == trackChangedMessage.SongUri);
-        //    }
-        //}
-
-        #endregion
 
         public void SetupHandler(IMusicPlayerControllerHandler handler)
         {

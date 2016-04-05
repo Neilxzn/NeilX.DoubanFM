@@ -23,7 +23,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
 
         public void OnCanceled()
         {
-            _musicPlayerController.OnCanceled();
+            _musicPlayerController?.OnCanceled();
         }
 
         public void OnReceiveMessage(MessageType type, string message)

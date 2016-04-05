@@ -127,14 +127,16 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
 
 
 
-        private void Shutdown()
+        public void Shutdown()
         {
+            _musicPlayerHandler?.OnCanceled();
             mediaPlayer.MediaOpened -= MediaPlayer_MediaOpened;
             mediaPlayer.MediaFailed -= MediaPlayer_MediaFailed;
             mediaPlayer.MediaEnded -= MediaPlayer_MediaEnded;
             mediaPlayer.SeekCompleted -= MediaPlayer_SeekCompleted;
             mediaPlayer.CurrentStateChanged -= MediaPlayer_CurrentStateChanged;
             BackgroundMediaPlayer.MessageReceivedFromForeground -= BackgroundMediaPlayer_MessageReceivedFromForeground;
+           // BackgroundMediaPlayer.Shutdown();
 
         }
 

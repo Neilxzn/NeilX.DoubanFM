@@ -416,7 +416,7 @@ namespace NeilX.DoubanFM.Services
             {
                 if (PlaybackStatus == MediaPlaybackStatus.Playing)
                 {
-                    // _position = position;
+                     _position = _proxy.Position;
                     RaisePropertyChanged(nameof(Position));
                 }
             });
@@ -462,8 +462,19 @@ namespace NeilX.DoubanFM.Services
             }
         }
         #endregion 
+
         public void Dispose()
         {
+            if (_proxy!=null)
+            {
+                _proxy.SeekCompleted -= _proxy_SeekCompleted;
+                _proxy.MediaOpened -= _proxy_MediaOpened;
+                _proxy.MediaFailed -= _proxy_MediaFailed;
+                _proxy.MediaEnded -= _proxy_MediaEnded;
+                _proxy.CurrentStateChanged -= _proxy_CurrentStateChanged;
+                _proxy.CurrentTrackChanged -= _proxy_CurrentTrackChanged;
+            }
+
             if (_askPositionTimer != null)
             {
                 _askPositionTimer.Dispose();

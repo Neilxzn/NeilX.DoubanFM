@@ -38,34 +38,36 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
 
         public void NotifyMediaEnd()
         {
-            MessageService.SendMessageToClient(new PlayerEventMessage("SeekCompleted", ""));
+            MessageService.SendMessageToClient(new PlayerEventMessage(PlayerEventMessage.MediaEnd, ""));
 
         }
 
         public void NotifyMediaFailed()
         {
-            MessageService.SendMessageToClient(new PlayerEventMessage("SeekCompleted", ""));
+            MessageService.SendMessageToClient(new PlayerEventMessage(PlayerEventMessage.MediaFailed, ""));
 
         }
 
         public void NotifyMediaOpened()
         {
-            MessageService.SendMessageToClient(new PlayerEventMessage("SeekCompleted", ""));
+            MessageService.SendMessageToClient(new PlayerEventMessage(PlayerEventMessage.MediaOpened, ""));
 
         }
 
         public void NotifySeekCompleted()
         {
-            MessageService.SendMessageToClient(new PlayerEventMessage("SeekCompleted", ""));
+            MessageService.SendMessageToClient(new PlayerEventMessage(PlayerEventMessage.SeekCompleted, ""));
         }
         public void NotifyPlaylist(IList<Song> playlist)
         {
 
         }
 
+
+
         public void NotifyPosition(TimeSpan position)
         {
-
+            throw new NotImplementedException();
         }
         public void NotifyDuration(TimeSpan? duration)
         {

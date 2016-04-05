@@ -27,8 +27,6 @@ namespace NeilX.DoubanFM.BackgroundTask
         private MediaPlaybackList playbackList = new MediaPlaybackList();
         private BackgroundTaskDeferral deferral; // Used to keep task alive
         private AppState foregroundAppState = AppState.Unknown;
-        private ManualResetEvent backgroundTaskStarted = new ManualResetEvent(false);
-        private bool playbackStartedPreviously = false;
         #endregion
 
 
@@ -39,31 +37,23 @@ namespace NeilX.DoubanFM.BackgroundTask
         {
             Debug.WriteLine("Background Audio Task " + taskInstance.Task.Name + " starting...");
             deferral = taskInstance.GetDeferral();
-           // AttachMessageHandlers();
+            // AttachMessageHandlers();
             server = new MusicPlayerServer();
             server.InitialServer();
-        
-            ValueSet valueSet =  new ValueSet();
-            valueSet["MessageId"]= MessageService.BackgroundMediaPlayerActivatedMessageKey;
+
+            ValueSet valueSet = new ValueSet();
+            valueSet["MessageId"] = MessageService.BackgroundMediaPlayerActivatedMessageKey;
             BackgroundMediaPlayer.SendMessageToForeground(valueSet);
 
 
             taskInstance.Task.Completed += TaskCompleted;
-            taskInstance.Canceled += new BackgroundTaskCanceledEventHandler(OnCanceled); 
+            taskInstance.Canceled += new BackgroundTaskCanceledEventHandler(OnCanceled);
         }
 
 
         #endregion
 
-        private void  AttachMessageHandlers()
-        {
-            BackgroundMediaPlayer.MessageReceivedFromForeground += BackgroundMediaPlayer_MessageReceivedFromForeground;
-        }
 
-        private void ActivateHandler()
-        {
-            BackgroundMediaPlayer.Current.CurrentStateChanged += Current_CurrentStateChanged;
-        }
 
         private void CheckOutAppState()
         {
@@ -93,28 +83,25 @@ namespace NeilX.DoubanFM.BackgroundTask
             smtc.IsNextEnabled = true;
             smtc.IsPreviousEnabled = true;
         }
-        private void ConfigureMediaPlayer()
-        {
 
-        }
 
         private void Shutdown()
         {
             // unsubscribe from list changes
-            if (playbackList != null)
-            {
-                playbackList.CurrentItemChanged -= PlaybackList_CurrentItemChanged;
-                playbackList = null;
-            }
+            //if (playbackList != null)
+            //{
+            //    playbackList.CurrentItemChanged -= PlaybackList_CurrentItemChanged;
+            //    playbackList = null;
+            //}
 
-            // unsubscribe event handlers
-            BackgroundMediaPlayer.MessageReceivedFromForeground -= BackgroundMediaPlayer_MessageReceivedFromForeground;
-            smtc.ButtonPressed -= smtc_ButtonPressed;
-            smtc.PropertyChanged -= smtc_PropertyChanged;
-            if (BackgroundMediaPlayer.Current.CurrentState != MediaPlayerState.Closed)
-            {
-                BackgroundMediaPlayer.Shutdown(); // shutdown media pipeline
-            }
+            //// unsubscribe event handlers
+            //BackgroundMediaPlayer.MessageReceivedFromForeground -= BackgroundMediaPlayer_MessageReceivedFromForeground;
+            //smtc.ButtonPressed -= smtc_ButtonPressed;
+            //smtc.PropertyChanged -= smtc_PropertyChanged;
+            //if (BackgroundMediaPlayer.Current.CurrentState != MediaPlayerState.Closed)
+            //{
+            //    BackgroundMediaPlayer.Shutdown(); // shutdown media pipeline
+            //}
         }
 
         #region SysteMediaTransportControls related functions and handlers
@@ -174,9 +161,9 @@ namespace NeilX.DoubanFM.BackgroundTask
                     // Wait for task to start. 
                     // Once started, this stays signaled until shutdown so it won't wait
                     // again unless it needs to.
-                    bool result = backgroundTaskStarted.WaitOne(5000);
-                    if (!result)
-                        throw new Exception("Background Task didnt initialize in time");
+                    //bool result = backgroundTaskStarted.WaitOne(5000);
+                    //if (!result)
+                    //    throw new Exception("Background Task didnt initialize in time");
 
                     StartPlayback();
                     break;
@@ -215,66 +202,66 @@ namespace NeilX.DoubanFM.BackgroundTask
             try
             {
                 // If playback was already started once we can just resume playing.
-                if (!playbackStartedPreviously)
-                {
-                    playbackStartedPreviously = true;
+                //if (!playbackStartedPreviously)
+                //{
+                //    playbackStartedPreviously = true;
 
-                    // If the task was cancelled we would have saved the current track and its position. We will try playback from there.
-                    var currentTrackId = ApplicationSettingsHelper.ReadResetSettingsValue(ApplicationSettingsConstants.TrackId);
-                    var currentTrackPosition = ApplicationSettingsHelper.ReadResetSettingsValue(ApplicationSettingsConstants.Position);
-                    if (currentTrackId != null)
-                    {
-                        // Find the index of the item by name
-                        var index = playbackList.Items.ToList().FindIndex(item =>
-                            AudioTaskHelper.GetPlaybackListItemTrackId(item).ToString() == (string)currentTrackId);
+                //    // If the task was cancelled we would have saved the current track and its position. We will try playback from there.
+                //    var currentTrackId = ApplicationSettingsHelper.ReadResetSettingsValue(ApplicationSettingsConstants.TrackId);
+                //    var currentTrackPosition = ApplicationSettingsHelper.ReadResetSettingsValue(ApplicationSettingsConstants.Position);
+                //    if (currentTrackId != null)
+                //    {
+                //        // Find the index of the item by name
+                //        var index = playbackList.Items.ToList().FindIndex(item =>
+                //            AudioTaskHelper.GetPlaybackListItemTrackId(item).ToString() == (string)currentTrackId);
 
-                        if (currentTrackPosition == null)
-                        {
-                            // Play from start if we dont have position
-                            Debug.WriteLine("StartPlayback: Switching to track " + index);
-                            playbackList.MoveTo((uint)index);
+                //        if (currentTrackPosition == null)
+                //        {
+                //            // Play from start if we dont have position
+                //            Debug.WriteLine("StartPlayback: Switching to track " + index);
+                //            playbackList.MoveTo((uint)index);
 
-                            // Begin playing
-                            BackgroundMediaPlayer.Current.Play();
-                        }
-                        else
-                        {
-                            // Play from exact position otherwise
-                            TypedEventHandler<MediaPlaybackList, CurrentMediaPlaybackItemChangedEventArgs> handler = null;
-                            handler = (MediaPlaybackList list, CurrentMediaPlaybackItemChangedEventArgs args) =>
-                            {
-                                if (args.NewItem == playbackList.Items[index])
-                                {
-                                    // Unsubscribe because this only had to run once for this item
-                                    playbackList.CurrentItemChanged -= handler;
+                //            // Begin playing
+                //            BackgroundMediaPlayer.Current.Play();
+                //        }
+                //        else
+                //        {
+                //            // Play from exact position otherwise
+                //            TypedEventHandler<MediaPlaybackList, CurrentMediaPlaybackItemChangedEventArgs> handler = null;
+                //            handler = (MediaPlaybackList list, CurrentMediaPlaybackItemChangedEventArgs args) =>
+                //            {
+                //                if (args.NewItem == playbackList.Items[index])
+                //                {
+                //                    // Unsubscribe because this only had to run once for this item
+                //                    playbackList.CurrentItemChanged -= handler;
 
-                                    // Set position
-                                    var position = TimeSpan.Parse((string)currentTrackPosition);
-                                    Debug.WriteLine("StartPlayback: Setting Position " + position);
-                                    BackgroundMediaPlayer.Current.Position = position;
+                //                    // Set position
+                //                    var position = TimeSpan.Parse((string)currentTrackPosition);
+                //                    Debug.WriteLine("StartPlayback: Setting Position " + position);
+                //                    BackgroundMediaPlayer.Current.Position = position;
 
-                                    // Begin playing
-                                    BackgroundMediaPlayer.Current.Play();
-                                }
-                            };
-                            playbackList.CurrentItemChanged += handler;
+                //                    // Begin playing
+                //                    BackgroundMediaPlayer.Current.Play();
+                //                }
+                //            };
+                //            playbackList.CurrentItemChanged += handler;
 
-                            // Switch to the track which will trigger an item changed event
-                            Debug.WriteLine("StartPlayback: Switching to track " + index);
-                            playbackList.MoveTo((uint)index);
-                        }
-                    }
-                    else
-                    {
-                        // Begin playing
-                        BackgroundMediaPlayer.Current.Play();
-                    }
-                }
-                else
-                {
-                    // Begin playing
-                    BackgroundMediaPlayer.Current.Play();
-                }
+                //            // Switch to the track which will trigger an item changed event
+                //            Debug.WriteLine("StartPlayback: Switching to track " + index);
+                //            playbackList.MoveTo((uint)index);
+                //        }
+                //    }
+                //    else
+                //    {
+                //        // Begin playing
+                //        BackgroundMediaPlayer.Current.Play();
+                //    }
+                //}
+                //else
+                //{
+                //    // Begin playing
+                //    BackgroundMediaPlayer.Current.Play();
+                //}
             }
             catch (Exception ex)
             {
@@ -340,7 +327,7 @@ namespace NeilX.DoubanFM.BackgroundTask
 
             // Don't auto start
             BackgroundMediaPlayer.Current.AutoPlay = false;
-            
+
             // Assign the list to the player
             BackgroundMediaPlayer.Current.Source = playbackList;
 
@@ -351,21 +338,7 @@ namespace NeilX.DoubanFM.BackgroundTask
         #endregion
 
         #region Background Media Player Handlers
-        void Current_CurrentStateChanged(MediaPlayer sender, object args)
-        {
-            if (sender.CurrentState == MediaPlayerState.Playing)
-            {
-                smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
-            }
-            else if (sender.CurrentState == MediaPlayerState.Paused)
-            {
-                smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
-            }
-            else if (sender.CurrentState == MediaPlayerState.Closed)
-            {
-                smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
-            }
-        }
+
 
         void BackgroundMediaPlayer_MessageReceivedFromForeground(object sender, MediaPlayerDataReceivedEventArgs e)
         {
@@ -447,20 +420,11 @@ namespace NeilX.DoubanFM.BackgroundTask
             deferral.Complete();
         }
 
-        /// <summary>
-        /// Handles background task cancellation. Task cancellation happens due to:
-        /// 1. Another Media app comes into foreground and starts playing music 
-        /// 2. Resource pressure. Your task is consuming more CPU and memory than allowed.
-        /// In either case, save state so that if foreground app resumes it can know where to start.
-        /// </summary>
         private void OnCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
         {
-            Debug.WriteLine("AudioPlayerTask " + sender.Task.TaskId + " Cancel Requested...");
             try
             {
-                // immediately set not running
-                backgroundTaskStarted.Reset();
-                Shutdown();
+                server?.Shutdown();
                 // save state
                 ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.TrackId, AudioTaskHelper.GetPlayListCurrentTrackId(playbackList) == null ? null : AudioTaskHelper.GetPlayListCurrentTrackId(playbackList).ToString());
                 ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.Position, BackgroundMediaPlayer.Current.Position.ToString());
