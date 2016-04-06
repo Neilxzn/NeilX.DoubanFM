@@ -13,7 +13,7 @@
         <convert:TimeSpanToDoubleConverter x:Key="TimeSpanToDoubleConverter"/>
         <convert:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter"/>
         <convert:IsPlayingConverter x:Key="IsPlayingConverter"/>
-
+        <convert:PlayModeToStringConverter x:Key="PlayModeToStringConverter"/>
         <Style x:Key="TrackFunctionalButtonStyle" TargetType="Button">
             <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
             <Setter Property="Margin" Value="5"/>
@@ -112,7 +112,7 @@
             </Grid>
             <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
                 <Button Style="{StaticResource PlayerActionButtonStyle}" 
-                    Content="&#xE72C;"
+                    Content="{x:Bind PlayerSession.PlayMode,Mode=OneWay,Converter={StaticResource PlayModeToStringConverter}}"
                     Click="{x:Bind PlayerSession.ScrollPlayMode}"/>
                 <Button Style="{StaticResource PlayerActionButtonStyle}" 
                     Content="&#xE006;"/>

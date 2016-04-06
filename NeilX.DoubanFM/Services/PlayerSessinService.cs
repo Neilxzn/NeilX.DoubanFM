@@ -113,7 +113,6 @@ namespace NeilX.DoubanFM.Services
                 if (Set(ref _currentTrack, value))
                 {
                     _proxy?.SetMediaSource(value);
-                    // _mtService.SetCurrentTrack(value);
                     OnCurrentTrackChanged();
                 }
             }
@@ -167,7 +166,6 @@ namespace NeilX.DoubanFM.Services
         {
             _client = new MusicPlayerClient();
             _client.PlayerActivated += _client_PlayerActivated;
-            // _musicPlayerController = new MusicPlayerController(this);
             _askPositionTimer = new Timer(OnAskPosition, null, Timeout.InfiniteTimeSpan, _askPositionPeriod);
             LoadState();
             // DoubanFMService.Player.CurrentChannelChanged += DoubanFM_CurrentChannelChanged;
@@ -263,8 +261,7 @@ namespace NeilX.DoubanFM.Services
         }
         private void OnPlayModeChanged()
         {
-            if (_proxy != null)
-                _proxy.PlayMode = PlayMode;
+            _proxy?.SetPlayMode(_playMode);
         }
 
         private void OnVolumeChanged()
@@ -348,7 +345,6 @@ namespace NeilX.DoubanFM.Services
         {
             if (_playlist != null)
             {
-                var currentTrack = _playlist.FirstOrDefault(o => o == arg);
                 await DispatcherHelper.RunAsync(() =>
                 {
                     if (Set(ref _currentTrack, arg))
@@ -358,7 +354,7 @@ namespace NeilX.DoubanFM.Services
                     }
                     _position = TimeSpan.Zero;
                     RaisePropertyChanged(nameof(Position));
-                    Duration = TimeSpan.FromSeconds((double)currentTrack?.Length);
+                    Duration = TimeSpan.FromSeconds((double)arg?.Length);
                 });
             }
         }
@@ -418,6 +414,11 @@ namespace NeilX.DoubanFM.Services
                 {
                      _position = _proxy.Position;
                     RaisePropertyChanged(nameof(Position));
+
+                    if ( _position.TotalMilliseconds>=Duration.Value.TotalMilliseconds)
+                    {
+                        SuspendAskPosition();
+                    }
                 }
             });
         }
@@ -437,7 +438,7 @@ namespace NeilX.DoubanFM.Services
             //_playerConfig = configService.Player;
             //PlayMode = _playModeManager.GetProvider(_playerConfig.PlayMode);
             Volume = 50;
-            PlayMode = PlayMode.Loop;
+            PlayMode = PlayMode.RepeatAll;
             //_playerConfig.EqualizerParameters.CollectionChanged += EqualizerParameters_CollectionChanged;
         }
 
