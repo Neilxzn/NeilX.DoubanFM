@@ -37,10 +37,13 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
                 case MessageType.AudioTaskStartedMessage:
                     break;
                 case MessageType.PlayModeChangeMessage:
+                    _musicPlayerController?.SetPlayMode(JsonHelper.FromJson<PlayModeChangeMessage>(message).Playmode);
                     break;
                 case MessageType.SkipNextMessage:
+                    _musicPlayerController?.MoveNext();
                     break;
                 case MessageType.SkipPreviousMessage:
+                    _musicPlayerController?.MovePrevious();
                     break;
                 case MessageType.StartPlaybackMessage:
                     break;

@@ -108,6 +108,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Authentication\AuthenticationBase.cs" />
+    <Compile Include="Common\SingletonProvider.cs" />
+    <Compile Include="LocalData\DataService.cs" />
+    <Compile Include="LocalData\DbContext.cs" />
+    <Compile Include="LocalData\LocalDataFacade.cs" />
     <Compile Include="Player\ChangeChannelCommandType.cs" />
     <Compile Include="Model\Channel.cs" />
     <Compile Include="Model\ChannelGroup.cs" />
@@ -141,7 +145,11 @@
     <Compile Include="Model\UserInfo.cs" />
     <EmbeddedResource Include="Properties\NeilX.DoubanFM.Core.rd.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <SDKReference Include="SQLite.UWP.2015, Version=3.11.0">
+      <Name>SQLite for Universal Windows Platform</Name>
+    </SDKReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

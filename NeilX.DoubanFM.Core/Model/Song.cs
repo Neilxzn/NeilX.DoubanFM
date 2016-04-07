@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite.Net.Attributes;
+using System;
 
 namespace NeilX.DoubanFM.Core
 {
@@ -85,7 +86,8 @@ namespace NeilX.DoubanFM.Core
         /// <value>
         /// The SID.
         /// </value>
-        public string Sid { get; }
+        [Ignore]
+        public string Sid { get; set; }
         /// <summary>
         /// Gets or sets the AID.
         /// </summary>
@@ -125,6 +127,10 @@ namespace NeilX.DoubanFM.Core
 
         public string Lyric { get; set; }
 
+
+        [AutoIncrement, PrimaryKey]
+        public int Id { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Song"/> class.
         /// </summary>
@@ -132,6 +138,7 @@ namespace NeilX.DoubanFM.Core
         public Song(string sid)
         {
             Sid = sid;
+            Id = int.Parse(sid);
         }
 
         public Song()

@@ -106,6 +106,41 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
             //    smtc.DisplayUpdater.Thumbnail = null;
         }
 
+        public void DetectSMTCStatus(Song song,PlayList playlist,PlayMode playMode)
+        {
+            if (song != null)
+            {
+                IsPlayEnabled = IsPauseEnabled = true;
+                var idx = playlist.TrackLists.IndexOf(song);
+                if (idx != -1)
+                {
+                    switch (playMode)
+                    {
+                        case PlayMode.RepeatOne:
+                            CanPrevious = CanNext = true;
+                            break;
+                        case PlayMode.RepeatAll:
+                            CanPrevious = CanNext = true;
+                            break;
+                        case PlayMode.List:
+                            CanPrevious = idx > 0 && PlaybackStatus != MediaPlaybackStatus.Changing;
+                            CanNext = idx < playlist.TrackLists.Count - 1 && PlaybackStatus != MediaPlaybackStatus.Changing;
+                            break;
+                        case PlayMode.Shuffle:
+                            CanPrevious = CanNext = true;
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+                else
+                    CanPrevious = CanNext = false;
+            }
+            else
+                IsPlayEnabled = IsPauseEnabled = CanPrevious = CanNext = false;
+        }
+
         #region IDisposable Support
         private bool disposedValue = false; // 要检测冗余调用
 

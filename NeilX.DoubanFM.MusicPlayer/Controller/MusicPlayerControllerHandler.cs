@@ -60,7 +60,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
         }
         public void NotifyPlaylist(IList<Song> playlist)
         {
-
+            throw new NotImplementedException();
         }
 
 

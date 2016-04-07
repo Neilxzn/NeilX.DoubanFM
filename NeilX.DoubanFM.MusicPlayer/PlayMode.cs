@@ -8,9 +8,9 @@ namespace NeilX.DoubanFM.MusicPlayer
 {
     public enum PlayMode
     {
-        Single,
-        SingleLoop,
-        Loop,
+        RepeatOne,
+        RepeatAll,
+        List,
         Shuffle
     }
 }

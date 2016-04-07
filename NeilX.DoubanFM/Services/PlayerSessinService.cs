@@ -25,7 +25,6 @@ namespace NeilX.DoubanFM.Services
         private readonly Timer _askPositionTimer;
         private static readonly TimeSpan _askPositionPeriod = TimeSpan.FromSeconds(0.25);
         private readonly MusicPlayerClient _client;
-        private bool _autoPlay = false;
         private bool _canPrevious;
         private bool _canPause;
         private bool _canPlay;
@@ -168,8 +167,6 @@ namespace NeilX.DoubanFM.Services
             _client.PlayerActivated += _client_PlayerActivated;
             _askPositionTimer = new Timer(OnAskPosition, null, Timeout.InfiniteTimeSpan, _askPositionPeriod);
             LoadState();
-            // DoubanFMService.Player.CurrentChannelChanged += DoubanFM_CurrentChannelChanged;
-            //DoubanFMService.Player.CurrentSongChanged += DoubanFM_CurrentSongChanged;
         }
 
         private void _client_PlayerActivated(object sender, object e)
@@ -262,6 +259,7 @@ namespace NeilX.DoubanFM.Services
         private void OnPlayModeChanged()
         {
             _proxy?.SetPlayMode(_playMode);
+            DetectPlayerControlStatus();
         }
 
         private void OnVolumeChanged()
@@ -272,19 +270,7 @@ namespace NeilX.DoubanFM.Services
 
         private void OnCurrentTrackChanged()
         {
-            if (CurrentTrack != null)
-            {
-                var idx = Playlist.IndexOf(CurrentTrack);
-                if (idx != -1)
-                {
-                    CanPrevious = idx > 0 && PlaybackStatus != MediaPlaybackStatus.Changing;
-                    CanNext = idx < Playlist.Count - 1 && PlaybackStatus != MediaPlaybackStatus.Changing;
-                }
-                else
-                    CanPrevious = CanNext = false;
-            }
-            else
-                CanPlay = CanPause = CanPrevious = CanNext = false;
+            DetectPlayerControlStatus();
         }
 
         #endregion
@@ -358,6 +344,7 @@ namespace NeilX.DoubanFM.Services
                 });
             }
         }
+
         private void _proxy_MediaFailed(IMediaPlayer sender, MediaPlayerFailedEventArgs args)
         {
 
@@ -365,11 +352,6 @@ namespace NeilX.DoubanFM.Services
 
         private void _proxy_MediaOpened(IMediaPlayer sender, object args)
         {
-            //if (_autoPlay)
-            //{
-            //    Play();
-            //    _autoPlay = false;
-            //}
         }
 
         private void _proxy_SeekCompleted(IMediaPlayer sender, object args)
@@ -378,33 +360,37 @@ namespace NeilX.DoubanFM.Services
         }
         #endregion
 
-        #region Helper private Methods
+        #region private Helper  Methods
+
+        #region Player Control Methods
 
         private void Play()
         {
-            //  PlaybackStatus = MediaPlaybackStatus.Changing;
+            PlaybackStatus = MediaPlaybackStatus.Changing;
             _proxy?.Play();
         }
 
         private void Pause()
         {
-            //  PlaybackStatus = MediaPlaybackStatus.Changing;
+            PlaybackStatus = MediaPlaybackStatus.Changing;
             _proxy?.Pause();
         }
 
         private void MoveNext()
         {
-            //  PlaybackStatus = MediaPlaybackStatus.Changing;
-            _autoPlay = true;
+            PlaybackStatus = MediaPlaybackStatus.Changing;
             _proxy?.MoveNext();
         }
 
         private void MovePrevious()
         {
-            //  PlaybackStatus = MediaPlaybackStatus.Changing;
-            _autoPlay = true;
+            PlaybackStatus = MediaPlaybackStatus.Changing;
             _proxy?.MovePrevious();
         }
+
+        #endregion
+
+        #region Position Methods
 
         private async void OnAskPosition(object state)
         {
@@ -412,16 +398,17 @@ namespace NeilX.DoubanFM.Services
             {
                 if (PlaybackStatus == MediaPlaybackStatus.Playing)
                 {
-                     _position = _proxy.Position;
+                    _position = _proxy.Position;
                     RaisePropertyChanged(nameof(Position));
 
-                    if ( _position.TotalMilliseconds>=Duration.Value.TotalMilliseconds)
+                    if (_position.TotalMilliseconds >= Duration.Value.TotalMilliseconds)
                     {
                         SuspendAskPosition();
                     }
                 }
             });
         }
+
         private void SuspendAskPosition()
         {
             _askPositionTimer.Change(Timeout.InfiniteTimeSpan, _askPositionPeriod);
@@ -432,37 +419,51 @@ namespace NeilX.DoubanFM.Services
             _askPositionTimer.Change(TimeSpan.Zero, _askPositionPeriod);
         }
 
+        #endregion
         private void LoadState()
         {
-            //var configService = IoC.Get<IConfigurationService>();
-            //_playerConfig = configService.Player;
             //PlayMode = _playModeManager.GetProvider(_playerConfig.PlayMode);
             Volume = 50;
             PlayMode = PlayMode.RepeatAll;
-            //_playerConfig.EqualizerParameters.CollectionChanged += EqualizerParameters_CollectionChanged;
         }
 
+        private void DetectPlayerControlStatus()
+        {
+            if (CurrentTrack != null)
+            {
+                var idx = Playlist.IndexOf(CurrentTrack);
+                if (idx != -1)
+                {
+                    switch (PlayMode)
+                    {
+                        case PlayMode.RepeatOne:
+                            CanPrevious = CanNext = true;
+                            break;
+                        case PlayMode.RepeatAll:
+                            CanPrevious = CanNext = true;
+                            break;
+                        case PlayMode.List:
+                            CanPrevious = idx > 0 && PlaybackStatus != MediaPlaybackStatus.Changing;
+                            CanNext = idx < Playlist.Count - 1 && PlaybackStatus != MediaPlaybackStatus.Changing;
+                            break;
+                        case PlayMode.Shuffle:
+                            CanPrevious = CanNext = true;
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+                else
+                    CanPrevious = CanNext = false;
+            }
+            else
+                CanPlay = CanPause = CanPrevious = CanNext = false;
+        }
         #endregion
 
 
-        #region DoubanFMService Handler
-        private void DoubanFM_CurrentSongChanged(object sender, Core.EventArgs<Core.Song> e)
-        {
 
-        }
-
-        private void DoubanFM_CurrentChannelChanged(object sender, Core.EventArgs<Core.Channel> e)
-        {
-            if (DoubanFMService.Player.PendingSongs?.Count < 1) return;
-            List<Song> infos = DoubanFMService.Player.PendingSongs.ToList();
-            SetPlaylist(infos, infos[0]);
-            if (IsPlaying)
-            {
-                Pause();
-                Play();
-            }
-        }
-        #endregion 
 
         public void Dispose()
         {

@@ -114,7 +114,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
         private void ConfigureMediaPlayer()
         {
             mediaPlayer = BackgroundMediaPlayer.Current;
-            // mediaPlayer.AudioCategory = MediaPlayerAudioCategory.Media;
+            mediaPlayer.AudioCategory = MediaPlayerAudioCategory.Media;
             mediaPlayer.AudioDeviceType = MediaPlayerAudioDeviceType.Multimedia;
             mediaPlayer.AutoPlay = false;
 
@@ -186,10 +186,6 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
             {
                 throw new NotSupportedException("Not supported uri.");
             }
-            
-            //IMediaSource source = MediaSource.CreateFromUri(new Uri(mediaSource.Url));
-            //MediaStreamSource streamSource;
-            //mediaPlayer?.SetMediaSource(source);
 
         }
 

@@ -17,6 +17,7 @@ using NeilX.DoubanFM.Core;
 using Kfstorm.LrcParser;
 using Windows.Storage.Pickers;
 using NeilX.DoubanFM.CustomControl;
+using NeilX.DoubanFM.Core.LocalData;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -36,7 +37,9 @@ namespace NeilX.DoubanFM.View
             InitializeMessenger();
 
             Unloaded += (sender, e) => Messenger.Default.Unregister(this);
-
+            LocalDataFacade lo = new LocalDataFacade();
+            lo.TestInsert();
+            lo.TestGet();
 
         }
         #region Helper methods

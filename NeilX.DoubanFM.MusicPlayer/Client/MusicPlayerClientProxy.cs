@@ -80,11 +80,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Client
             }
         }
 
-        public PlayMode PlayMode
-        {
-            get;
-            set;
-        }
+        
 
         public MusicPlayerClientProxy(MusicPlayerClient _client)
         {
@@ -113,6 +109,14 @@ namespace NeilX.DoubanFM.MusicPlayer.Client
             if (client != null)
             {
                 MessageService.SendMessageToServer(new UpdatePlaylistMessage(songs));
+            }
+        }
+
+        public void SetPlayMode(PlayMode playmode)
+        {
+            if (client != null)
+            {
+                MessageService.SendMessageToServer(new PlayModeChangeMessage(playmode));
             }
         }
 

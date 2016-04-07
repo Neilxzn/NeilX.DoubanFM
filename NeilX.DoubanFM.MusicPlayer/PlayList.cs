@@ -24,17 +24,22 @@ namespace NeilX.DoubanFM.MusicPlayer
         public PlayMode PlayMode { get; set; }
 
 
-        public List<Song> TrackLists
+        public IList<Song> TrackLists
         {
             get;
             set;
         }
 
-        public PlayList(List<Song> songs)
+        public PlayList(IList<Song> songs)
         {
             TrackLists = songs;
+            CurrentIndex = 0;
         }
 
+        public PlayList()
+        {
+            CurrentIndex = 0;
+        }
 
         public Song GetCurrentTrack()
         {
@@ -45,33 +50,28 @@ namespace NeilX.DoubanFM.MusicPlayer
             return null;
         }
 
+        public void CheckCurrentTrack(Song song)
+        {
+
+            if (TrackLists == null)
+            {
+                TrackLists = new List<Song>() { song };
+            }
+            else if (!TrackLists.Contains(song))
+            {
+                TrackLists.Add(song);
+            }
+            CurrentIndex = TrackLists.IndexOf(song);
+        }
+
+
         public Song MovePrevious()
         {
-            if (PlayMode == PlayMode.SingleLoop)
+            if (PlayMode == PlayMode.RepeatOne)
             {
                 return TrackLists[this.CurrentIndex];
             }
-            if (PlayMode == PlayMode.Loop)
-            {
-                if (++CurrentIndex > TrackLists.Count - 1)
-                {
-                    CurrentIndex = 0;
-                }
-                return TrackLists[CurrentIndex];
-            }
-            if (PlayMode == PlayMode.Single && ++CurrentIndex < TrackLists.Count)
-            {
-                return TrackLists[CurrentIndex];
-            }
-            return null;
-        }
-        public Song MoveNext()
-        {
-            if (PlayMode == PlayMode.SingleLoop)
-            {
-                return TrackLists[this.CurrentIndex];
-            }
-            if (PlayMode == PlayMode.Loop)
+            if (PlayMode == PlayMode.RepeatAll)
             {
                 this.CurrentIndex--;
                 if (this.CurrentIndex < 0)
@@ -80,7 +80,7 @@ namespace NeilX.DoubanFM.MusicPlayer
                 }
                 return TrackLists[CurrentIndex];
             }
-            if (PlayMode == PlayMode.Single)
+            if (PlayMode == PlayMode.List)
             {
                 CurrentIndex--;
                 if (CurrentIndex < TrackLists.Count)
@@ -88,7 +88,41 @@ namespace NeilX.DoubanFM.MusicPlayer
                     return TrackLists[CurrentIndex];
                 }
             }
+            if (PlayMode == PlayMode.Shuffle)
+            {
+                Random random = new Random();
+                CurrentIndex = random.Next(TrackLists.Count );
+                return TrackLists[CurrentIndex];
+            }
             return null;
+        }
+        public Song MoveNext()
+        {
+
+            if (PlayMode == PlayMode.RepeatOne)
+            {
+                return TrackLists[this.CurrentIndex];
+            }
+            if (PlayMode == PlayMode.RepeatAll)
+            {
+                if (++CurrentIndex > TrackLists.Count - 1)
+                {
+                    CurrentIndex = 0;
+                }
+                return TrackLists[CurrentIndex];
+            }
+            if (PlayMode == PlayMode.List && ++CurrentIndex < TrackLists.Count)
+            {
+                return TrackLists[CurrentIndex];
+            }
+            if (PlayMode==PlayMode.Shuffle)
+            {
+                Random random = new Random();
+                CurrentIndex = random.Next(TrackLists.Count);
+                return TrackLists[CurrentIndex];
+            }
+            return null;
+          
         }
 
 
