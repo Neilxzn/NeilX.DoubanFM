@@ -18,6 +18,7 @@ using Kfstorm.LrcParser;
 using Windows.Storage.Pickers;
 using NeilX.DoubanFM.CustomControl;
 using NeilX.DoubanFM.Core.LocalData;
+using NeilX.DoubanFM.Services;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -40,6 +41,7 @@ namespace NeilX.DoubanFM.View
             LocalDataFacade lo = new LocalDataFacade();
             lo.TestInsert();
             lo.TestGet();
+            LocalDataService.GetLocalAllSongs();
 
         }
         #region Helper methods

@@ -109,7 +109,7 @@
   <ItemGroup>
     <Compile Include="Authentication\AuthenticationBase.cs" />
     <Compile Include="Common\SingletonProvider.cs" />
-    <Compile Include="LocalData\DataService.cs" />
+    <Compile Include="LocalData\DataAccess.cs" />
     <Compile Include="LocalData\DbContext.cs" />
     <Compile Include="LocalData\LocalDataFacade.cs" />
     <Compile Include="Player\ChangeChannelCommandType.cs" />

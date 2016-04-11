@@ -104,6 +104,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\LocalSongHelper.cs" />
     <Compile Include="Convertors\IsPlayingConverter.cs" />
     <Compile Include="Convertors\PlayModeToStringConverter.cs" />
     <Compile Include="Convertors\TimeSpanToDoubleConverter.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Selector\FMsItemTemplateSelector.cs" />
     <Compile Include="Services\DoubanFMService.cs" />
     <Compile Include="Services\IPlayerSessionService.cs" />
+    <Compile Include="Services\LocalDataService.cs" />
     <Compile Include="Services\LyricService\ILyricsService.cs" />
     <Compile Include="Services\LyricService\LyricsService.cs" />
     <Compile Include="Services\LyricService\TrackMetadata.cs" />
@@ -254,6 +256,7 @@
       <HintPath>..\..\NeilSoft.UWP\NeilSoft.UWP\bin\Debug\NeilSoft.UWP.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

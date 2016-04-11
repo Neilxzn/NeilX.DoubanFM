@@ -131,6 +131,13 @@ namespace NeilX.DoubanFM.Core
         [AutoIncrement, PrimaryKey]
         public int Id { get; set; }
 
+
+        public int ListId { get; set; }
+
+
+        public int IsLocalMusic { get; set; }
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Song"/> class.
         /// </summary>
