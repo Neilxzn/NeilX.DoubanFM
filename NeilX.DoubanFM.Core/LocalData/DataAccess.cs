@@ -8,6 +8,10 @@ namespace NeilX.DoubanFM.Core.LocalData
 {
     public class DataAccess
     {
+        static DataAccess()
+        {
+            DbContext.Instance.Init();
+        }
         #region Song
         public int InsertSong(Song song)
         {
@@ -18,6 +22,38 @@ namespace NeilX.DoubanFM.Core.LocalData
             }
             return result;
         }
+
+        public int InsertSongs(List<Song> songs,bool _isChecked=true)
+        {
+            int result = 0;
+            using (var db = DbContext.Instance.GetDbConnection())
+            {
+                if (_isChecked)
+                {
+                    var list = db.Table<Song>().ToList();
+                    foreach (var item in list)
+                    {
+                        Song rs = songs.Where(o => o.LocalFileId == item.LocalFileId).FirstOrDefault();
+                        if (rs != null)
+                        {
+                            songs[songs.IndexOf(rs)] = item;
+                        }
+                    }
+                    db.DeleteAll<Song>();
+                    result = db.InsertAll(songs);
+                }
+                else
+                {
+                    result = db.InsertAll(songs);
+                }
+               
+            }
+            return result;
+        }
+
+       
+
+
 
         public void DelectSong(Song song)
         {
@@ -47,25 +83,78 @@ namespace NeilX.DoubanFM.Core.LocalData
             return result;
         }
 
-        public IList<Song> GetSongsByListId(int listId)
+        public List<Song> GetSongsByListId(int listId)
         {
-            IList<Song> result;
+            List<Song> result;
             using (var db = DbContext.Instance.GetDbConnection())
             {
-                result = db.Table<Song>().Where(o=>o.ListId==listId).ToList();
+                result = db.Table<Song>().Where(o=>o.ListId==listId)?.ToList();
             }
             return result;
         }
 
-        public void UpdateSongListId(int songId,int listId)
+        public void UpdateSong(Song song)
         {
             using (var db = DbContext.Instance.GetDbConnection())
             {
-               
+                db.Update(song);
+            }
+        }
+        public void UpdateAllSong(List<Song> songs)
+        {
+            using (var db = DbContext.Instance.GetDbConnection())
+            {
+                db.UpdateAll(songs);
             }
         }
         #endregion
 
+        #region SongList
+        public int InsertSongList(SongList list)
+        {
+            int result = 0;
+            using (var db = DbContext.Instance.GetDbConnection())
+            {
+                result = db.Insert(list);
+            }
+            return result;
+        }
+
+        public void DelectSongList(int id)
+        {
+            using (var db = DbContext.Instance.GetDbConnection())
+            {
+                db.Delete<SongList>(id);
+                db.Table<Song>().Where(o => o.ListId == id).Select(o=>o.ListId=0);//todo
+            }
+        }
+
+        public void DelectSongList(SongList list)
+        {
+            using (var db = DbContext.Instance.GetDbConnection())
+            {
+                db.Delete<SongList>(list);
+            }
+        }
+
+        public List<SongList> GetAllSongLists()
+        {
+            List<SongList> result;
+            using (var db = DbContext.Instance.GetDbConnection())
+            {
+                result = db.Table<SongList>().ToList();
+            }
+            return result;
+        }
+
+        public void UpdateSongList(SongList songList)
+        {
+            using (var db = DbContext.Instance.GetDbConnection())
+            {
+                db.Update(songList);
+            }
+        }
+        #endregion
 
     }
 }

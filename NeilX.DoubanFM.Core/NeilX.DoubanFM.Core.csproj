@@ -112,6 +112,7 @@
     <Compile Include="LocalData\DataAccess.cs" />
     <Compile Include="LocalData\DbContext.cs" />
     <Compile Include="LocalData\LocalDataFacade.cs" />
+    <Compile Include="Model\SongList.cs" />
     <Compile Include="Player\ChangeChannelCommandType.cs" />
     <Compile Include="Model\Channel.cs" />
     <Compile Include="Model\ChannelGroup.cs" />

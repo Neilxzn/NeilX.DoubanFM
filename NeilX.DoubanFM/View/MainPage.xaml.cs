@@ -38,10 +38,8 @@ namespace NeilX.DoubanFM.View
             InitializeMessenger();
 
             Unloaded += (sender, e) => Messenger.Default.Unregister(this);
-            LocalDataFacade lo = new LocalDataFacade();
-            lo.TestInsert();
-            lo.TestGet();
-            LocalDataService.GetLocalAllSongs();
+            
+         
 
         }
         #region Helper methods

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeilX.DoubanFM.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,6 +24,8 @@ namespace NeilX.DoubanFM.View
     /// </summary>
     public sealed partial class MyMusicView : Page
     {
+        public MyMusicViewModel MyMusicVM => (MyMusicViewModel)DataContext;
+
         public MyMusicView()
         {
             this.InitializeComponent();

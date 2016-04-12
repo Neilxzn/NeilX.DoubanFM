@@ -5,112 +5,24 @@
     xmlns:local="using:NeilX.DoubanFM.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
-
+    xmlns:core="using:NeilX.DoubanFM.Core"
+    mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator},Path=MyMusicVM}">
+    <UserControl.Resources>
+        <DataTemplate x:Key="songItemDataTemplate" x:DataType="core:Song">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{x:Bind Title}"/>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Pivot >
             <PivotItem Header="本地音乐">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="2*"/>
-                        <RowDefinition Height="8*"/>
-                    </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Width="60" Height="60" Background="Aquamarine"  Margin="10">
-                            <TextBlock Text="列表1" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            <Button.Flyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem Click="MenuFlyoutItem_Click_2" >重命名</MenuFlyoutItem>
-                                    <MenuFlyoutItem Click="MenuFlyoutItem_Click" >删除</MenuFlyoutItem>
-                                    <MenuFlyoutItem >打开</MenuFlyoutItem>
-                                </MenuFlyout>
-                            </Button.Flyout>
-                        </Button>
-                        <Button Width="60" Height="60" Background="Aquamarine" Margin="10">
-                            <TextBlock Text="列表2" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Button>
-                        <Button Width="80" Height="40" Background="Transparent" Margin="10">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="添加"/>
-                                <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" VerticalAlignment="Center" />
-
-                            </StackPanel>
-                            <Button.Flyout>
-                                <Flyout>
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
-                                        </Grid.RowDefinitions>
-                                        <TextBlock Text="列表名称" HorizontalAlignment="Center"/>
-                                        <StackPanel Orientation="Horizontal" Grid.Row="1">
-                                            <TextBox Grid.Row="1" Margin="5"/>
-                                            <Button Content="确定"/>
-                                        </StackPanel>
-                                      
-                                    </Grid>
-                                </Flyout>
-                            </Button.Flyout>
-                        </Button>
-                    </StackPanel>
-                    <ListView x:Name="listView" Header="列表1音乐"
-                              Grid.Row="1"  Margin="20">
-                        <ListViewItem>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="80"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="微光"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <StackPanel Grid.Column="1" Orientation="Horizontal" >
-                                    <Button Background="Transparent" >
-                                        <SymbolIcon Symbol="Play"/>
-                                    </Button>
-                                    <Button Background="Transparent">
-                                        <SymbolIcon Symbol="More"/>
-                                        <Button.Flyout>
-                                            <MenuFlyout>
-                                                <MenuFlyoutItem Click="MenuFlyoutItem_Click_1">歌曲信息
-                                                </MenuFlyoutItem>
-                                                <MenuFlyoutItem >分享微博</MenuFlyoutItem>
-                                                <MenuFlyoutItem Click="MenuFlyoutItem_Click">删除歌曲</MenuFlyoutItem>
-                                                <MenuFlyoutItem  >播放歌曲</MenuFlyoutItem>
-                                            </MenuFlyout>
-                                        </Button.Flyout>
-                                    </Button>
-                                </StackPanel>
-                                <TextBlock Grid.Column="2" Margin="15,0,0,0" Text="我是歌手"  VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="3" Margin="15,0,0,0" Text="张学友"  VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="4" Margin="15,0,0,0" Text="3:20"  VerticalAlignment="Center"/>
-                            </Grid>
-                        </ListViewItem>
-                        <ListViewItem>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="80"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="遇到"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <StackPanel Grid.Column="1" Orientation="Horizontal" >
-                                    <Button Background="Transparent" >
-                                        <SymbolIcon Symbol="Play"/>
-                                    </Button>
-                                    <Button Background="Transparent">
-                                        <SymbolIcon Symbol="More"/>
-                                    </Button>
-                                </StackPanel>
-                                <TextBlock Grid.Column="2" Margin="15,0,0,0" Text="恶作剧"  VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="3" Margin="15,0,0,0" Text="方雅贤"  VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="4" Margin="15,0,0,0" Text="3:2"  VerticalAlignment="Center"/>
-                            </Grid>
-                        </ListViewItem>
-                    </ListView>
+                    <ListBox ItemsSource="{x:Bind MyMusicVM.AlllocalSongs}"/>
                 </Grid>
             </PivotItem>
             <PivotItem Header="电台收藏">
