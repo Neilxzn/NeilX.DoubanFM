@@ -175,12 +175,20 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
             MediaOpened(this, args);
         }
 
-        public  void SetMediaSource(Song song)
+        public  async void SetMediaSource(Song song)
         {
             Uri uri;
             if (Uri.TryCreate(song.Url,UriKind.RelativeOrAbsolute,out uri))
             {
-                mediaPlayer.SetUriSource(uri);
+                if (uri.IsFile)
+                {
+                    StorageFile file = await StorageFile.GetFileFromPathAsync(uri.LocalPath);
+                    mediaPlayer.SetFileSource(file);     
+                }
+                else
+                {
+                    mediaPlayer.SetUriSource(uri);
+                }
             }
             else
             {

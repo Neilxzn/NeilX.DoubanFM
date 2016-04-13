@@ -21,7 +21,7 @@ namespace NeilX.DoubanFM.Core
         /// <value>
         /// The picture URL of cover.
         /// </value>
-        public string PictureUrl { get; set; }
+        public string PictureUrl { get; set; } 
         /// <summary>
         /// Gets or sets the SSID.
         /// </summary>
@@ -167,7 +167,7 @@ namespace NeilX.DoubanFM.Core
 
         public bool Equals(Song other)
         {
-            return other != null && Sid == other.Sid;
+            return other != null && Id == other.Id;
         }
 
         public static bool operator ==(Song left, Song right)

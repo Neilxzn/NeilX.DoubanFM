@@ -222,27 +222,6 @@ namespace NeilX.DoubanFM.View
         private void Hambeger_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             MySplitView.IsPaneOpen = !MySplitView.IsPaneOpen;
-            List<Song> tracks = new List<Song>();
-            Song track = new Song();
-            track.Sid = "1";
-            track.Title = "微光2";
-            track.Artist = "张信哲2";
-            track.Url = @"ms-appx:///SampleMedias/ring4.mp3";
-            track.Lyric = @"ms-appx:///SampleMedias/ring4.lrc";
-            track.Length = 282;
-            track.AlbumTitle = "微光集合";
-            track.PictureUrl = @"ms-appx:///SampleMedias/ring4.jpg";
-            tracks.Add(track);
-            Song track2 = new Song("3");
-            track2.Title = "微光";
-            track2.Artist = "张信哲";
-            track2.Url = @"ms-appx:///SampleMedias/ring4.mp3";
-            track2.Lyric = @"ms-appx:///SampleMedias/ring4.lrc";
-            track2.Length = 282;
-            track2.AlbumTitle = "微光集合";
-            track2.PictureUrl = @"ms-appx:///SampleMedias/ring4.jpg";
-            tracks.Add(track2);
-            Main.PlayerSession.SetPlaylist(tracks, track);
         }
 
 

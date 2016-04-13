@@ -62,5 +62,7 @@ namespace NeilX.DoubanFM.View
             d.Content = tb;
             d.ShowAsync();
         }
+
+       
     }
 }

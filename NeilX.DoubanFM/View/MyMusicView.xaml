@@ -5,28 +5,66 @@
     xmlns:local="using:NeilX.DoubanFM.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:NeilX.DoubanFM.ViewModel"
     xmlns:core="using:NeilX.DoubanFM.Core"
     mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator},Path=MyMusicVM}">
     <UserControl.Resources>
-        <DataTemplate x:Key="songItemDataTemplate" x:DataType="core:Song">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="{x:Bind Title}"/>
+        <DataTemplate x:Key="songItemDataTemplate" x:DataType="vm:MusicSongViewModel">
+            <Button  >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{x:Bind Song.Title}"/>
+                    <Button Grid.Column="1"
+                            Content="点击播放" 
+                            Click="{x:Bind PlayLocalSong}"/>
+                </Grid>
+            </Button>
+          
+        </DataTemplate>
+        <DataTemplate x:Key="songlistDataTemplate" x:DataType="core:SongList">
+            <Grid  >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{x:Bind Name}"/>
+                    
+                </Grid>
             </Grid>
+
         </DataTemplate>
     </UserControl.Resources>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{StaticResource ContentBackground}">
         <Pivot >
-            <PivotItem Header="本地音乐">
+            <PivotItem Header="本地歌曲">
                 <Grid>
-                    <ListBox ItemsSource="{x:Bind MyMusicVM.AlllocalSongs}"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Button Content="播放全部" 
+                            Click="{x:Bind MyMusicVM.PlayeAllLocalSongs}"/>
+                    <ListBox Grid.Row="1" 
+                             ItemsSource="{x:Bind MyMusicVM.AllMusicSongs,Mode=OneWay}"
+                             ItemTemplate="{StaticResource songItemDataTemplate}"/>
                 </Grid>
             </PivotItem>
-            <PivotItem Header="电台收藏">
-                <Grid/>
+            <PivotItem Header="播放列表">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Button Content="添加列表" 
+                            Click="{x:Bind MyMusicVM.AddSongList}"/>
+                    <ListBox Grid.Row="1" 
+                             ItemTemplate="{StaticResource songlistDataTemplate}"
+                             ItemsSource="{x:Bind MyMusicVM.AllSongList,Mode=OneWay}"/>
+                </Grid>
             </PivotItem>
         </Pivot>
     </Grid>
