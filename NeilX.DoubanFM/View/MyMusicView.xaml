@@ -63,7 +63,8 @@
                             Click="{x:Bind MyMusicVM.AddSongList}"/>
                     <ListBox Grid.Row="1" 
                              ItemTemplate="{StaticResource songlistDataTemplate}"
-                             ItemsSource="{x:Bind MyMusicVM.AllSongList,Mode=OneWay}"/>
+                             ItemsSource="{x:Bind MyMusicVM.AllSongList,Mode=OneWay}"
+                             SelectedItem="{Binding SelectList,Mode=TwoWay}"/>
                 </Grid>
             </PivotItem>
         </Pivot>

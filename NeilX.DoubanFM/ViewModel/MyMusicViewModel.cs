@@ -12,11 +12,13 @@ using Windows.UI.Xaml.Controls;
 using Microsoft.Practices.ServiceLocation;
 using GalaSoft.MvvmLight.Threading;
 using Windows.UI.Xaml.Input;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace NeilX.DoubanFM.ViewModel
 {
     public class MusicSongViewModel : ViewModelBase
     {
+ 
         private Song _song;
 
         public Song Song
@@ -56,7 +58,9 @@ namespace NeilX.DoubanFM.ViewModel
 
     public class MyMusicViewModel : ViewModelBase
     {
+        public static readonly Guid Token = Guid.NewGuid();
         private List<Song> _allLocalSongs;
+
 
         private ObservableCollection<MusicSongViewModel> _allMusicSongs;
 
@@ -87,6 +91,34 @@ namespace NeilX.DoubanFM.ViewModel
             }
         }
 
+        private SongList _selectList;
+
+
+        public SongList SelectList
+        {
+            get { return _selectList; }
+            set
+            {
+                if(Set(ref _selectList, value))
+                {
+                    OnSelectSongListChanged(value);
+                } 
+            }
+        }
+
+        private ObservableCollection<MusicSongViewModel> _selectedMusicSongs;
+
+        public ObservableCollection<MusicSongViewModel> SelectedMusicSongs
+        {
+            get
+            {
+                return _selectedMusicSongs ?? new ObservableCollection<MusicSongViewModel>();
+            }
+            set
+            {
+                Set(ref _selectedMusicSongs, value);
+            }
+        }
 
 
 
@@ -109,18 +141,26 @@ namespace NeilX.DoubanFM.ViewModel
             }
         }
 
-        public async void AddSongList()
+        public void AddSongList()
         {
             SongList list = new SongList()
             {
-                Name="播放列表测试",
-                BuildTime=DateTime.Now
+                Name = "播放列表测试",
+                BuildTime = DateTime.Now
             };
             LocalDataService.AddSongList(list);
             InitialSongList();
         }
 
+        public void GotoTheSongList()
+        {
 
+        }
+
+        public override void Cleanup()
+        {
+            
+        }
 
 
         private async void InitialAllLocalSongs()
@@ -164,9 +204,23 @@ namespace NeilX.DoubanFM.ViewModel
             AllSongList = list != null ? new ObservableCollection<SongList>(list) : null;
         }
 
+       
         private void PlayLocalSong(MusicSongViewModel musicSong)
         {
 
+        }
+
+        private void OnSelectSongListChanged(SongList value)
+        {
+            Messenger.Default.Send(value, Token);
+            SelectedMusicSongs = new ObservableCollection<MusicSongViewModel>(
+                                 from s in _allLocalSongs
+                                 where s.ListId == value.Id
+                                 select new MusicSongViewModel()
+                                 {
+                                     Song = s,
+                                     PlayMethod = PlayLocalSong
+                                 });
         }
 
 

@@ -135,23 +135,8 @@
                 </RelativePanel>
             </SplitView.Pane>
             <SplitView.Content>
-                <Frame Loaded="{x:Bind Main.SetupNavigationService}"/>
-                <!--<Grid >
-                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE768;" VerticalAlignment="Bottom"></TextBlock>
-
-                    <StackPanel Grid.Row="3">
-                        <ProgressBar Name="dprogress" Height="10" Width="100" HorizontalAlignment="Left" />
-                        <StackPanel Orientation="Horizontal">
-                            <Button Content="load"  Click="Load_Click" Margin="0"/>
-                            <Button Content="pause" Click="Pause_Click"  Margin="0"/>
-                            <Button Content="resume" Click="Resume_Click"  Margin="0"/>
-                            <Button Content="cancel" Click="{x:Bind Main.HelloTest}"  Margin="0"/>
-                            <Button  Command="{Binding GotoNextCommand}">Go to Next!</Button>
-                            <TextBlock Text="{Binding Title}"/>
-                        </StackPanel>
-                        <Button Content="GET FILE" Click="Button_Click"/>
-                    </StackPanel>
-                </Grid>-->
+                <Frame x:Name="navigationFrame" Loaded="{x:Bind Main.SetupNavigationService}"/>
+              
             </SplitView.Content>
 
         </SplitView>

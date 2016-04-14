@@ -10,26 +10,29 @@ using Windows.UI.Xaml.Input;
 using NeilX.DoubanFM.Services;
 using NeilX.DoubanFM.UserControls.ControlsModel;
 using NeilX.DoubanFM.View;
+using System;
+using NeilX.DoubanFM.Core;
 
 namespace NeilX.DoubanFM.ViewModel
 {
 
     public class MainViewModel : ViewModelBase
     {
+        private static readonly Guid Token = Guid.NewGuid();
         private Frame _navigationService;
-        private SystemNavigationManager _backButton;
         private ObservableCollection<MenuListItem> _menuList;
 
         public MainViewModel()
         {
             if (IsInDesignMode)
             {
-                // Code runs in Blend --> create design time data.
+                InitializeMenuData();
             }
             else
             {
                 // Code runs "for real"
                 InitializeMenuData();
+                RegisterMessenger();
             }
            
 
@@ -82,6 +85,7 @@ namespace NeilX.DoubanFM.ViewModel
 
         }
 
+
         #endregion
 
 
@@ -124,29 +128,19 @@ namespace NeilX.DoubanFM.ViewModel
 
         }
 
-        #region Title Bar
-        private void SetupTitleBar()
+        private void RegisterMessenger()
         {
-            //CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            //coreTitleBar.ExtendViewIntoTitleBar = true;
-            _backButton = SystemNavigationManager.GetForCurrentView();
-            _backButton.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-            _backButton.BackRequested += BackButton_BackRequested;
-            //     Window.Current.SetTitleBar(TitleGrid);
+            Messenger.Default.Register<SongList>(this, MyMusicViewModel.Token, NavigateToSongListView);
         }
 
-        private void BackButton_BackRequested(object sender, BackRequestedEventArgs e)
+        private void UnRegisterMessenger()
         {
-            if (_navigationService.CanGoBack)
-            {
-                _navigationService.GoBack();
-                if (!_navigationService.CanGoBack)
-                {
-                    _backButton.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
-                }
-            }
+            Messenger.Default.Unregister(this);
         }
-        #endregion
+
+     
+
+        #region NavigationService
         private void NavigateToView(MenuGotoView view)
         {
             switch (view)
@@ -165,9 +159,18 @@ namespace NeilX.DoubanFM.ViewModel
             }
         }
 
+
+        private void NavigateToSongListView(SongList list)
+        {
+            _navigationService.Navigate(typeof(SongListView));
+        }
+        #endregion
         #endregion
 
-
+        public override void Cleanup()
+        {
+            UnRegisterMessenger();
+        }
 
 
     }
