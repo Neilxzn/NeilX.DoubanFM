@@ -33,14 +33,6 @@ namespace NeilX.DoubanFM.Services
             }
             return songs?.OrderBy(o => o.Title).ToList();
         }
-
-
-        public static void AddSongList(SongList list)
-        {
-            DataAccess dataaccess = new DataAccess();
-            dataaccess.InsertSongList(list);
-        }
-
         public static async Task<List<SongList>> GetAllSongListsAsync()
         {
             return await Task.Run(() =>
@@ -49,5 +41,47 @@ namespace NeilX.DoubanFM.Services
                 return dataaccess.GetAllSongLists();
             });
         }
+
+
+        public static void AddSongList(SongList list)
+        {
+            DataAccess dataaccess = new DataAccess();
+            dataaccess.InsertSongList(list);
+        }
+
+        public static void AddSongToSongList(Song newSong,SongList list)
+        {
+            newSong.ListId = list.Id;
+            DataAccess dataaccess = new DataAccess();
+            dataaccess.UpdateSong(newSong);
+        }
+        
+
+        public static void DelectSong(Song song)
+        {
+
+        }
+
+        public static void DelectSongList(SongList list)
+        {
+            DataAccess dataaccess = new DataAccess();
+            var songs = dataaccess.GetAllSongs();
+            foreach (Song song in songs)
+            {
+                if (song.ListId ==list.Id)
+                {
+                    song.ListId = -1;
+                }
+            }
+            dataaccess.UpdateAllSong(songs);
+            dataaccess.DelectSongList(list);
+        }
+
+        public static void UpdateSongList(SongList list)
+        {
+            DataAccess dataaccess = new DataAccess();
+            dataaccess.UpdateSongList(list);
+        }
+
     }
 }

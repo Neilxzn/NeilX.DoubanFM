@@ -39,6 +39,8 @@ namespace NeilX.DoubanFM.ViewModel
             SimpleIoc.Default.Register<RadioListViewModel>();
             SimpleIoc.Default.Register<SearchViewModel>();
             SimpleIoc.Default.Register<MyMusicViewModel>();
+            SimpleIoc.Default.Register<SongListViewModel>();
+            SimpleIoc.Default.Register<SongListEditViewModel>();
             SimpleIoc.Default.Register<PlayerSessionService>(true);
 
 
@@ -88,6 +90,21 @@ namespace NeilX.DoubanFM.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<MyMusicViewModel>();
+            }
+        }
+        public SongListViewModel SongListVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<SongListViewModel>();
+            }
+        }
+
+        public SongListEditViewModel SongListEditVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<SongListEditViewModel>();
             }
         }
         private INavigationService CreateNavigationService()

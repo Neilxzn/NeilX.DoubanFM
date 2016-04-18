@@ -28,6 +28,8 @@ namespace NeilX.DoubanFM.Services
         void RequestPrevious();
         void RequestNext();
         void SetPlaylist(IList<Song> tracks, Song current);
+
+        void AddSongToPlaylist(Song newSong);
         void PlayWhenOpened();
         void ScrollPlayMode();
     }

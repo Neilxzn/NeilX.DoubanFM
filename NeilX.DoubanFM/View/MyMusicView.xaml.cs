@@ -1,4 +1,5 @@
-﻿using NeilX.DoubanFM.ViewModel;
+﻿using GalaSoft.MvvmLight.Messaging;
+using NeilX.DoubanFM.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,45 +25,31 @@ namespace NeilX.DoubanFM.View
     /// </summary>
     public sealed partial class MyMusicView : Page
     {
+        public static readonly Guid Token = Guid.NewGuid();
         public MyMusicViewModel MyMusicVM => (MyMusicViewModel)DataContext;
 
         public MyMusicView()
         {
             this.InitializeComponent();
+            InitializeMessenger();
         }
 
-        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        public void InitializeMessenger()
         {
-
-            ContentDialog d = new ContentDialog();
-            d.Title = "删除？";
-            d.PrimaryButtonText = "确认";
-            d.SecondaryButtonText = "取消";
-            d.ShowAsync();
+            Messenger.Default.Register<NotificationMessage>(this, MyMusicViewModel.Token, OpenAddSongListView);
         }
 
-        private void MenuFlyoutItem_Click_1(object sender, RoutedEventArgs e)
+        private void OpenAddSongListView(NotificationMessage obj)
         {
-            ContentDialog d = new ContentDialog();
-            d.Title = "歌曲信息";
-            d.IsSecondaryButtonEnabled = false;
-            d.PrimaryButtonText = "确认";
-            d.Content = "微光 数据格式:MP3，长度：3:30";
-            d.ShowAsync();
+            if (obj.Notification=="open")
+            {
+                testList.Visibility = Visibility.Visible;
+            }
+            else if(obj.Notification == "close")
+            {
+                testList.Visibility = Visibility.Collapsed;
+            }
         }
 
-        private void MenuFlyoutItem_Click_2(object sender, RoutedEventArgs e)
-        {
-            TextBox tb = new TextBox();
-            tb.Text = "列表1";
-            ContentDialog d = new ContentDialog();
-            d.Title = "重命名";
-            d.SecondaryButtonText = "取消";
-            d.PrimaryButtonText = "确认";
-            d.Content = tb;
-            d.ShowAsync();
-        }
-
-       
     }
 }

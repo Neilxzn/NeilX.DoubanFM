@@ -133,7 +133,7 @@ namespace NeilX.DoubanFM.Core.LocalData
         {
             using (var db = DbContext.Instance.GetDbConnection())
             {
-                db.Delete<SongList>(list);
+                db.Delete<SongList>(list.Id);
             }
         }
 

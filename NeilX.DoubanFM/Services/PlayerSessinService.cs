@@ -230,6 +230,23 @@ namespace NeilX.DoubanFM.Services
             CurrentTrack = current;
         }
 
+        public void AddSongToPlaylist(Song newSong)
+        {
+            if (Playlist!=null)
+            {
+                Playlist.Add(newSong);
+            }
+            else
+            {
+                Playlist = new List<Song>()
+                {
+                    newSong
+                };
+            
+            }
+            CurrentTrack = newSong;
+        }
+
         public void ScrollPlayMode()
         {
             var playmodes = Enum.GetValues(typeof(PlayMode)).Cast<PlayMode>().ToList();

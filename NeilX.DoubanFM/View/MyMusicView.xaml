@@ -15,11 +15,26 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="{x:Bind Song.Title}"/>
                     <Button Grid.Column="1"
                             Content="点击播放" 
                             Click="{x:Bind PlayLocalSong}"/>
+                    <Button Grid.Column="2"
+                            Content="more"
+                            >
+                        <Button.Flyout>
+                            <Flyout>
+                                <Grid>
+                                    <ItemsControl>
+                                        <Button Content="收藏"
+                                                Click="{x:Bind AddSongToSongList}"/>
+                                    </ItemsControl>
+                                </Grid>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
                 </Grid>
             </Button>
           
@@ -60,7 +75,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Button Content="添加列表" 
-                            Click="{x:Bind MyMusicVM.AddSongList}"/>
+                            Click="{x:Bind MyMusicVM.AddNewSongList}"/>
                     <ListBox Grid.Row="1" 
                              ItemTemplate="{StaticResource songlistDataTemplate}"
                              ItemsSource="{x:Bind MyMusicVM.AllSongList,Mode=OneWay}"
@@ -68,5 +83,11 @@
                 </Grid>
             </PivotItem>
         </Pivot>
+        <Canvas x:Name="testList" Visibility="Collapsed" Width="200" Background="AliceBlue">
+            <ListBox Grid.Row="1" 
+                             ItemTemplate="{StaticResource songlistDataTemplate}"
+                             ItemsSource="{x:Bind MyMusicVM.AllSongList,Mode=OneWay}"
+                             SelectionChanged="{x:Bind MyMusicVM.AddNewSongToList}"/>
+        </Canvas>
     </Grid>
 </Page>

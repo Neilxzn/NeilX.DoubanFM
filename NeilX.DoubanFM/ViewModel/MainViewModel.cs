@@ -128,9 +128,13 @@ namespace NeilX.DoubanFM.ViewModel
 
         }
 
+
+
+        #region Messenget Helper Methods
         private void RegisterMessenger()
         {
-            Messenger.Default.Register<SongList>(this, MyMusicViewModel.Token, NavigateToSongListView);
+            Messenger.Default.Register<NotificationMessage>(this, MyMusicViewModel.Token, HandleMyMusicVMMsg);
+            Messenger.Default.Register<NotificationMessage>(this, SongListViewModel.Token, HandleSongListVMMsg);
         }
 
         private void UnRegisterMessenger()
@@ -138,7 +142,25 @@ namespace NeilX.DoubanFM.ViewModel
             Messenger.Default.Unregister(this);
         }
 
-     
+        private void HandleMyMusicVMMsg(NotificationMessage msg)
+        {
+            if (msg.Notification == "GotoSongListView")
+            {
+                NavigateToSongListView();
+            }
+        }
+        private void HandleSongListVMMsg(NotificationMessage msg)
+        {
+            if (msg.Notification== "GotoEditView")
+            {
+                NavigateToSongListEditView();
+            }
+            else if(msg.Notification == "Update")
+            {
+                NavigateToView(MenuGotoView.RadioListView);
+            }
+        }
+        #endregion
 
         #region NavigationService
         private void NavigateToView(MenuGotoView view)
@@ -160,11 +182,16 @@ namespace NeilX.DoubanFM.ViewModel
         }
 
 
-        private void NavigateToSongListView(SongList list)
+        private void NavigateToSongListView()
         {
             _navigationService.Navigate(typeof(SongListView));
         }
+        private void NavigateToSongListEditView()
+        {
+            _navigationService.Navigate(typeof(SongListEditView));
+        }
         #endregion
+
         #endregion
 
         public override void Cleanup()

@@ -132,7 +132,7 @@ namespace NeilX.DoubanFM.Core
         public int Id { get; set; }
 
 
-        public int ListId { get; set; }
+        public int ListId { get; set; } = -1;
 
 
         public string LocalFileId { get; set; }
