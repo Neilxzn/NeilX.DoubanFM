@@ -48,14 +48,15 @@ namespace NeilX.DoubanFM.Core
         /// <param name="jsonContent">Content of JSON format.</param>
         public static List<Song> ParseGetPlayListResult(string jsonContent)
         {
+            List<Song> results = new List<Song>();
             var obj = JObject.Parse(jsonContent);
             JToken songs;
             if (obj.TryGetValue("song", out songs) && songs != null)
             {
-                return (from song in songs
-                        select song.ParseSong()).ToList();
+                results.AddRange(from song in songs
+                                 select song.ParseSong());
             }
-            return new List<Song>();
+            return results;
         }
 
         #endregion

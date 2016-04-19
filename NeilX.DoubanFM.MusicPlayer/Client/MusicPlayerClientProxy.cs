@@ -145,26 +145,35 @@ namespace NeilX.DoubanFM.MusicPlayer.Client
                 MessageService.SendMessageToServer(new SkipNextMessage());
             }
         }
+
+        public void Close()
+        {
+            if (client != null)
+            {
+                MessageService.SendMessageToServer(new AppSuspendedMessage());
+            }
+        }
+
         #region Client Handle Message Methods 
 
         private void Client_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
             switch (e.Type)
             {
-                case MessageType.AppResumedMessage:
-                    break;
-                case MessageType.AppSuspendedMessage:
-                    break;
-                case MessageType.AudioTaskStartedMessage:
-                    break;
-                case MessageType.PlayModeChangeMessage:
-                    break;
-                case MessageType.SkipNextMessage:
-                    break;
-                case MessageType.SkipPreviousMessage:
-                    break;
-                case MessageType.StartPlaybackMessage:
-                    break;
+                //case MessageType.AppResumedMessage:
+                //    break;
+                //case MessageType.AppSuspendedMessage:
+                //    break;
+                //case MessageType.AudioTaskStartedMessage:
+                //    break;
+                //case MessageType.PlayModeChangeMessage:
+                //    break;
+                //case MessageType.SkipNextMessage:
+                //    break;
+                //case MessageType.SkipPreviousMessage:
+                //    break;
+                //case MessageType.StartPlaybackMessage:
+                //    break;
                 case MessageType.TrackChangedMessage:
                     if (CurrentTrackChanged != null)
                         CurrentTrackChanged(this, JsonHelper.FromJson<TrackChangedMessage>(e.MessegeContent).Song);

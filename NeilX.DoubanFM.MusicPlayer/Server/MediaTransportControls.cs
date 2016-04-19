@@ -94,16 +94,6 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
                 musicProp.Title = string.Empty;
             }
             updater.Update();
-
-            //smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
-            //smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
-            //smtc.DisplayUpdater.MusicProperties.Title = item.Source.CustomProperties[TaskConstant.TitleKey] as string;
-
-            //var albumArtUri = item.Source.CustomProperties[TaskConstant.AlbumArtKey] as Uri;
-            //if (albumArtUri != null)
-            //    smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(albumArtUri);
-            //else
-            //    smtc.DisplayUpdater.Thumbnail = null;
         }
 
         public void DetectSMTCStatus(Song song,PlayList playlist,PlayMode playMode)

@@ -37,10 +37,7 @@ namespace NeilX.DoubanFM.View
         {
             this.InitializeComponent();
             InitializeMessenger();
-
-            Unloaded += (sender, e) => Messenger.Default.Unregister(this);
-            
-         
+            Unloaded += (sender, e) => Messenger.Default.Unregister(this);           
 
         }
         #region Helper methods
@@ -102,11 +99,11 @@ namespace NeilX.DoubanFM.View
         }
         #endregion
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override  void OnNavigatedTo(NavigationEventArgs e)
         {
             SetupTitleBar();
             PointServiceContentControl.AnimationObject = ell;
-            ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.AppState, AppState.Active.ToString());
+            AppSettingsHelper.SaveSettingToLocalSettings(AppSettingsConstants.AppState, AppState.Active.ToString());
         }
 
         

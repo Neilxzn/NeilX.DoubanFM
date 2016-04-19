@@ -9,8 +9,6 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
 {
     public interface IMusicPlayerController
     {
-        void SetupHandler(IMusicPlayerControllerHandler handler);
-
         void Play();
         void Pause();
         void SetPlaylist(IList<Song> tracks);
@@ -18,13 +16,13 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
         void MoveNext();
         void MovePrevious();
         void SetPlayMode(PlayMode playmode);
-        void AskPosition();
-        void SetPosition(TimeSpan position);
-        void SetVolume(double value);
-        void AskPlaylist();
-        void AskCurrentTrack();
-        void AskCurrentState();
-        void AskDuration();
+        //void AskPosition();
+        //void SetPosition(TimeSpan position);
+        //void SetVolume(double value);
+        //void AskPlaylist();
+        //void AskCurrentTrack();
+        //void AskCurrentState();
+        //void AskDuration();
 
     }
 }

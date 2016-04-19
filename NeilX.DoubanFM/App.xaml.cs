@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Threading;
 using NeilSoft.UWP;
+using NeilX.DoubanFM.Services;
 using NeilX.DoubanFM.View;
 using System;
 using System.Collections.Generic;
@@ -20,31 +21,21 @@ using Windows.UI.Xaml.Navigation;
 
 namespace NeilX.DoubanFM
 {
-    /// <summary>
-    /// 提供特定于应用程序的行为，以补充默认的应用程序类。
-    /// </summary>
+
     sealed partial class App : Application
     {
-        /// <summary>
-        /// 初始化单一实例应用程序对象。这是执行的创作代码的第一行，
-        /// 已执行，逻辑上等同于 main() 或 WinMain()。
-        /// </summary>
+
         public App()
         {
             Microsoft.ApplicationInsights.WindowsAppInitializer.InitializeAsync(
                 Microsoft.ApplicationInsights.WindowsCollectors.Metadata |
                 Microsoft.ApplicationInsights.WindowsCollectors.Session);
             this.InitializeComponent();
-            this.Suspending += OnSuspending;
-            this.Resuming += App_Resuming;
+            AppStateManager appStateManager = new AppStateManager(this);
         }
 
 
-        /// <summary>
-        /// 在应用程序由最终用户正常启动时进行调用。
-        /// 将在启动应用程序以打开特定文件等情况下使用。
-        /// </summary>
-        /// <param name="e">有关启动请求和过程的详细信息。</param>
+
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
 
@@ -96,58 +87,8 @@ namespace NeilX.DoubanFM
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
-        /// <summary>
-        /// 在将要挂起应用程序执行时调用。  在不知道应用程序
-        /// 无需知道应用程序会被终止还是会恢复，
-        /// 并让内存内容保持不变。
-        /// </summary>
-        /// <param name="sender">挂起的请求的源。</param>
-        /// <param name="e">有关挂起请求的详细信息。</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
-        {
-            var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: 保存应用程序状态并停止任何后台活动
-            // Only if the background task is already running would we do these, otherwise
-            // it would trigger starting up the background task when trying to suspend.
-            //            if (IsMyBackgroundTaskRunning)
-            //            {
-            //                // Stop handling player events immediately
-            ////                RemoveMediaPlayerEventHandlers();
+       
 
-            //                // Tell the background task the foreground is suspended
-            //                MessageService.SendMessageToBackground(new AppSuspendedMessage());
-            //            }
-
-            // Persist that the foreground app is suspended
-            ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.AppState, AppState.Suspended.ToString());
-
-            deferral.Complete();
-        }
-
-        private void App_Resuming(object sender, object e)
-        {
-            ApplicationSettingsHelper.SaveSettingToLocalSettings(ApplicationSettingsConstants.AppState, AppState.Active.ToString());
-            // Verify the task is running
-            //if (IsMyBackgroundTaskRunning)
-            //{
-            //    // If yes, it's safe to reconnect to media play handlers
-            //   // AddMediaPlayerEventHandlers();
-
-            //    // Send message to background task that app is resumed so it can start sending notifications again
-            //    //MessageService.SendMessageToBackground(new AppResumedMessage());
-
-            //    //UpdateTransportControls(CurrentPlayer.CurrentState);
-
-            //    //var trackId = GetCurrentTrackIdAfterAppResume();
-            //    //txtCurrentTrack.Text = trackId == null ? string.Empty : playlistView.GetSongById(trackId).Title;
-            //    //txtCurrentState.Text = CurrentPlayer.CurrentState.ToString();
-            //}
-            //else
-            //{
-            //    //playButton.Content = ">";     // Change to play button
-            //    //txtCurrentTrack.Text = string.Empty;
-            //    //txtCurrentState.Text = "Background Task Not Running";
-            //}
-        }
+       
     }
 }

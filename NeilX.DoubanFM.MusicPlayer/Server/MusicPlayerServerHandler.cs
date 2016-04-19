@@ -31,8 +31,10 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
             switch (type)
             {
                 case MessageType.AppResumedMessage:
+                    _musicPlayerController.SetAppStateActive();
                     break;
                 case MessageType.AppSuspendedMessage:
+                    _musicPlayerController.SetAppStateSuspended();
                     break;
                 case MessageType.AudioTaskStartedMessage:
                     break;

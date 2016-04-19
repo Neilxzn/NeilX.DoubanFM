@@ -136,7 +136,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
             mediaPlayer.SeekCompleted -= MediaPlayer_SeekCompleted;
             mediaPlayer.CurrentStateChanged -= MediaPlayer_CurrentStateChanged;
             BackgroundMediaPlayer.MessageReceivedFromForeground -= BackgroundMediaPlayer_MessageReceivedFromForeground;
-           // BackgroundMediaPlayer.Shutdown();
+          //  BackgroundMediaPlayer.Shutdown();
 
         }
 

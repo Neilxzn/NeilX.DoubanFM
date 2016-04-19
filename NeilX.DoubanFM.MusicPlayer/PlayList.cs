@@ -1,29 +1,29 @@
-﻿using NeilX.DoubanFM.Core;
+﻿using NeilSoft.UWP;
+using NeilX.DoubanFM.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace NeilX.DoubanFM.MusicPlayer
 {
+    [DataContract]
     public class PlayList
     {
-        private const string FileName = "playlist.dat";
+        private const string cachefile = "playlistcache.json";
 
-        private const string PATH_PlayerState = "player_state.json";
-
-        private const string PlayListFileName = "playlist.dat";
-
+        [DataMember]
         public int CurrentIndex
         {
             get;
             set;
         }
-
+        [DataMember]
         public PlayMode PlayMode { get; set; }
 
-
+        [DataMember]
         public IList<Song> TrackLists
         {
             get;
@@ -35,7 +35,7 @@ namespace NeilX.DoubanFM.MusicPlayer
             TrackLists = songs;
             CurrentIndex = 0;
         }
-
+   
         public PlayList()
         {
             CurrentIndex = 0;
@@ -123,6 +123,17 @@ namespace NeilX.DoubanFM.MusicPlayer
             }
             return null;
           
+        }
+
+
+        public async void Save()
+        {
+           await  JsonFileHelper.SerializeDataToFileAsync<PlayList>(cachefile, this);
+        }
+
+        public async static  Task<PlayList> Load()
+        {
+            return (await JsonFileHelper.LoadJsonFromFileAsync<PlayList>(cachefile)) as PlayList;
         }
 
 

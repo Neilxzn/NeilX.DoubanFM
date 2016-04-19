@@ -56,12 +56,12 @@ namespace NeilX.DoubanFM.Common
         {
             StorageFolder m = KnownFolders.MusicLibrary;
             StorageFolder musicFolder = await KnownFolders.GetFolderForUserAsync(null /* current user */, KnownFolderId.MusicLibrary);
-            long oldlastDate = ApplicationSettingsHelper.LoadSetttingFromLocalSettings("LocalDataModifiedDate", 0L);
+            long oldlastDate = AppSettingsHelper.LoadSetttingFromLocalSettings("LocalDataModifiedDate", 0L);
             long lastDate = (await musicFolder.GetBasicPropertiesAsync()).DateModified.ToUnixTimeSeconds();
             if (oldlastDate != lastDate)
             {
-                ApplicationSettingsHelper.SaveSettingToLocalSettings("LocalDataModifiedDate",lastDate);
-                ApplicationSettingsHelper.LoadSetttingFromLocalSettings("LocalDataModifiedDate", lastDate);
+                AppSettingsHelper.SaveSettingToLocalSettings("LocalDataModifiedDate",lastDate);
+                AppSettingsHelper.LoadSetttingFromLocalSettings("LocalDataModifiedDate", lastDate);
                 return true;
             }
             return false;

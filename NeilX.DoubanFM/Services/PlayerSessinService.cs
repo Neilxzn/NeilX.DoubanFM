@@ -14,10 +14,11 @@ using Microsoft.Practices.ServiceLocation;
 using NeilX.DoubanFM.Core;
 using NeilX.DoubanFM.MusicPlayer.Server;
 using NeilX.DoubanFM.MusicPlayer.Client;
+using NeilSoft.UWP;
 
 namespace NeilX.DoubanFM.Services
 {
-    public class PlayerSessionService : ObservableObject, IPlayerSessionService, IDisposable
+    public class PlayerSessionService : ObservableObject, IPlayerSessionService
     {
         #region private filed
 
@@ -42,7 +43,7 @@ namespace NeilX.DoubanFM.Services
         #endregion
 
         #region Properties
-
+        public static bool IsActived;
         public bool CanPrevious
         {
             get { return _canPrevious; }
@@ -166,7 +167,6 @@ namespace NeilX.DoubanFM.Services
             _client = new MusicPlayerClient();
             _client.PlayerActivated += _client_PlayerActivated;
             _askPositionTimer = new Timer(OnAskPosition, null, Timeout.InfiniteTimeSpan, _askPositionPeriod);
-            LoadState();
         }
 
         private void _client_PlayerActivated(object sender, object e)
@@ -178,6 +178,8 @@ namespace NeilX.DoubanFM.Services
             _proxy.MediaEnded += _proxy_MediaEnded;
             _proxy.CurrentStateChanged += _proxy_CurrentStateChanged;
             _proxy.CurrentTrackChanged += _proxy_CurrentTrackChanged;
+            IsActived = true;
+            LoadState();
             OnPlayModeChanged();
             OnVolumeChanged();
             //  _proxy?.SetupHandler(this);
@@ -232,7 +234,7 @@ namespace NeilX.DoubanFM.Services
 
         public void AddSongToPlaylist(Song newSong)
         {
-            if (Playlist!=null)
+            if (Playlist != null)
             {
                 Playlist.Add(newSong);
             }
@@ -242,7 +244,7 @@ namespace NeilX.DoubanFM.Services
                 {
                     newSong
                 };
-            
+
             }
             CurrentTrack = newSong;
         }
@@ -257,7 +259,24 @@ namespace NeilX.DoubanFM.Services
             }
             PlayMode = playmodes[nextIdx];
         }
+        public void Close()
+        {
+            if (_proxy != null)
+            {
+                _proxy.SeekCompleted -= _proxy_SeekCompleted;
+                _proxy.MediaOpened -= _proxy_MediaOpened;
+                _proxy.MediaFailed -= _proxy_MediaFailed;
+                _proxy.MediaEnded -= _proxy_MediaEnded;
+                _proxy.CurrentStateChanged -= _proxy_CurrentStateChanged;
+                _proxy.CurrentTrackChanged -= _proxy_CurrentTrackChanged;
+                _proxy.Close();
+            }
 
+            if (_askPositionTimer != null)
+            {
+                _askPositionTimer.Dispose();
+            }
+        }
         #endregion
 
         #region Properties Change Handler
@@ -437,11 +456,31 @@ namespace NeilX.DoubanFM.Services
         }
 
         #endregion
-        private void LoadState()
+
+        #region Laod and Detect State
+
+        private async void LoadState()
         {
-            //PlayMode = _playModeManager.GetProvider(_playerConfig.PlayMode);
-            Volume = 50;
-            PlayMode = PlayMode.RepeatAll;
+            PlayList list = await PlayList.Load();
+            double _volumn = AppSettingsHelper.LoadSetttingFromLocalSettings<double>(AppSettingsConstants.Volume, 50);
+            await DispatcherHelper.UIDispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                 () =>
+                 {
+                     Volume = _volumn;
+                     if (list!=null)
+                     {
+                         PlayMode = list.PlayMode;
+                     }
+                     else
+                     {
+                         PlayMode = PlayMode.RepeatAll;
+                     }
+                     if (list?.TrackLists != null)
+                     {
+                         SetPlaylist(list.TrackLists, list.TrackLists[list.CurrentIndex]);
+                     }
+                 });
+
         }
 
         private void DetectPlayerControlStatus()
@@ -476,29 +515,15 @@ namespace NeilX.DoubanFM.Services
             }
             else
                 CanPlay = CanPause = CanPrevious = CanNext = false;
-        }
+        } 
+        #endregion
+
         #endregion
 
 
 
 
-        public void Dispose()
-        {
-            if (_proxy!=null)
-            {
-                _proxy.SeekCompleted -= _proxy_SeekCompleted;
-                _proxy.MediaOpened -= _proxy_MediaOpened;
-                _proxy.MediaFailed -= _proxy_MediaFailed;
-                _proxy.MediaEnded -= _proxy_MediaEnded;
-                _proxy.CurrentStateChanged -= _proxy_CurrentStateChanged;
-                _proxy.CurrentTrackChanged -= _proxy_CurrentTrackChanged;
-            }
-
-            if (_askPositionTimer != null)
-            {
-                _askPositionTimer.Dispose();
-            }
-        }
+   
 
 
     }

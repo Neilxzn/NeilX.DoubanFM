@@ -95,10 +95,7 @@
     <Content Include="Assets\Images\搜索.png" />
     <Content Include="Assets\Images\红心.png" />
     <Content Include="Assets\Images\音乐.png" />
-    <Content Include="SampleMedias\ring4.jpg" />
-    <Content Include="SampleMedias\ring4.mp3" />
     <None Include="project.json" />
-    <None Include="SampleMedias\ring4.lrc" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -111,6 +108,7 @@
     <Compile Include="Convertors\TimeSpanToStringConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Selector\FMsItemTemplateSelector.cs" />
+    <Compile Include="Services\AppStateManager.cs" />
     <Compile Include="Services\DoubanFMService.cs" />
     <Compile Include="Services\IPlayerSessionService.cs" />
     <Compile Include="Services\LocalDataService.cs" />

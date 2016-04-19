@@ -7,6 +7,10 @@ using NeilX.DoubanFM.Core;
 using NeilX.DoubanFM.MusicPlayer.Server;
 using Windows.Media;
 using System.Diagnostics;
+using NeilSoft.UWP;
+using Windows.Storage;
+using System.IO;
+using System.Runtime.Serialization.Json;
 
 namespace NeilX.DoubanFM.MusicPlayer.Controller
 {
@@ -18,9 +22,11 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
         private bool _autoPlay;
         private readonly MediaTransportControls _mtControls;
         private Song _currentTrack;
+        private AppState foregroundAppState = AppState.Unknown;
 
         public MusicPlayerController(IMediaPlayer musicPlayer)
         {
+            foregroundAppState = AppState.Active;
             _player = musicPlayer;
             _controllerHandler = new MusicPlayerControllerHandler();
 
@@ -32,38 +38,18 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
             _player.CurrentStateChanged += _player_CurrentStateChanged;
             #endregion
 
+            #region stmc
+
             _mtControls = new MediaTransportControls(_player.SystemMediaTransportControls);
             _mtControls.IsEnabled = _mtControls.IsPauseEnabled = _mtControls.IsPlayEnabled = true;
-            _mtControls.ButtonPressed += _mtControls_ButtonPressed;
+            _mtControls.ButtonPressed += _mtControls_ButtonPressed; 
+            #endregion
 
             _playlist = new PlayList();
 
         }
+      
 
-        private void _mtControls_ButtonPressed(object sender, SystemMediaTransportControlsButtonPressedEventArgs e)
-        {
-            switch (e.Button)
-            {
-                case SystemMediaTransportControlsButton.Play:
-                    Debug.WriteLine("UVC play button pressed");
-                    Play();
-                    break;
-                case SystemMediaTransportControlsButton.Pause:
-                    Debug.WriteLine("UVC pause button pressed");
-                    Pause();
-                    break;
-                case SystemMediaTransportControlsButton.Next:
-                    Debug.WriteLine("UVC next button pressed");
-                    MoveNext();
-                    break;
-                case SystemMediaTransportControlsButton.Previous:
-                    Debug.WriteLine("UVC previous button pressed");
-                    MovePrevious();
-                    break;
-            }
-        }
-
-       
 
         public void OnCanceled()
         {
@@ -74,6 +60,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
             _player.CurrentStateChanged -= _player_CurrentStateChanged;
             _mtControls.ButtonPressed -= _mtControls_ButtonPressed;
             _mtControls?.Dispose();
+            AppSettingsHelper.SaveSettingToLocalSettings(AppSettingsConstants.BackgroundTaskState, BackgroundTaskState.Canceled.ToString());
         }
 
         #region Player Event Handler
@@ -114,7 +101,6 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
         {
             _controllerHandler?.NotifyMediaEnd();
             MoveNext();
-            
         }
 
         private void _player_MediaOpened(IMediaPlayer sender, object args)
@@ -122,8 +108,11 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
 
             if (_autoPlay)
             {
-                _autoPlay = false;
                 Play();
+            }
+            else
+            {
+                _autoPlay = true;
             }
             _controllerHandler?.NotifyMediaOpened();
         }
@@ -131,10 +120,53 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
         private void _player_SeekCompleted(IMediaPlayer sender, object args)
         {
           _controllerHandler?.NotifySeekCompleted();
-        } 
+        }
         #endregion
 
+        #region STMC Event Handeler
 
+        private void _mtControls_ButtonPressed(object sender, SystemMediaTransportControlsButtonPressedEventArgs e)
+        {
+            switch (e.Button)
+            {
+                case SystemMediaTransportControlsButton.Play:
+                    Debug.WriteLine("UVC play button pressed");
+                    Play();
+                    break;
+                case SystemMediaTransportControlsButton.Pause:
+                    Debug.WriteLine("UVC pause button pressed");
+                    Pause();
+                    break;
+                case SystemMediaTransportControlsButton.Next:
+                    Debug.WriteLine("UVC next button pressed");
+                    MoveNext();
+                    break;
+                case SystemMediaTransportControlsButton.Previous:
+                    Debug.WriteLine("UVC previous button pressed");
+                    MovePrevious();
+                    break;
+            }
+        }
+
+        #endregion
+
+        #region private helper methods
+        private void SetMediaSource(Song song)
+        {
+            if (song == null) return;
+            _player.SetMediaSource(song);
+            _mtControls.SetCurrentTrack(song);
+            _mtControls.DetectSMTCStatus(song, _playlist, _playlist.PlayMode);
+
+            if (foregroundAppState == AppState.Active)
+                _controllerHandler?.NotifyCurrentTrackChanged(song);
+            else
+                ;//ApplicationSettingsHelper.SaveSettingToLocalSettings(TaskConstant.TrackIdKey, currentTrackId == null ? null : currentTrackId.ToString());
+
+        }
+        #endregion
+
+        #region public methods
 
         public void SetupHandler(IMusicPlayerControllerHandler handler)
         {
@@ -154,12 +186,12 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
 
         public void SetPlaylist(IList<Song> tracks)
         {
-            _playlist.TrackLists =tracks;
+            _playlist.TrackLists = tracks;
         }
 
         public void SetCurrentTrack(Song song)
         {
-            if (song!=null)
+            if (song != null)
             {
                 _playlist?.CheckCurrentTrack(song);
                 SetMediaSource(song);
@@ -167,14 +199,12 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
         }
         public void MoveNext()
         {
-            _autoPlay = true;
             SetMediaSource(_playlist?.MoveNext());
 
         }
 
         public void MovePrevious()
         {
-            _autoPlay = true;
             SetMediaSource(_playlist?.MovePrevious());
         }
 
@@ -184,49 +214,53 @@ namespace NeilX.DoubanFM.MusicPlayer.Controller
             _mtControls.DetectSMTCStatus(_playlist.GetCurrentTrack(), _playlist, playmode);
         }
 
-   
-
-        public void AskPlaylist()
-        {
-           // _controllerHandler?.NotifyPlaylist(_playlist);
-        }
-
         public void AskCurrentTrack()
         {
             _controllerHandler?.NotifyCurrentTrackChanged(_currentTrack);
         }
 
-        public void AskCurrentState()
+        #region AppState
+        public void SetAppStateSuspended()
         {
+            foregroundAppState = AppState.Suspended;
+            _playlist.Save();
+            AppSettingsHelper.SaveSettingToLocalSettings(AppSettingsConstants.Position, BackgroundMediaPlayer.Current.Position.ToString());
+            AppSettingsHelper.SaveSettingToLocalSettings(AppSettingsConstants.Volume, BackgroundMediaPlayer.Current.Volume * 100);
         }
-
-        #region  not Use 
-
-        public void AskPosition()
+        public void SetAppStateActive()
         {
-        }
-
-        public void SetPosition(TimeSpan position)
-        {
-        }
-
-        public void SetVolume(double value)
-        {
-        }
-
-        public void AskDuration()
-        {
+            foregroundAppState = AppState.Active;
         }
         #endregion
 
-        private void SetMediaSource(Song song)
-        {
-            if (song == null) return;
-            _player.SetMediaSource(song);
-            _mtControls.SetCurrentTrack(song);
-            _mtControls.DetectSMTCStatus(song, _playlist, _playlist.PlayMode);
-            _controllerHandler?.NotifyCurrentTrackChanged(song);
-        }
+        #endregion
+
+        //#region  not Use 
+        //public void AskPlaylist()
+        //{
+
+        //}
+        //public void AskCurrentState()
+        //{
+        //}
+        //public void AskPosition()
+        //{
+        //}
+
+        //public void SetPosition(TimeSpan position)
+        //{
+        //}
+
+        //public void SetVolume(double value)
+        //{
+        //}
+
+        //public void AskDuration()
+        //{
+        //}
+        //#endregion
+
+      
 
     }
 }
