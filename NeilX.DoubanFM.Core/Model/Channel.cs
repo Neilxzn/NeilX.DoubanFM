@@ -84,6 +84,7 @@ namespace NeilX.DoubanFM.Core
         /// </value>
         public string CoverUrl { get; set; }
 
+        public string ChannelGroupName { get; set; }
 #pragma warning disable 1591
         public override bool Equals(object obj)
         {

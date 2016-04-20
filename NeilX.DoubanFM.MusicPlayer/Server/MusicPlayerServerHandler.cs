@@ -53,7 +53,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
                     _musicPlayerController?.SetCurrentTrack(JsonHelper.FromJson<TrackChangedMessage>(message).Song);
                     break;
                 case MessageType.UpdatePlaylistMessage:
-                    _musicPlayerController?.SetPlaylist(JsonHelper.FromJson<UpdatePlaylistMessage>(message).Tracks);
+                    _musicPlayerController?.SetPlaylist(new List<Song>( JsonHelper.FromJson<UpdatePlaylistMessage>(message).Tracks));
                     break;
                 default:
                     break;

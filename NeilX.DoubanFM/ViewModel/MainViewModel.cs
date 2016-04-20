@@ -20,6 +20,7 @@ namespace NeilX.DoubanFM.ViewModel
     {
         private static readonly Guid Token = Guid.NewGuid();
         private Frame _navigationService;
+        private int _selectedMenuIndex = -1;
         private ObservableCollection<MenuListItem> _menuList;
 
         public MainViewModel()
@@ -34,10 +35,25 @@ namespace NeilX.DoubanFM.ViewModel
                 InitializeMenuData();
                 RegisterMessenger();
             }
-           
+
 
         }
 
+
+
+        public int SelectedMenuIndex
+        {
+            get { return _selectedMenuIndex; }
+            set
+            {
+                if (Set(ref _selectedMenuIndex, value))
+                {
+                    OnSelectedMenuIndexChanged(value);
+                }
+            }
+        }
+
+      
         public ObservableCollection<MenuListItem> MenuList
         {
             get { return _menuList; }
@@ -65,24 +81,21 @@ namespace NeilX.DoubanFM.ViewModel
 
 
         #region Public  Methods
-        public  void SetupNavigationService(object sender, object e)
+        public void SetupNavigationService(object sender, object e)
         {
             _navigationService = (Frame)sender;
-            _navigationService.Navigate(typeof(View.RadioListView));
+            SelectedMenuIndex = 1;
+            _navigationService.Navigated += _navigationService_Navigated;
         }
 
-        public  void OpenSettingView()
+
+
+        public void OpenSettingView()
         {
-            MessengerInstance.Send("OpenSettingView","MainPage" );
+            MessengerInstance.Send("OpenSettingView", "MainPage");
         }
 
 
-        public void MenuListSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            MenuListItem selectedItem = e.AddedItems[0] as MenuListItem;
-            NavigateToView(selectedItem.GotoView);
-
-        }
 
 
         #endregion
@@ -123,7 +136,7 @@ namespace NeilX.DoubanFM.ViewModel
 
             MenuList.Add(m);
 
-           
+
 
         }
 
@@ -150,11 +163,11 @@ namespace NeilX.DoubanFM.ViewModel
         }
         private void HandleSongListVMMsg(NotificationMessage msg)
         {
-            if (msg.Notification== "GotoEditView")
+            if (msg.Notification == "GotoEditView")
             {
                 NavigateToSongListEditView();
             }
-            else if(msg.Notification == "Update")
+            else if (msg.Notification == "Update")
             {
                 NavigateToView(MenuGotoView.RadioListView);
             }
@@ -162,6 +175,37 @@ namespace NeilX.DoubanFM.ViewModel
         #endregion
 
         #region NavigationService
+
+        private void _navigationService_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
+        {
+            if (e.SourcePageType==typeof(RadioListView)&&SelectedMenuIndex!=1)
+            {
+                _selectedMenuIndex = 1;
+                RaisePropertyChanged(nameof(SelectedMenuIndex));
+            }
+            else if (e.SourcePageType == typeof(SearchView) && SelectedMenuIndex != 0)
+            {
+                _selectedMenuIndex = 0;
+                RaisePropertyChanged(nameof(SelectedMenuIndex));
+            }
+            else if((e.SourcePageType == typeof(View.MyMusicView)
+                || e.SourcePageType == typeof(View.SongListView)
+                || e.SourcePageType == typeof(View.SongListEditView))
+                && SelectedMenuIndex != 2)
+            {
+                _selectedMenuIndex = 2;
+                RaisePropertyChanged(nameof(SelectedMenuIndex));
+            }
+        }
+
+        private void OnSelectedMenuIndexChanged(int value)
+        {
+            if (MenuList!=null)
+            {
+                NavigateToView(MenuList[value].GotoView);
+            }
+        }
+
         private void NavigateToView(MenuGotoView view)
         {
             switch (view)

@@ -8,5 +8,6 @@
         <ResourceDictionary Source="/Themes/DoubanSkin/GridView.xaml"/>
         <ResourceDictionary Source="/Themes/DoubanSkin/Slider.xaml"/>
         <ResourceDictionary Source="/Themes/DoubanSkin/Button.xaml"/>
+        <ResourceDictionary Source="/Themes/DoubanSkin/Rectangle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

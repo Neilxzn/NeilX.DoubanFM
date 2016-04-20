@@ -106,7 +106,7 @@ namespace NeilX.DoubanFM.ViewModel
                 //StyleSongFM = channelground[4];
                 //MoodFM = channelground[5];
                 //BrandFM = channelground[6];
-                OthersFMs = new ObservableCollection<ChannelGroup>(channelground.Where(o=>o!=MyFM));
+                 OthersFMs = new ObservableCollection<ChannelGroup>(channelground.Where(o=>o!=MyFM));
             }
             else
             {

@@ -17,8 +17,7 @@
             <Grid HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
                   Background="Transparent" 
-                  Tag="{Binding}"
-                  >
+                  Tag="{Binding}" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -31,42 +30,43 @@
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center"
                           Data="{x:Bind Icon, Mode=OneWay}"
-                          Fill="{StaticResource GrayForeground}"
+                          Fill="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Foreground}"
                           Stretch="Uniform" />
                 </Grid>
-                <TextBlock Grid.Column="1" Style="{StaticResource paneContentTextStyle}" Text="{x:Bind Name, Mode=OneWay}" />
+                <TextBlock Grid.Column="1"
+                           Foreground="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Foreground}"
+                           Style="{StaticResource paneContentTextStyle}"
+                           Text="{x:Bind Name, Mode=OneWay}" />
             </Grid>
         </DataTemplate>
-        <Style x:Key="ListViewItemStyle" TargetType="ListViewItem">
-            <Setter Property="Padding" Value="0,0,12,0" />
+        <Style x:Key="MenuListItemStyle" TargetType="ListViewItem">
+            <Setter Property="Padding" Value="0" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Width" Value="200"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListViewItem">
                         <ListViewItemPresenter HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                               CheckBoxBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
-                                               CheckBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                                               CheckBoxBrush="{StaticResource DoubanGreenBrush}"
+                                               CheckBrush="{StaticResource DoubanGreenBrush}"
                                                CheckMode="Inline"
                                                ContentMargin="{TemplateBinding Padding}"
                                                ContentTransitions="{TemplateBinding ContentTransitions}"
                                                DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
-                                               DragBackground="{ThemeResource ListViewItemDragBackgroundThemeBrush}"
-                                               DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}"
                                                DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
-                                               FocusBorderBrush="{ThemeResource SystemControlForegroundAltHighBrush}"
-                                               FocusSecondaryBorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}"
                                                PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
-                                               PointerOverBackground="{ThemeResource SystemControlHighlightListLowBrush}"
-                                               PointerOverForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
-                                               PressedBackground="{ThemeResource SystemControlHighlightListMediumBrush}"
+                                               PointerOverForeground="{StaticResource DoubanGreenBrush}"
                                                ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
-                                               SelectedBackground="{ThemeResource SystemControlHighlightListAccentLowBrush}"
-                                               SelectedForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
-                                               SelectedPointerOverBackground="{ThemeResource SystemControlHighlightListAccentMediumBrush}"
-                                               SelectedPressedBackground="{ThemeResource SystemControlHighlightListAccentHighBrush}"
-                                               SelectionCheckMarkVisualEnabled="True" />
+                                               SelectedBackground="{StaticResource DoubanGreenBrush}"
+                                               SelectedPointerOverBackground="{StaticResource DoubanHoverGreenBrush}"
+                                               SelectedPressedBackground="{StaticResource DoubanGreenBrush}"
+                                               SelectionCheckMarkVisualEnabled="True" Foreground="{StaticResource GrayForeground}" >
+                            <ListViewItemPresenter.SelectedForeground>
+                                <SolidColorBrush Color="{ThemeResource SystemAltHighColor}"/>
+                            </ListViewItemPresenter.SelectedForeground>
+                        </ListViewItemPresenter>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -79,7 +79,12 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <SplitView x:Name="MySplitView" Foreground="{StaticResource GrayForeground}"  PaneBackground="{StaticResource PaneBackground}"   DisplayMode="CompactOverlay" CompactPaneLength="40" OpenPaneLength="200">
+        <SplitView x:Name="MySplitView" 
+                   Foreground="{StaticResource GrayForeground}"  
+                   PaneBackground="{StaticResource PaneBackground}"   
+                   DisplayMode="CompactInline" 
+                   CompactPaneLength="40" 
+                   OpenPaneLength="200">
             <SplitView.Pane>
                 <RelativePanel >
                     <StackPanel  Margin="10,10" PointerPressed="Hambeger_PointerPressed" x:Name="Hambeger"  RelativePanel.AlignTopWithPanel="True">
@@ -88,20 +93,12 @@
                     <StackPanel RelativePanel.Below="Hambeger">
                         <ListView x:Name="FunctionsListView"
                                   VerticalAlignment="Center"
-                                  ItemContainerStyle="{StaticResource ListViewItemStyle}"
+                                  ItemContainerStyle="{StaticResource MenuListItemStyle}"
                                   ItemTemplate="{StaticResource MenuListItemDataTemplate}"
                                   ItemsSource="{x:Bind Main.MenuList, Mode=OneWay}"
-                                  SelectionChanged="{x:Bind Main.MenuListSelectionChanged,Mode=OneWay}"
+                                  SelectedIndex="{x:Bind Main.SelectedMenuIndex,Mode=TwoWay}"
                                   SelectionMode="Single"
                                   />
-                        <Ellipse x:Name="ell" Width="30"  Height="30" Fill="Red" Visibility="Collapsed">
-                            <Ellipse.RenderTransform>
-                                <TransformGroup>
-                                    <TranslateTransform/>
-                                    <CompositeTransform/>
-                                </TransformGroup>
-                            </Ellipse.RenderTransform>
-                        </Ellipse>
                     </StackPanel>
                     <!--<ListBox x:Name="menuList" SelectionMode="Single" SelectionChanged="menuList_SelectionChanged"
                              RelativePanel.Below="Hambeger">
@@ -129,14 +126,13 @@
                         <Grid Grid.Column="0"  Width="40"  Height="40">
                             <TextBlock Margin="10" Style="{StaticResource MDL2IconTextStyle}" Text="&#xE713;" PointerPressed="{x:Bind Main.OpenSettingView,Mode=OneWay}"/>
                         </Grid>
-                            <TextBlock  Grid.Column="1"    Style="{StaticResource paneContentTextStyle}" Text="设置" />
+                        <TextBlock  Grid.Column="1"    Style="{StaticResource paneContentTextStyle}" Text="设置" />
                     </Grid>
 
                 </RelativePanel>
             </SplitView.Pane>
             <SplitView.Content>
                 <Frame x:Name="navigationFrame" Loaded="{x:Bind Main.SetupNavigationService}"/>
-              
             </SplitView.Content>
 
         </SplitView>

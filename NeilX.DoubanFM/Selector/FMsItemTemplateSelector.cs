@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace NeilX.DoubanFM.Selector
 {
@@ -21,8 +22,14 @@ namespace NeilX.DoubanFM.Selector
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
             Channel channel = item as Channel;
-            return ArtistFMTempalte;
-            return base.SelectTemplateCore(item, container);
+            if (channel?.ChannelGroupName.Contains("艺术家")==true)
+            {
+                return ArtistFMTempalte;
+            }
+            else
+            {
+                return SingleSongFMTempalte;
+            }
         }
 
     }

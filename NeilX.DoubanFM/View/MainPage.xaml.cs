@@ -20,6 +20,7 @@ using NeilX.DoubanFM.CustomControl;
 using NeilX.DoubanFM.Core.LocalData;
 using NeilX.DoubanFM.Services;
 using Windows.ApplicationModel.Core;
+using Windows.UI.ViewManagement;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -64,12 +65,27 @@ namespace NeilX.DoubanFM.View
         }
         #endregion
 
-        #region Title Bar
-        private void SetupTitleBar()
+        #region Title Bar & BackButton
+        private void SetupTitleBarAndBackButton()
         {
+            Color titlebgColor1= Color.FromArgb(0xff, 0x1A, 0xC9, 0x6A);
+            Color titlebgColor2 = Color.FromArgb(0xff, 0x84, 0xC7, 0xAF);
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             // coreTitleBar.ExtendViewIntoTitleBar = true;
-            //     Window.Current.SetTitleBar(TitleGrid);
+           //     Window.Current.SetTitleBar(TitleGrid);
+
+            ApplicationViewTitleBar appTitleBar = ApplicationView.GetForCurrentView().TitleBar;
+            appTitleBar.BackgroundColor = titlebgColor1;
+            appTitleBar.InactiveBackgroundColor = titlebgColor2;
+            appTitleBar.ForegroundColor = Colors.White;
+            appTitleBar.InactiveForegroundColor = Colors.White;
+            appTitleBar.ButtonBackgroundColor = titlebgColor1;
+            appTitleBar.ButtonInactiveBackgroundColor = titlebgColor2;
+            appTitleBar.ButtonForegroundColor = Colors.White;
+            appTitleBar.ButtonInactiveForegroundColor = Colors.White;
+            appTitleBar.ButtonHoverBackgroundColor = titlebgColor1;
+                
+
             _backButton = SystemNavigationManager.GetForCurrentView();
             _backButton.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
             _backButton.BackRequested += BackButton_BackRequested;
@@ -101,8 +117,7 @@ namespace NeilX.DoubanFM.View
 
         protected override  void OnNavigatedTo(NavigationEventArgs e)
         {
-            SetupTitleBar();
-            PointServiceContentControl.AnimationObject = ell;
+            SetupTitleBarAndBackButton();
             AppSettingsHelper.SaveSettingToLocalSettings(AppSettingsConstants.AppState, AppState.Active.ToString());
         }
 
@@ -232,21 +247,7 @@ namespace NeilX.DoubanFM.View
         }
 
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
-        {
-            //List<TrackInfo> tracks = new List<TrackInfo>();
-            //Uri uri = new Uri("ms-appx:///SampleMedias/Ring01.mp3");
-            //StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(uri);
-            //await TryAddTrackInfo(file, tracks);    
-            //   InitializeSongs();
-          //  FileOpenPicker picker = new FileOpenPicker();
-          //  picker.FileTypeFilter.Add ("*");
-          //var file=  await  picker.PickSingleFileAsync();
-           
-          // // var file = await StorageFile.GetFileFromPathAsync(value.Lyric);
-          //  var filetext = await FileIO.ReadTextAsync(file);
-          //   var lyricfile = LrcFile.FromText(filetext);
-        }
+       
 
        
 
