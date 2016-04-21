@@ -9,5 +9,7 @@
         <ResourceDictionary Source="/Themes/DoubanSkin/Slider.xaml"/>
         <ResourceDictionary Source="/Themes/DoubanSkin/Button.xaml"/>
         <ResourceDictionary Source="/Themes/DoubanSkin/Rectangle.xaml"/>
+        <ResourceDictionary Source="/Themes/DoubanSkin/Pivot.xaml"/>
+        <ResourceDictionary Source="/Themes/DoubanSkin/ListView.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

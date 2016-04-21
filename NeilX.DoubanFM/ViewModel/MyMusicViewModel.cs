@@ -97,14 +97,24 @@ namespace NeilX.DoubanFM.ViewModel
         }
 
 
-        private MusicSongViewModel _selectSong;
+        private object _selectSong;
 
-        public MusicSongViewModel SelectSong
+        public object SelectSong
         {
             get { return _selectSong; }
             set
             {
-                Set(ref _selectSong, value);
+                if (_selectSong != value)
+                {
+                    if (_selectSong != null)
+                    {
+                        ((MusicSongViewModel)_selectSong).IsSelected = false;
+                        RaisePropertyChanged(nameof(SelectSong));
+                    }
+                    _selectSong = value;
+                    ((MusicSongViewModel)_selectSong).IsSelected = true;
+                    RaisePropertyChanged(nameof(SelectSong));
+                }
             }
         }
 
@@ -158,7 +168,8 @@ namespace NeilX.DoubanFM.ViewModel
             SongList list = new SongList()
             {
                 Name = "播放列表测试",
-                BuildTime = DateTime.Now
+                BuildTime = DateTime.Now,
+                Thumbnail= "ms-appx:///Assets/Images/m51.jpg"
             };
             LocalDataService.AddSongList(list);
             InitialSongList();
@@ -169,7 +180,7 @@ namespace NeilX.DoubanFM.ViewModel
             SongList list = e.AddedItems[0] as SongList;
             if (list != null)
             {
-                LocalDataService.AddSongToSongList(SelectSong.Song, list);
+                LocalDataService.AddSongToSongList(((MusicSongViewModel)SelectSong).Song, list);
             }
             Messenger.Default.Send(new NotificationMessage("close"), Token);
         }
@@ -236,10 +247,8 @@ namespace NeilX.DoubanFM.ViewModel
 
         private void AddSongToSongList(MusicSongViewModel musicSong)
         {
-            SelectSong = musicSong;
             Messenger.Default.Send(new NotificationMessage("open"), Token);
         }
-
 
 
         private void OnSelectSongListChanged(SongList value)

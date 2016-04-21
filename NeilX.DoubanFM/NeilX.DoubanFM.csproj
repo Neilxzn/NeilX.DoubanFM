@@ -99,6 +99,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\LocalSongHelper.cs" />
+    <Compile Include="Convertors\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Convertors\DoubleToTimeSpanStringConverter.cs" />
     <Compile Include="Convertors\IsPlayingConverter.cs" />
     <Compile Include="Convertors\PlayModeToStringConverter.cs" />
     <Compile Include="Convertors\TimeSpanToDoubleConverter.cs" />
@@ -106,6 +108,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Selector\ChlGpHeaderTemplateSelector.cs" />
     <Compile Include="Selector\FMsItemTemplateSelector.cs" />
+    <Compile Include="Selector\SongsItemTemplateSelector.cs" />
     <Compile Include="Services\AppStateManager.cs" />
     <Compile Include="Services\DoubanFMService.cs" />
     <Compile Include="Services\IPlayerSessionService.cs" />
@@ -160,9 +163,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Images\m51.jpg" />
+    <Content Include="Assets\Images\全部播放.png" />
     <Content Include="Assets\Images\我的私人.png" />
+    <Content Include="Assets\Images\歌单播放.png" />
+    <Content Include="Assets\Images\添加列表.png" />
     <Content Include="Assets\Images\红心.png" />
     <Content Include="Assets\Images\豆瓣精选.png" />
+    <Content Include="Assets\Images\音乐Title.png" />
+    <Content Include="Assets\Images\音乐Title2.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -198,6 +206,16 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="Themes\DoubanSkin\Image.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\DoubanSkin\ListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\DoubanSkin\Pivot.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

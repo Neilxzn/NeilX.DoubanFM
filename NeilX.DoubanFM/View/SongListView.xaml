@@ -6,23 +6,36 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="using:NeilX.DoubanFM.ViewModel"
+    xmlns:converter="using:NeilX.DoubanFM.Convertors"
     mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator},Path=SongListVM}">
     <UserControl.Resources>
-        <DataTemplate x:Key="songItemDataTemplate" x:DataType="vm:MusicSongViewModel">
-            <Button  >
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="{x:Bind Song.Title}"/>
-                    <Button Grid.Column="1"
-                            Content="点击播放" 
-                            Click="{x:Bind PlayLocalSong}"/>
-                    <Button Grid.Column="2"
-                            Content="more"
-                            >
+        <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converter:IntToTimeSpanStringConverter x:Key="IntToTimeSpanStringConverter"/>
+        <DataTemplate x:Key="songLightDataTemplate" x:DataType="vm:MusicSongViewModel">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="80"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{x:Bind Index}"
+                           Style="{StaticResource MainTextStyle14}"
+                           HorizontalAlignment="Left"/>
+                <TextBlock Grid.Column="1" 
+                           Text="{x:Bind Song.Title}"
+                           Style="{StaticResource MainTextStyle14}"
+                           HorizontalAlignment="Left"/>
+                <StackPanel Grid.Column="2" Orientation="Horizontal"
+                           Visibility="{x:Bind IsSelected,Converter={StaticResource BooleanToVisibilityConverter},Mode=OneWay}">
+                    <Button Click="{x:Bind PlayLocalSong}" 
+                            Style="{StaticResource SongItemButtonStyle}">
+                        <SymbolIcon Symbol="Play"/>
+                    </Button>
+                    <Button Style="{StaticResource SongItemButtonStyle}">
+                        <SymbolIcon Symbol="More"/>
                         <Button.Flyout>
                             <Flyout>
                                 <Grid>
@@ -34,24 +47,93 @@
                             </Flyout>
                         </Button.Flyout>
                     </Button>
-                </Grid>
-            </Button>
-
+                </StackPanel>
+                <TextBlock Grid.Column="3" 
+                           Margin="15,0,0,0" 
+                           Text="{x:Bind Song.AlbumTitle}"
+                           Style="{StaticResource MainTextGrayStyle14}"
+                           HorizontalAlignment="Left"/>
+                <TextBlock Grid.Column="4"
+                           Margin="15,0,0,0" 
+                           Text="{x:Bind Song.Artist}" 
+                           Style="{StaticResource MainTextGrayStyle14}"
+                           HorizontalAlignment="Left"/>
+                <TextBlock Grid.Column="5" 
+                           Margin="15,0,0,0" 
+                           Text="{x:Bind Song.Length,Converter={StaticResource IntToTimeSpanStringConverter}}"
+                           Style="{StaticResource MainTextGrayStyle14}"
+                           HorizontalAlignment="Left"/>
+            </Grid>
         </DataTemplate>
     </UserControl.Resources>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{StaticResource ContentBackground}" Margin="20,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
-        <StackPanel>
-            <TextBlock Text="{x:Bind SongListVM.SelectList.Name}"/>
-            <TextBlock Text="{x:Bind SongListVM.SelectList.BuildTime}"/>
-            <Button Content="编辑歌单" Click="{x:Bind SongListVM.EditListInfo}"/>
-            <Button Content="删除歌单" Click="{x:Bind SongListVM.DelectSongLits}"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Text="歌单" 
+                   Style="{StaticResource MainTextGrayStyle14}"
+                   HorizontalAlignment="Left"
+                   Margin="20,5"/>
+        <Image Grid.Row="1"
+               Width="100" 
+               Height="100" 
+               Source="{x:Bind SongListVM.SelectList.Thumbnail,Mode=OneWay,FallbackValue='ms-appx:///Assets/Images/m51.jpg',TargetNullValue='ms-appx:///Assets/Images/m51.jpg'}"/>
+        <StackPanel Grid.Column="1"
+                    Grid.Row="1"
+                    Orientation="Vertical"
+                    HorizontalAlignment="Left"
+                    Margin="5,0">
+            <TextBlock Text="{x:Bind SongListVM.SelectList.Name}"
+                               HorizontalAlignment="Left"
+                               Style="{StaticResource TitleTextStyle20}"/>
+            <TextBlock  Style="{StaticResource MainTextGrayStyle14}">
+                <Run Text="创建于"/>
+                <Run Text="{x:Bind SongListVM.SelectList.BuildTime}"/>
+            </TextBlock>
+            <StackPanel Orientation="Horizontal" Margin="10">
+                <Button Content="编辑歌单" 
+                        Click="{x:Bind SongListVM.EditListInfo}"
+                        Style="{StaticResource SongListEditButtonStyle1}"/>
+                <Button Content="删除歌单" 
+                        Margin="20,0"
+                        Click="{x:Bind SongListVM.DelectSongLits}" 
+                        Style="{StaticResource SongListEditButtonStyle1}"/>
+            </StackPanel>
         </StackPanel>
-        <ListBox Grid.Row="1" 
-                             ItemsSource="{x:Bind SongListVM.ListMusicSongs,Mode=OneWay}"
-                             ItemTemplate="{StaticResource songItemDataTemplate}"/>
+
+        <Button  Grid.Row="2" 
+                 Margin="10,3"
+                 Style="{StaticResource PlayAllButtonStyle}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Width="20"  Height="20" 
+                                   Margin="2"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Source="ms-appx:///Assets/Images/全部播放.png" />
+                <TextBlock Grid.Column="1"
+                           Margin="2"
+                           Style="{StaticResource MainTextStyle16}">
+                    <Run Text="播放全部"/>
+                    <Run Text="{x:Bind SongListVM.SelectList.SongCount,Mode=OneWay}"/>
+                </TextBlock>
+            </Grid>
+        </Button>
+        <ListView Grid.Row="3" 
+                  Grid.ColumnSpan="2"
+                   Margin="10,5"
+                  ItemContainerStyle="{StaticResource SongsListViewItemStyle}"
+                  ItemsSource="{x:Bind SongListVM.ListMusicSongs,Mode=OneWay}"
+                  ItemTemplate="{StaticResource songLightDataTemplate}"/>
     </Grid>
 </Page>

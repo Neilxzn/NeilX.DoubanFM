@@ -26,6 +26,13 @@
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
+    <Style x:Key="TitleTextStyle20" TargetType="TextBlock" BasedOn="{StaticResource BaseAppTextBlockStyle}">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="3"/>
+    </Style>
     <Style x:Key="MainTextStyle18" TargetType="TextBlock" BasedOn="{StaticResource BaseAppTextBlockStyle}">
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -41,6 +48,13 @@
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Margin" Value="3"/>
+    </Style>
+    <Style x:Key="MainTextGrayStyle14" TargetType="TextBlock" BasedOn="{StaticResource BaseAppTextBlockStyle}">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="3"/>
+        <Setter Property="Foreground" Value="{StaticResource GrayForeground}"/>
     </Style>
     <Style x:Key="MyFMTextStyle14" TargetType="TextBlock" BasedOn="{StaticResource BaseAppTextBlockStyle}">
         <Setter Property="FontSize" Value="14"/>

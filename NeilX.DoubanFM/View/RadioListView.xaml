@@ -16,8 +16,12 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <!--Image-->
-                <TextBlock  Text="{Binding GroupName}" Style="{StaticResource MainTextStyle16}"/>
+                <Image Source="ms-appx:///Assets/Images/音乐Title2.png" 
+                       Width="25" Height="25"/>
+                <TextBlock  Grid.Column="1"
+                            Text="{Binding GroupName}"
+                            Style="{StaticResource MainTextStyle16}"
+                            Margin="5,0"/>
             </Grid>
         </DataTemplate>
         
@@ -52,6 +56,7 @@
             </custom:PointServiceContentControl>
 
         </DataTemplate>
+        
         <Style x:Key="FMsGroupItemStyle" TargetType="GroupItem">
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="5,2"/>
@@ -88,6 +93,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        
         <ItemsPanelTemplate x:Key="FmsItemsPanelTemplate">
             <ItemsPanelTemplate>
                 <VariableSizedWrapGrid MaximumRowsOrColumns="5" 

@@ -51,5 +51,9 @@ namespace NeilX.DoubanFM.View
             }
         }
 
+        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            
+        }
     }
 }
