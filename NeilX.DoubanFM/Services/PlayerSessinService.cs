@@ -228,7 +228,7 @@ namespace NeilX.DoubanFM.Services
 
         public void SetPlaylist(IList<Song> tracks, Song current)
         {
-            Playlist = tracks;
+            Playlist = new List<Song>(tracks);
             CurrentTrack = current;
         }
 

@@ -1,4 +1,7 @@
-﻿using NeilX.DoubanFM.ViewModel;
+﻿using GalaSoft.MvvmLight.Messaging;
+using Microsoft.Practices.ServiceLocation;
+using NeilX.DoubanFM.Core;
+using NeilX.DoubanFM.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,12 +26,33 @@ namespace NeilX.DoubanFM.View
     /// </summary>
     public sealed partial class SongListView : Page
     {
+        public static readonly Guid Token = Guid.NewGuid();
         public SongListViewModel SongListVM => (SongListViewModel)DataContext;
         public SongListView()
         {
             this.InitializeComponent();
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+        }
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            SongListVM.OnNavigatedTo(e.Parameter as SongList);
+        }
 
+        private void EditListBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Messenger.Default.Send(new NotificationMessage<SongList>(SongListVM.SelectList,"GotoEditView"), Token);
+        }
+
+        private void DelectListBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Messenger.Default.Send(new NotificationMessage<SongList>(null,"Update"), Token);
+            SongListVM.DelectSongLits();
+            ViewModelLocator.Instance.MyMusicVM.ReflashData();
+        }
     }
 }

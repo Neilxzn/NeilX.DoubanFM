@@ -98,12 +98,14 @@
                 <Run Text="{x:Bind SongListVM.SelectList.BuildTime}"/>
             </TextBlock>
             <StackPanel Orientation="Horizontal" Margin="10">
-                <Button Content="编辑歌单" 
-                        Click="{x:Bind SongListVM.EditListInfo}"
+                <Button x:Name="EditListBtn"
+                        Content="编辑歌单" 
+                        Click="EditListBtn_Click"
                         Style="{StaticResource SongListEditButtonStyle1}"/>
-                <Button Content="删除歌单" 
+                <Button x:Name="DelectListBtn"
+                        Content="删除歌单" 
                         Margin="20,0"
-                        Click="{x:Bind SongListVM.DelectSongLits}" 
+                        Click="DelectListBtn_Click" 
                         Style="{StaticResource SongListEditButtonStyle1}"/>
             </StackPanel>
         </StackPanel>

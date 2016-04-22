@@ -1,4 +1,5 @@
-﻿using NeilX.DoubanFM.ViewModel;
+﻿using NeilX.DoubanFM.Core;
+using NeilX.DoubanFM.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,6 +28,13 @@ namespace NeilX.DoubanFM.View
         public SongListEditView()
         {
             this.InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            SongListEditVM.OnNavigatedTo(e.Parameter as SongList);
+           
         }
     }
 }

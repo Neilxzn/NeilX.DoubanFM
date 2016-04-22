@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
+using NeilX.DoubanFM.Core;
 using NeilX.DoubanFM.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -51,9 +52,18 @@ namespace NeilX.DoubanFM.View
             }
         }
 
-        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
+
+
+        private void SongGrid_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            
+            FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
+        }
+
+        private void songListsView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            SongList list = e.ClickedItem as SongList;
+            Messenger.Default.Send(new NotificationMessage<SongList>(list, "GotoSongListView"), Token);
+
         }
     }
 }

@@ -53,15 +53,17 @@
                      PlaceholderText="暂无"
                      Style="{StaticResource DoubanBaseTextBoxStyle}"
                      Text="{x:Bind SongListEditVM.SelectList.ListInfo,Mode=TwoWay}"/>
-            
             <Button Grid.Column="2"
-                  Grid.RowSpan="3"
-                  Margin="5" Style="{StaticResource SongListEditImgButtonStyle}">
+                    Grid.RowSpan="3"
+                    Margin="5"
+                    Click="{x:Bind SongListEditVM.ChangeSongListImg}"
+                    Style="{StaticResource SongListEditImgButtonStyle}">
                 <Grid>
                     <Image HorizontalAlignment="Stretch"
                        VerticalAlignment="Stretch"
                     Source="{x:Bind SongListEditVM.SelectList.Thumbnail,Mode=OneWay}"
-                    Stretch="UniformToFill"/>
+                    Stretch="Fill"/>
+
                     <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom">
                         <Border BorderThickness="0" CornerRadius="12,0,0,12" Background="Black" Opacity="0.6"/>
                         <TextBlock Text="编辑封面" Style="{StaticResource MainWhiteTextStyle14}" Margin="4"/>
@@ -92,7 +94,5 @@
                     Style="{StaticResource SongListEditButtonStyle1}"
                     Click="{x:Bind SongListEditVM.Cancel}"/>
         </StackPanel>
-
-
     </Grid>
 </Page>

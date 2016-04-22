@@ -46,17 +46,19 @@ namespace NeilX.DoubanFM.ViewModel
             set { Set(ref _isSelected, value); }
         }
 
-        public Action<MusicSongViewModel> PlayMethod { get; set; }
-        public Action<MusicSongViewModel> AddToList { get; set; }
+
 
         public void PlayLocalSong()
         {
-            PlayMethod?.Invoke(this);
+            if (Song != null)
+            {
+                ServiceLocator.Current.GetInstance<PlayerSessionService>().AddSongToPlaylist(Song);
+            }
         }
 
         public void AddSongToSongList()
         {
-            AddToList?.Invoke(this);
+            Messenger.Default.Send(new NotificationMessage("open"), MyMusicViewModel.Token);
         }
 
     }
@@ -119,20 +121,7 @@ namespace NeilX.DoubanFM.ViewModel
         }
 
 
-        private SongList _selectList;
-
-
-        public SongList SelectList
-        {
-            get { return _selectList; }
-            set
-            {
-                if (Set(ref _selectList, value))
-                {
-                    OnSelectSongListChanged(value);
-                }
-            }
-        }
+       
 
 
 
@@ -140,17 +129,12 @@ namespace NeilX.DoubanFM.ViewModel
 
         public MyMusicViewModel()
         {
-            SelectList = null;
             SelectSong = null;
             InitialAllLocalSongs();
             InitialSongList();
         }
 
-        public void ReflashData()
-        {
-            InitialAllLocalSongs();
-            InitialSongList();
-        }
+
 
 
         public void PlayeAllLocalSongs()
@@ -185,6 +169,11 @@ namespace NeilX.DoubanFM.ViewModel
             Messenger.Default.Send(new NotificationMessage("close"), Token);
         }
 
+        public void ReflashData()
+        {
+            InitialAllLocalSongs();
+            InitialSongList();
+        }
 
         public override void Cleanup()
         {
@@ -201,9 +190,7 @@ namespace NeilX.DoubanFM.ViewModel
                 select new MusicSongViewModel()
                 {
                     Index = oldsongs.IndexOf(s) + 1,
-                    Song = s,
-                    PlayMethod = PlayLocalSong,
-                    AddToList = AddSongToSongList
+                    Song = s
                 }) : null;
             await Task.Run(async () =>
             {
@@ -218,9 +205,7 @@ namespace NeilX.DoubanFM.ViewModel
                                     select new MusicSongViewModel()
                                     {
                                         Index = oldsongs.IndexOf(s) + 1,
-                                        Song = s,
-                                        PlayMethod = PlayLocalSong,
-                                        AddToList = AddSongToSongList
+                                        Song = s
                                     }) : null;
                              _allLocalSongs = songs;
                          });
@@ -233,41 +218,6 @@ namespace NeilX.DoubanFM.ViewModel
         {
             List<SongList> list = await LocalDataService.GetAllSongListsAsync();
             AllSongList = list != null ? new ObservableCollection<SongList>(list) : null;
-        }
-
-
-        private void PlayLocalSong(MusicSongViewModel musicSong)
-        {
-            if (musicSong.Song != null)
-            {
-                ServiceLocator.Current.GetInstance<PlayerSessionService>().AddSongToPlaylist(musicSong.Song);
-            }
-
-        }
-
-        private void AddSongToSongList(MusicSongViewModel musicSong)
-        {
-            Messenger.Default.Send(new NotificationMessage("open"), Token);
-        }
-
-
-        private void OnSelectSongListChanged(SongList value)
-        {
-            if (value == null) return;
-            Messenger.Default.Send(new NotificationMessage("GotoSongListView"), Token);
-            ServiceLocator.Current.GetInstance<SongListViewModel>().SelectList = value;
-            ServiceLocator.Current.GetInstance<SongListViewModel>().ListMusicSongs
-              = new ObservableCollection<MusicSongViewModel>(
-                from s in _allLocalSongs
-                where s.ListId == value.Id
-                select new MusicSongViewModel()
-                {
-                    Song = s,
-                    PlayMethod = PlayLocalSong,
-                    AddToList = AddSongToSongList
-                });
-        }
-
-
+        }     
     }
 }

@@ -13,112 +13,126 @@
     <UserControl.Resources>
         <converter:IntToTimeSpanStringConverter x:Key="IntToTimeSpanStringConverter"/>
         <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+
         <DataTemplate x:Key="songLightDataTemplate" x:DataType="vm:MusicSongViewModel">
-            <Grid >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="1.5*"/>
-                    <ColumnDefinition Width="80"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="1.5*"/>
-                    <ColumnDefinition Width="80"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="{x:Bind Index}"
+            <Grid>
+                <Grid.Resources>
+                    <MenuFlyout x:Key="SongItemMoreInfoFlyOut"  Placement="Bottom" >
+                        <MenuFlyoutItem Text="立即播放" Click="{x:Bind PlayLocalSong}"/>
+                        <MenuFlyoutItem Text="收藏" Click="{x:Bind AddSongToSongList}"/>
+                        <MenuFlyoutItem Text="分享" />
+                        <MenuFlyoutItem Text="查看信息" />
+                        <MenuFlyoutItem Text="删除歌曲" />
+                    </MenuFlyout>
+                </Grid.Resources>
+                <Grid x:Name="SongGrid" 
+                      Background="Transparent"
+                      RightTapped="SongGrid_RightTapped"  
+                      FlyoutBase.AttachedFlyout="{StaticResource SongItemMoreInfoFlyOut}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="80"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{x:Bind Index}"
                            Style="{StaticResource MainTextStyle14}"
                            HorizontalAlignment="Left"/>
-                <TextBlock Grid.Column="1" 
+                    <TextBlock Grid.Column="1" 
                            Text="{x:Bind Song.Title}"
                            Style="{StaticResource MainTextStyle14}"
                            HorizontalAlignment="Left"/>
-                <StackPanel Grid.Column="2" Orientation="Horizontal"
-                           Visibility="{x:Bind IsSelected,Converter={StaticResource BooleanToVisibilityConverter},Mode=OneWay}">
-                    <Button Click="{x:Bind PlayLocalSong}" 
+                    <StackPanel Grid.Column="2" 
+                            Orientation="Horizontal"
+                            Visibility="{x:Bind IsSelected,Converter={StaticResource BooleanToVisibilityConverter},Mode=OneWay}">
+                        <Button Click="{x:Bind PlayLocalSong}" 
                             Style="{StaticResource SongItemButtonStyle}">
-                        <SymbolIcon Symbol="Play"/>
-                    </Button>
-                    <Button Style="{StaticResource SongItemButtonStyle}">
-                        <SymbolIcon Symbol="More"/>
-                        <Button.Flyout>
-                            <Flyout>
-                                <Grid>
-                                    <ItemsControl>
-                                        <Button Content="收藏"
-                                                Click="{x:Bind AddSongToSongList}"/>
-                                    </ItemsControl>
-                                </Grid>
-                            </Flyout>
-                        </Button.Flyout>
-                    </Button>
-                </StackPanel>
-                <TextBlock Grid.Column="3" 
+                            <SymbolIcon Symbol="Play"/>
+                        </Button>
+                        <Button Style="{StaticResource SongItemButtonStyle}" Flyout="{StaticResource SongItemMoreInfoFlyOut}">
+                            <SymbolIcon Symbol="More"/>
+                        </Button>
+                    </StackPanel>
+                    <TextBlock Grid.Column="3" 
                            Margin="15,0,0,0" 
                            Text="{x:Bind Song.AlbumTitle}"
                            Style="{StaticResource MainTextGrayStyle14}"
                            HorizontalAlignment="Left"/>
-                <TextBlock Grid.Column="4"
+                    <TextBlock Grid.Column="4"
                            Margin="15,0,0,0" 
                            Text="{x:Bind Song.Artist}" 
                            Style="{StaticResource MainTextGrayStyle14}"
                            HorizontalAlignment="Left"/>
-                <TextBlock Grid.Column="5" 
+                    <TextBlock Grid.Column="5" 
                            Margin="15,0,0,0" 
                            Text="{x:Bind Song.Length,Converter={StaticResource IntToTimeSpanStringConverter}}"
                            Style="{StaticResource MainTextGrayStyle14}"
                            HorizontalAlignment="Left"/>
+                </Grid>
+
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="songDeepDataTemplate" x:DataType="vm:MusicSongViewModel">
-            <Grid >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="1.5*"/>
-                    <ColumnDefinition Width="80"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="1.5*"/>
-                    <ColumnDefinition Width="80"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="{x:Bind Index}"
+            <Grid>
+                <Grid.Resources>
+                    <MenuFlyout x:Key="SongItemMoreInfoFlyOut"  Placement="Bottom" >
+                        <MenuFlyoutItem Text="立即播放" Click="{x:Bind PlayLocalSong}"/>
+                        <MenuFlyoutItem Text="收藏" Click="{x:Bind AddSongToSongList}"/>
+                        <MenuFlyoutItem Text="分享" />
+                        <MenuFlyoutItem Text="查看信息" />
+                        <MenuFlyoutItem Text="删除歌曲" />
+                    </MenuFlyout>
+                </Grid.Resources>
+                <Grid x:Name="SongGrid" 
+                      Background="Transparent"
+                      RightTapped="SongGrid_RightTapped"  
+                      FlyoutBase.AttachedFlyout="{StaticResource SongItemMoreInfoFlyOut}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="80"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{x:Bind Index}"
                            Style="{StaticResource MainTextStyle14}"
                            HorizontalAlignment="Left"/>
-                <TextBlock Grid.Column="1" 
+                    <TextBlock Grid.Column="1" 
                            Text="{x:Bind Song.Title}"
                            Style="{StaticResource MainTextStyle14}"
                            HorizontalAlignment="Left"/>
-                <StackPanel Grid.Column="2" Orientation="Horizontal"
-                           Visibility="{x:Bind IsSelected,Converter={StaticResource BooleanToVisibilityConverter},Mode=OneWay}">
-                    <Button Click="{x:Bind PlayLocalSong}" 
+                    <StackPanel Grid.Column="2" 
+                            Orientation="Horizontal"
+                            Visibility="{x:Bind IsSelected,Converter={StaticResource BooleanToVisibilityConverter},Mode=OneWay}">
+                        <Button Click="{x:Bind PlayLocalSong}" 
                             Style="{StaticResource SongItemButtonStyle}">
-                        <SymbolIcon Symbol="Play"/>
-                    </Button>
-                    <Button Style="{StaticResource SongItemButtonStyle}">
-                        <SymbolIcon Symbol="More"/>
-                        <Button.Flyout>
-                            <Flyout>
-                                <Grid>
-                                    <ItemsControl>
-                                        <Button Content="收藏"
-                                                Click="{x:Bind AddSongToSongList}"/>
-                                    </ItemsControl>
-                                </Grid>
-                            </Flyout>
-                        </Button.Flyout>
-                    </Button>
-                </StackPanel>
-                <TextBlock Grid.Column="3" 
+                            <SymbolIcon Symbol="Play"/>
+                        </Button>
+                        <Button Style="{StaticResource SongItemButtonStyle}" Flyout="{StaticResource SongItemMoreInfoFlyOut}">
+                            <SymbolIcon Symbol="More"/>
+                        </Button>
+                    </StackPanel>
+                    <TextBlock Grid.Column="3" 
                            Margin="15,0,0,0" 
                            Text="{x:Bind Song.AlbumTitle}"
                            Style="{StaticResource MainTextGrayStyle14}"
                            HorizontalAlignment="Left"/>
-                <TextBlock Grid.Column="4"
+                    <TextBlock Grid.Column="4"
                            Margin="15,0,0,0" 
                            Text="{x:Bind Song.Artist}" 
                            Style="{StaticResource MainTextGrayStyle14}"
                            HorizontalAlignment="Left"/>
-                <TextBlock Grid.Column="5" 
+                    <TextBlock Grid.Column="5" 
                            Margin="15,0,0,0" 
                            Text="{x:Bind Song.Length,Converter={StaticResource IntToTimeSpanStringConverter}}"
                            Style="{StaticResource MainTextGrayStyle14}"
                            HorizontalAlignment="Left"/>
+                </Grid>
+
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="songlistDataTemplate" x:DataType="core:SongList">
@@ -204,7 +218,7 @@
                              ItemContainerStyle="{StaticResource SongsListViewItemStyle}"/>
                 </Grid>
             </PivotItem>
-            
+
             <PivotItem Header="播放歌单">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -230,14 +244,15 @@
                                        Style="{StaticResource MainTextStyle16}"/>
                         </Grid>
                     </Button>
-                    <ListView Grid.Row="1" 
-                             Margin="10,5"
+                    <ListView x:Name="songListsView"
+                              Grid.Row="1" 
+                              Margin="10,5"
                               IsItemClickEnabled="True"
-                              ItemClick="ListView_ItemClick"
+                              ItemClick="songListsView_ItemClick"
+                              SelectionMode="None"
                               ItemContainerStyle="{StaticResource SongsListViewItemStyle}"
-                             ItemTemplate="{StaticResource songlistDataTemplate}"
-                             ItemsSource="{x:Bind MyMusicVM.AllSongList,Mode=OneWay}"
-                             SelectedItem="{Binding SelectList,Mode=TwoWay}"/>
+                              ItemTemplate="{StaticResource songlistDataTemplate}"
+                              ItemsSource="{x:Bind MyMusicVM.AllSongList,Mode=OneWay}"/>
                 </Grid>
             </PivotItem>
         </Pivot>

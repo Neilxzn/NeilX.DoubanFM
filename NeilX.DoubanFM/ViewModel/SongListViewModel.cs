@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Practices.ServiceLocation;
+using NeilX.DoubanFM.Common;
 using NeilX.DoubanFM.Core;
 using NeilX.DoubanFM.Services;
 using System;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace NeilX.DoubanFM.ViewModel
 {
-    public class SongListViewModel:ViewModelBase
+    public class SongListViewModel:ViewModelBase, IVMNavigate<SongList>
     {
         public static readonly Guid Token = Guid.NewGuid();
         private MusicSongViewModel _selectSong;
@@ -55,19 +56,30 @@ namespace NeilX.DoubanFM.ViewModel
             }
         }
 
-        public void EditListInfo()
-        {
-            
-            Messenger.Default.Send(new NotificationMessage("GotoEditView"), Token);
-            ServiceLocator.Current.GetInstance<SongListEditViewModel>().SelectList = SelectList;
-
-        }
 
         public void DelectSongLits()
         {
             LocalDataService.DelectSongList(SelectList);
-            Messenger.Default.Send(new NotificationMessage("Update"), Token);
-            ServiceLocator.Current.GetInstance<MyMusicViewModel>().ReflashData();
+
+        }
+
+        public void OnNavigatedTo(SongList t)
+        {
+            if (SelectList == t) return;
+            var allSongs = ServiceLocator.Current.GetInstance<MyMusicViewModel>().AllMusicSongs;
+            SelectList = t;
+            ListMusicSongs= new ObservableCollection<MusicSongViewModel>(
+                from s in allSongs
+                where s.Song.ListId== t.Id
+                select new MusicSongViewModel()
+                {
+                    Song = s.Song
+                });
+        }
+
+        public void OnNavigatedFrom(SongList t)
+        {
+            
         }
     }
 }

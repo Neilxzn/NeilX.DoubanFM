@@ -53,7 +53,7 @@ namespace NeilX.DoubanFM.ViewModel
             }
         }
 
-      
+
         public ObservableCollection<MenuListItem> MenuList
         {
             get { return _menuList; }
@@ -88,6 +88,13 @@ namespace NeilX.DoubanFM.ViewModel
             _navigationService.Navigated += _navigationService_Navigated;
         }
 
+        public void NavigationServiceGoBack()
+        {
+            if (_navigationService.CanGoBack)
+            {
+                _navigationService.GoBack();
+            }
+        }
 
 
         public void OpenSettingView()
@@ -145,8 +152,8 @@ namespace NeilX.DoubanFM.ViewModel
         #region Messenget Helper Methods
         private void RegisterMessenger()
         {
-            Messenger.Default.Register<NotificationMessage>(this, MyMusicViewModel.Token, HandleMyMusicVMMsg);
-            Messenger.Default.Register<NotificationMessage>(this, SongListViewModel.Token, HandleSongListVMMsg);
+            Messenger.Default.Register<NotificationMessage<SongList>>(this, MyMusicView.Token, HandleMyMusicViewMsg);
+            Messenger.Default.Register<NotificationMessage<SongList>>(this, SongListView.Token, HandleSongListViewMsg);
         }
 
         private void UnRegisterMessenger()
@@ -154,31 +161,35 @@ namespace NeilX.DoubanFM.ViewModel
             Messenger.Default.Unregister(this);
         }
 
-        private void HandleMyMusicVMMsg(NotificationMessage msg)
+        private void HandleMyMusicViewMsg(NotificationMessage<SongList> msg)
         {
             if (msg.Notification == "GotoSongListView")
             {
-                NavigateToSongListView();
+                _navigationService.Navigate(typeof(SongListView), msg.Content);
             }
         }
-        private void HandleSongListVMMsg(NotificationMessage msg)
+
+        private void HandleSongListViewMsg(NotificationMessage<SongList> msg)
         {
             if (msg.Notification == "GotoEditView")
             {
-                NavigateToSongListEditView();
+                _navigationService.Navigate(typeof(SongListEditView), msg.Content);
             }
             else if (msg.Notification == "Update")
             {
                 NavigateToView(MenuGotoView.RadioListView);
+                _navigationService.BackStack.Clear();
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
             }
         }
+     
         #endregion
 
         #region NavigationService
 
         private void _navigationService_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
         {
-            if (e.SourcePageType==typeof(RadioListView)&&SelectedMenuIndex!=1)
+            if (e.SourcePageType == typeof(RadioListView) && SelectedMenuIndex != 1)
             {
                 _selectedMenuIndex = 1;
                 RaisePropertyChanged(nameof(SelectedMenuIndex));
@@ -188,7 +199,7 @@ namespace NeilX.DoubanFM.ViewModel
                 _selectedMenuIndex = 0;
                 RaisePropertyChanged(nameof(SelectedMenuIndex));
             }
-            else if((e.SourcePageType == typeof(View.MyMusicView)
+            else if ((e.SourcePageType == typeof(View.MyMusicView)
                 || e.SourcePageType == typeof(View.SongListView)
                 || e.SourcePageType == typeof(View.SongListEditView))
                 && SelectedMenuIndex != 2)
@@ -200,7 +211,7 @@ namespace NeilX.DoubanFM.ViewModel
 
         private void OnSelectedMenuIndexChanged(int value)
         {
-            if (MenuList!=null)
+            if (MenuList != null)
             {
                 NavigateToView(MenuList[value].GotoView);
             }
@@ -225,14 +236,7 @@ namespace NeilX.DoubanFM.ViewModel
         }
 
 
-        private void NavigateToSongListView()
-        {
-            _navigationService.Navigate(typeof(SongListView));
-        }
-        private void NavigateToSongListEditView()
-        {
-            _navigationService.Navigate(typeof(SongListEditView));
-        }
+
         #endregion
 
         #endregion

@@ -98,6 +98,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\IVMNavigate.cs" />
     <Compile Include="Common\LocalSongHelper.cs" />
     <Compile Include="Convertors\BooleanToVisibilityConverter.cs" />
     <Compile Include="Convertors\DoubleToTimeSpanStringConverter.cs" />

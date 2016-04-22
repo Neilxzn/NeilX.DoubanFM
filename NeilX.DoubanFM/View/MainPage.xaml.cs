@@ -122,7 +122,7 @@ namespace NeilX.DoubanFM.View
         }
 
         
-
+        
 
 
         //#region test a download method
