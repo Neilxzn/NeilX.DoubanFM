@@ -7,17 +7,92 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator},Path=SongListEditVM}">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{StaticResource ContentBackground}" Margin="20,10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="编辑歌单信息"/>
-        <StackPanel Grid.Row="1">
-            <TextBlock Text="{x:Bind SongListEditVM.SelectList.Name}"/>
-            <TextBlock Text="{x:Bind SongListEditVM.SelectList.BuildTime}"/>
-            <Button Content="确定" Click="{x:Bind SongListEditVM.UpdateInfo}"/>
-            <Button Content="取消"  Click="{x:Bind SongListEditVM.Cancel}"/>
+        <TextBlock Text="编辑歌单信息" 
+                   Style="{StaticResource MainTextStyle16}"
+                   HorizontalAlignment="Left"
+                   Margin="20,10"/>
+        <Rectangle Height="1"
+                   Grid.Row="1"
+                   Fill="{StaticResource LightGrayForeground}"
+                   Margin="12,0"   />
+        <Grid Grid.Row="2"  Margin="5,14">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="150"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="歌单名："
+                       Style="{StaticResource MainTextStyle14}" 
+                       HorizontalAlignment="Right"/>
+            
+            <TextBox Grid.Column="1" 
+                     Text="{x:Bind SongListEditVM.SelectList.Name,Mode=TwoWay}"
+                     Style="{StaticResource DoubanBaseTextBoxStyle}"/>
+            
+            <TextBlock Grid.Row="1" 
+                       Text="介绍："  
+                       Style="{StaticResource MainTextStyle14}" 
+                       HorizontalAlignment="Right"/>
+            
+            <TextBox Grid.Row="1" 
+                     Grid.Column="1"
+                     Grid.RowSpan="2"
+                     PlaceholderText="暂无"
+                     Style="{StaticResource DoubanBaseTextBoxStyle}"
+                     Text="{x:Bind SongListEditVM.SelectList.ListInfo,Mode=TwoWay}"/>
+            
+            <Button Grid.Column="2"
+                  Grid.RowSpan="3"
+                  Margin="5" Style="{StaticResource SongListEditImgButtonStyle}">
+                <Grid>
+                    <Image HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"
+                    Source="{x:Bind SongListEditVM.SelectList.Thumbnail,Mode=OneWay}"
+                    Stretch="UniformToFill"/>
+                    <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                        <Border BorderThickness="0" CornerRadius="12,0,0,12" Background="Black" Opacity="0.6"/>
+                        <TextBlock Text="编辑封面" Style="{StaticResource MainWhiteTextStyle14}" Margin="4"/>
+                    </Grid>
+                   
+                </Grid>
+            </Button>
+
+        </Grid>
+        <Rectangle Height="1"
+                   Grid.Row="3"
+                   Fill="{StaticResource LightGrayForeground}"
+                   Margin="12,0"/>
+        
+        <StackPanel Grid.Row="4" 
+                    Orientation="Horizontal" 
+                    Margin="14"
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Top">
+            <Button Content="确定"
+                    Padding="20,0"
+                    Margin="20,0"
+                    Style="{StaticResource SongListEditButtonStyle1}"
+                    Click="{x:Bind SongListEditVM.UpdateInfo}"/>
+            <Button Content="取消"
+                    Padding="20,0"
+                    Margin="20,0"
+                    Style="{StaticResource SongListEditButtonStyle1}"
+                    Click="{x:Bind SongListEditVM.Cancel}"/>
         </StackPanel>
+
+
     </Grid>
 </Page>

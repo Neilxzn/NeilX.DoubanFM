@@ -14,6 +14,8 @@ namespace NeilX.DoubanFM.Core
 
         public string Name { get; set; }
 
+        public string ListInfo { get; set; }
+
         public string Thumbnail { get; set; }
 
         public DateTime BuildTime { get; set; }

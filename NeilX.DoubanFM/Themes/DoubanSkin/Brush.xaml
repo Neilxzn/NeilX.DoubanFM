@@ -9,4 +9,5 @@
     <SolidColorBrush x:Key="ContentBackground" Color="#FFFAFAFC"/>
     <SolidColorBrush x:Key="DoubanGreenBrush" Color="#1AC96A"/>
     <SolidColorBrush x:Key="DoubanHoverGreenBrush" Color="#84c7af"/>
+    <SolidColorBrush x:Key="DoubanPressGreenBrush" Color="#FF54CBA0"/>
 </ResourceDictionary>
