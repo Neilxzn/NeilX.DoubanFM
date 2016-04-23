@@ -21,6 +21,7 @@ using NeilX.DoubanFM.Core.LocalData;
 using NeilX.DoubanFM.Services;
 using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml.Shapes;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -54,7 +55,7 @@ namespace NeilX.DoubanFM.View
         {
             if (msg != "OpenSettingView") return;
             SettingsFlyout settings = new SettingsFlyout();
-            
+            settings.Height = 100;
             // optionally change header and content background colors away from defaults (recommended)
             //settings.Background = new SolidColorBrush(Colors.Red);
             settings.HeaderBackground = new SolidColorBrush(Colors.Orange);
@@ -239,19 +240,28 @@ namespace NeilX.DoubanFM.View
         //}
         //#endregion
 
-     
 
-        private void Hambeger_PointerPressed(object sender, PointerRoutedEventArgs e)
+        private void SplitShell_FlyoutCloseRequested(object sender, EventArgs e)
         {
-            MySplitView.IsPaneOpen = !MySplitView.IsPaneOpen;
+            if (SplitShell.IsRightFlyoutOpen)
+            {
+                SplitShell.HideRightFlyout();
+            }
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            //SplitShell.RightFlyoutContent =new BlankPage1();
+            BlankPage1 lo = new BlankPage1();
+            lo.Width = 50;
+            lo.Height = 60;
+            if (SplitShell.IsCenterFlyoutOpen)
+            {
+                SplitShell.HideCenterFlyout();
+            }
+            else
 
-       
-
-       
-
-
-       
+            SplitShell.CenterFlyoutContent = lo;
+        }
     }
 }

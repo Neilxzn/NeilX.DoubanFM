@@ -7,6 +7,38 @@
         <ResourceDictionary Source="/Themes/DoubanSkin/Brush.xaml"/>
         <ResourceDictionary Source="/Themes/DoubanSkin/TextBlock.xaml"/>
     </ResourceDictionary.MergedDictionaries>
+    <Style x:Key="MenuListItemStyle" TargetType="ListViewItem">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Width" Value="200"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <ListViewItemPresenter HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                               VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                               CheckBoxBrush="{StaticResource DoubanGreenBrush}"
+                                               CheckBrush="{StaticResource DoubanGreenBrush}"
+                                               CheckMode="Inline"
+                                               ContentMargin="{TemplateBinding Padding}"
+                                               ContentTransitions="{TemplateBinding ContentTransitions}"
+                                               DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
+                                               DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
+                                               PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
+                                               PointerOverForeground="{StaticResource DoubanGreenBrush}"
+                                               ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
+                                               SelectedBackground="{StaticResource DoubanGreenBrush}"
+                                               SelectedPointerOverBackground="{StaticResource DoubanHoverGreenBrush}"
+                                               SelectedPressedBackground="{StaticResource DoubanGreenBrush}"
+                                               SelectionCheckMarkVisualEnabled="True" Foreground="{StaticResource GrayForeground}" >
+                        <ListViewItemPresenter.SelectedForeground>
+                            <SolidColorBrush Color="{ThemeResource SystemAltHighColor}"/>
+                        </ListViewItemPresenter.SelectedForeground>
+                    </ListViewItemPresenter>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style x:Key="SongsListViewItemStyle" TargetType="ListViewItem">
         <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
         <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>

@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:convert="using:NeilX.DoubanFM.Convertors"
     xmlns:Lcontrols="using:NeilX.DoubanFM.UserControls"
+    xmlns:controls="using:NeilX.DoubanFM.Controls"
     xmlns:custom="using:NeilX.DoubanFM.CustomControl"
     xmlns:controlsModel="using:NeilX.DoubanFM.UserControls.ControlsModel"
     mc:Ignorable="d"  DataContext="{Binding Source={StaticResource Locator},Path=Main}">
@@ -39,38 +40,7 @@
                            Text="{x:Bind Name, Mode=OneWay}" />
             </Grid>
         </DataTemplate>
-        <Style x:Key="MenuListItemStyle" TargetType="ListViewItem">
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Width" Value="200"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListViewItem">
-                        <ListViewItemPresenter HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                               VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                               CheckBoxBrush="{StaticResource DoubanGreenBrush}"
-                                               CheckBrush="{StaticResource DoubanGreenBrush}"
-                                               CheckMode="Inline"
-                                               ContentMargin="{TemplateBinding Padding}"
-                                               ContentTransitions="{TemplateBinding ContentTransitions}"
-                                               DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
-                                               DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
-                                               PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
-                                               PointerOverForeground="{StaticResource DoubanGreenBrush}"
-                                               ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
-                                               SelectedBackground="{StaticResource DoubanGreenBrush}"
-                                               SelectedPointerOverBackground="{StaticResource DoubanHoverGreenBrush}"
-                                               SelectedPressedBackground="{StaticResource DoubanGreenBrush}"
-                                               SelectionCheckMarkVisualEnabled="True" Foreground="{StaticResource GrayForeground}" >
-                            <ListViewItemPresenter.SelectedForeground>
-                                <SolidColorBrush Color="{ThemeResource SystemAltHighColor}"/>
-                            </ListViewItemPresenter.SelectedForeground>
-                        </ListViewItemPresenter>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+      
 
     </Page.Resources>
     <Grid Background="{StaticResource ContentBackground}">
@@ -78,47 +48,24 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-
-        <SplitView x:Name="MySplitView" 
-                   Foreground="{StaticResource GrayForeground}"  
-                   PaneBackground="{StaticResource PaneBackground}"   
-                   DisplayMode="CompactInline" 
-                   CompactPaneLength="40" 
-                   OpenPaneLength="200">
-            <SplitView.Pane>
-                <RelativePanel >
-                    <StackPanel  Margin="10,10" PointerPressed="Hambeger_PointerPressed" x:Name="Hambeger"  RelativePanel.AlignTopWithPanel="True">
-                        <TextBlock  Style="{StaticResource MDL2IconTextStyle}" Text="&#xE700;" />
-                    </StackPanel>
-                    <StackPanel RelativePanel.Below="Hambeger">
-                        <ListView x:Name="FunctionsListView"
-                                  VerticalAlignment="Center"
-                                  ItemContainerStyle="{StaticResource MenuListItemStyle}"
-                                  ItemTemplate="{StaticResource MenuListItemDataTemplate}"
-                                  ItemsSource="{x:Bind Main.MenuList, Mode=OneWay}"
-                                  SelectedIndex="{x:Bind Main.SelectedMenuIndex,Mode=TwoWay}"
-                                  SelectionMode="Single"
-                                  />
-                    </StackPanel>
-                    <!--<ListBox x:Name="menuList" SelectionMode="Single" SelectionChanged="menuList_SelectionChanged"
-                             RelativePanel.Below="Hambeger">
-                        <ListBoxItem Name="RadioList" Tag="RadioList">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="32" Text="&#xE8D6;" />
-                                <TextBlock FontSize="20" Margin="20,0,0,0">电台列表</TextBlock>
-                            </StackPanel>
-                        </ListBoxItem>
-                        <ListBoxItem Name="MyMusic" Tag="MyMusic">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="32" Text="&#xE8CF;" />
-                                <TextBlock FontSize="20" Margin="20,0,0,0">我的音乐</TextBlock>
-                            </StackPanel>
-                        </ListBoxItem>
-                    </ListBox>-->
+        <controls:SplitShell x:Name="SplitShell"
+                             Foreground="{StaticResource GrayForeground}"
+                             x:FieldModifier="public"
+                             FlyoutCloseRequested="SplitShell_FlyoutCloseRequested"
+                             IsTabStop="False">
+            <controls:SplitShell.LeftPaneContent>
+                <RelativePanel>
+                    <ListView x:Name="FunctionsListView"
+                              VerticalAlignment="Center"
+                              ItemContainerStyle="{StaticResource MenuListItemStyle}"
+                              ItemTemplate="{StaticResource MenuListItemDataTemplate}"
+                              ItemsSource="{x:Bind Main.MenuList, Mode=OneWay}"
+                              SelectedIndex="{x:Bind Main.SelectedMenuIndex,Mode=TwoWay}"
+                              SelectionMode="Single" />
                     <Grid HorizontalAlignment="Stretch"
-                          VerticalAlignment="Stretch"
+                          VerticalAlignment="Bottom"
                           Background="Transparent" 
-                          RelativePanel.AlignBottomWithPanel="True"  >
+                          RelativePanel.AlignBottomWithPanel="True">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
@@ -128,23 +75,23 @@
                         </Grid>
                         <TextBlock  Grid.Column="1"    Style="{StaticResource paneContentTextStyle}" Text="设置" />
                     </Grid>
-
                 </RelativePanel>
-            </SplitView.Pane>
-            <SplitView.Content>
-                <Frame x:Name="navigationFrame" Loaded="{x:Bind Main.SetupNavigationService}"/>
-            </SplitView.Content>
-
-        </SplitView>
-        <!--<Button Content="test" Click="Button_Click"/>-->
-        <!--音乐播放界面-->
-        <Lcontrols:PlayingControl Visibility="{Binding ElementName=Player,Path=IsOpenPlayingView}" CurrentTrack="{x:Bind Main.PlayerSession.CurrentTrack,Mode=OneWay}" Position="{x:Bind Main.PlayerSession.Position,Mode=OneWay}"/>
-        <!--音乐播放面板-->
-        <Lcontrols:PlayerControl x:Name="Player"
+            </controls:SplitShell.LeftPaneContent>
+            <controls:SplitShell.Content>
+                <Grid>
+                    <Frame x:Name="navigationFrame" 
+                           Loaded="{x:Bind Main.SetupNavigationService}"/>
+                </Grid>
+            </controls:SplitShell.Content>
+            <controls:SplitShell.FooterContent>
+                <Lcontrols:PlayerControl x:Name="Player"
                                  Grid.Row="1"  
                                  PlayerSession="{x:Bind Main.PlayerSession,Mode=OneWay}"
                                  Background="{StaticResource PaneBackground}"/>
-
+            </controls:SplitShell.FooterContent>
+        </controls:SplitShell>
+        <!--<Lcontrols:PlayingControl Visibility="{Binding ElementName=Player,Path=IsOpenPlayingView}" CurrentTrack="{x:Bind Main.PlayerSession.CurrentTrack,Mode=OneWay}" Position="{x:Bind Main.PlayerSession.Position,Mode=OneWay}"/>-->
+        <Button Click="Button_Click" Content="test" />
     </Grid>
 
 </Page>

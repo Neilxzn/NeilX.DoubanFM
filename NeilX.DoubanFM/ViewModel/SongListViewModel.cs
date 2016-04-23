@@ -66,7 +66,7 @@ namespace NeilX.DoubanFM.ViewModel
         public void OnNavigatedTo(SongList t)
         {
             if (SelectList == t) return;
-            var allSongs = ServiceLocator.Current.GetInstance<MyMusicViewModel>().AllMusicSongs;
+            var allSongs = ViewModelLocator.Instance.MyMusicVM.AllMusicSongs;
             SelectList = t;
             ListMusicSongs= new ObservableCollection<MusicSongViewModel>(
                 from s in allSongs

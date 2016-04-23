@@ -76,16 +76,26 @@ namespace NeilX.DoubanFM.ViewModel
 
         }
 
-
+        public Frame NavigationService
+        {
+            get
+            {
+                return _navigationService;
+            }
+            private set
+            {
+                _navigationService = value;
+            }
+        }
 
 
 
         #region Public  Methods
         public void SetupNavigationService(object sender, object e)
         {
-            _navigationService = (Frame)sender;
+            NavigationService = (Frame)sender;
             SelectedMenuIndex = 1;
-            _navigationService.Navigated += _navigationService_Navigated;
+            NavigationService.Navigated += _navigationService_Navigated;
         }
 
         public void NavigationServiceGoBack()
@@ -182,7 +192,7 @@ namespace NeilX.DoubanFM.ViewModel
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
             }
         }
-     
+
         #endregion
 
         #region NavigationService

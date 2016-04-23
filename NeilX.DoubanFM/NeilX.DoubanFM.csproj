@@ -137,6 +137,18 @@
     <Compile Include="ViewModel\SongListEditViewModel.cs" />
     <Compile Include="ViewModel\SongListViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="View\BlankPage1.xaml.cs">
+      <DependentUpon>BlankPage1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Flyout\AddSongListFlyout.xaml.cs">
+      <DependentUpon>AddSongListFlyout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Flyout\ConfirmFlyout.xaml.cs">
+      <DependentUpon>ConfirmFlyout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Flyout\SongInfoFlyout.xaml.cs">
+      <DependentUpon>SongInfoFlyout.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -253,6 +265,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\BlankPage1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Flyout\AddSongListFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Flyout\ConfirmFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Flyout\SongInfoFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -282,6 +310,10 @@
     <ProjectReference Include="..\NeilX.DoubanFM.BackgroundTask\NeilX.DoubanFM.BackgroundTask.csproj">
       <Project>{52a8fba8-d3db-4059-8551-9680d0220f83}</Project>
       <Name>NeilX.DoubanFM.BackgroundTask</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeilX.DoubanFM.Controls\NeilX.DoubanFM.Controls.csproj">
+      <Project>{f8253489-160e-4e2b-b7bc-e8561d7ecb9c}</Project>
+      <Name>NeilX.DoubanFM.Controls</Name>
     </ProjectReference>
     <ProjectReference Include="..\NeilX.DoubanFM.Core\NeilX.DoubanFM.Core.csproj">
       <Project>{ed1a3a12-61d3-41ba-8558-e6912643c89a}</Project>
