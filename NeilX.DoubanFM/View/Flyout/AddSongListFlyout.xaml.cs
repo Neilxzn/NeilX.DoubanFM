@@ -1,4 +1,7 @@
-﻿using System;
+﻿using NeilX.DoubanFM.Core;
+using NeilX.DoubanFM.Services;
+using NeilX.DoubanFM.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +28,18 @@ namespace NeilX.DoubanFM.View.Flyout
         public AddSongListFlyout()
         {
             this.InitializeComponent();
+        }
+
+        private void closeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModelLocator.Instance.NavigationService.CloseCenterFlyout();
+        }
+
+        private void comfirmBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (txtContent.Text == string.Empty || txtContent.Text == null) return;
+            ViewModelLocator.Instance.MyMusicVM.AddNewSongList(txtContent.Text);
+            ViewModelLocator.Instance.NavigationService.CloseCenterFlyout();
         }
     }
 }

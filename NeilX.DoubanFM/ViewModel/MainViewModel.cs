@@ -107,10 +107,6 @@ namespace NeilX.DoubanFM.ViewModel
         }
 
 
-        public void OpenSettingView()
-        {
-            MessengerInstance.Send("OpenSettingView", "MainPage");
-        }
 
 
 

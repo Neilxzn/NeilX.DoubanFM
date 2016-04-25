@@ -52,14 +52,28 @@ namespace NeilX.DoubanFM.Services
         public static void AddSongToSongList(Song newSong,SongList list)
         {
             newSong.ListId = list.Id;
+            list.SongCount++;
             DataAccess dataaccess = new DataAccess();
+            dataaccess.UpdateSongList(list);
             dataaccess.UpdateSong(newSong);
         }
         
 
-        public static void DelectSong(Song song)
+        public static async void DelectSong(Song song)
         {
-
+            DataAccess dataaccess = new DataAccess();
+            SongList songlist = dataaccess.GetAllSongLists().Where(o => o.Id == song.ListId).FirstOrDefault();
+            if (songlist!=null)
+            {
+                songlist.SongCount--;
+                dataaccess.UpdateSongList(songlist);
+            }
+            dataaccess.DelectSong(song);
+            StorageFile file = await StorageFile.GetFileFromPathAsync(song.Url);
+            if (file!=null)
+            {
+                await file.DeleteAsync();
+            }
         }
 
         public static void DelectSongList(SongList list)

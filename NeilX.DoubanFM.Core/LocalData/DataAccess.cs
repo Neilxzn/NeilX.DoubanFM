@@ -59,7 +59,7 @@ namespace NeilX.DoubanFM.Core.LocalData
         {
             using (var db = DbContext.Instance.GetDbConnection())
             {
-                db.Delete<Song>(song);
+                db.Delete<Song>(song.Id);
             }
         }
 

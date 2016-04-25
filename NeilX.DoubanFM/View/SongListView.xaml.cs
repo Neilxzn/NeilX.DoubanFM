@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Practices.ServiceLocation;
 using NeilX.DoubanFM.Core;
+using NeilX.DoubanFM.View.Flyout;
 using NeilX.DoubanFM.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -45,14 +46,18 @@ namespace NeilX.DoubanFM.View
 
         private void EditListBtn_Click(object sender, RoutedEventArgs e)
         {
-            Messenger.Default.Send(new NotificationMessage<SongList>(SongListVM.SelectList,"GotoEditView"), Token);
+            Messenger.Default.Send(new NotificationMessage<SongList>(SongListVM.SelectList, "GotoEditView"), Token);
         }
 
         private void DelectListBtn_Click(object sender, RoutedEventArgs e)
         {
-            Messenger.Default.Send(new NotificationMessage<SongList>(null,"Update"), Token);
-            SongListVM.DelectSongLits();
-            ViewModelLocator.Instance.MyMusicVM.ReflashData();
+            Action action = new Action(() =>
+            {
+                Messenger.Default.Send(new NotificationMessage<SongList>(null, "Update"), Token);
+                SongListVM.DelectSongLits();
+                ViewModelLocator.Instance.MyMusicVM.ReflashData();
+            });
+            ViewModelLocator.Instance.NavigationService.ShowCenterFlyout(new ConfirmFlyout(action));
         }
     }
 }

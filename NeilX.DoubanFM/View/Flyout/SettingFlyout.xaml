@@ -7,7 +7,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    <Grid Background="{StaticResource ContentBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="设置" Margin="10"/>
+        <StackPanel Grid.Row="1">
+            <Button Content="下载设置"  HorizontalAlignment="Center" Margin="10"/>
+            <Button Content="清除缓存" HorizontalAlignment="Center" Margin="10"/>
+        </StackPanel>
     </Grid>
 </Page>

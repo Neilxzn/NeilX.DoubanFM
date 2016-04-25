@@ -5,9 +5,65 @@
     xmlns:local="using:NeilX.DoubanFM.View.Flyout"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="360"
+    Height="150"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <TextBlock x:Name="HeaderLabel" 
+                       Margin="10"
+                       Style="{StaticResource MainTextStyle16}"
+                       HorizontalAlignment="Left"
+                       Text="添加新的歌单"/>
+            <Button x:Name="closeBtn" Click="closeBtn_Click" 
+                    Foreground="{StaticResource GrayForeground}"
+                    HorizontalAlignment="Right"
+                    Style="{StaticResource SongItemButtonStyle}">
+                <SymbolIcon Symbol="Cancel" />
+            </Button>
+        </Grid>
+        <Rectangle HorizontalAlignment="Stretch" 
+                   VerticalAlignment="Bottom" 
+                   Grid.Row="1"
+                   Height="1" 
+                   Margin="12,0"
+                   Fill="{StaticResource LightGrayForeground}">
+        </Rectangle>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBox x:Name="txtContent"
+                     PlaceholderText="新歌单名称"
+                       Margin="10"
+                     HorizontalContentAlignment="Left"
+                     VerticalContentAlignment="Center"
+                       Style="{StaticResource DoubanBaseTextBoxStyle}"/>
+            <StackPanel Grid.Row="4" 
+                    Orientation="Horizontal" 
+                    Margin="14"
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Top">
+                <Button x:Name="comfirmBtn"
+                    Content="确定"
+                    Padding="20,0"
+                    Margin="20,0"
+                    Style="{StaticResource SongListEditButtonStyle1}"
+                    Click="comfirmBtn_Click"/>
+                <Button Content="取消"
+                    Padding="20,0"
+                    Margin="20,0"
+                    Style="{StaticResource SongListEditButtonStyle1}"
+                    Click="closeBtn_Click"/>
+            </StackPanel>
+        </Grid>
     </Grid>
+
 </Page>

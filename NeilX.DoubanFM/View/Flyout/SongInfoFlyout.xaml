@@ -32,7 +32,7 @@
                        Fill="Black"
                        Opacity="0.5"/>
                 <StackPanel Orientation="Horizontal" Margin="10,20">
-                    <Button  Foreground="White"
+                    <Button  Foreground="White" Click="ActionButton_Click"
                          Style="{StaticResource SongItemButtonStyle}">
                         <SymbolIcon Symbol="Back"/>
                     </Button>

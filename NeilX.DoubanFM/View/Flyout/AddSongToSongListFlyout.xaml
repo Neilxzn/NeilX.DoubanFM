@@ -1,0 +1,72 @@
+﻿<Page
+    x:Class="NeilX.DoubanFM.View.Flyout.AddSongToSongListFlyout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NeilX.DoubanFM.View.Flyout"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:core="using:NeilX.DoubanFM.Core"
+    Width="330"
+    Height="330"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:Key="songlistSimpleDataTemplate" x:DataType="core:SongList">
+            <Grid Margin="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Width="50" 
+                           Height="50" Source="{x:Bind Thumbnail,Mode=OneWay,FallbackValue='ms-appx:///Assets/Images/m51.jpg',TargetNullValue='ms-appx:///Assets/Images/m51.jpg'}"/>
+                <StackPanel Orientation="Vertical"
+                            HorizontalAlignment="Left"
+                            Margin="5,0"
+                            Grid.Column="1">
+                    <TextBlock Text="{x:Bind Name}"
+                               HorizontalAlignment="Left"
+                               Style="{StaticResource MainTextStyle14}"/>
+                    <TextBlock Style="{StaticResource MainTextGrayStyle14}">
+                        <Run Text="{x:Bind SongCount}"/>
+                        <Run Text="首"/>
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <TextBlock x:Name="HeaderLabel" 
+                       Margin="10"
+                       Style="{StaticResource MainTextStyle16}"
+                       HorizontalAlignment="Left"
+                       Text="添加音乐"/>
+            <Button x:Name="closeBtn" Click="closeBtn_Click" 
+                    Foreground="{StaticResource GrayForeground}"
+                    HorizontalAlignment="Right"
+                    Style="{StaticResource SongItemButtonStyle}">
+                <SymbolIcon Symbol="Cancel" />
+            </Button>
+        </Grid>
+        <Rectangle HorizontalAlignment="Stretch" 
+                   VerticalAlignment="Bottom" 
+                   Grid.Row="1"
+                   Height="1" 
+                   Margin="12,0"
+                   Fill="{StaticResource LightGrayForeground}">
+        </Rectangle>
+        <ListView x:Name="songListView"
+                  Grid.Row="2"
+                  IsItemClickEnabled="True"
+                  ItemClick="songListView_ItemClick"
+                  SelectionMode="None"
+                  ItemContainerStyle="{StaticResource SongsListViewItemStyle}"
+                  ItemTemplate="{StaticResource songlistSimpleDataTemplate}"
+                  ItemsSource="{x:Bind SongLists, Mode=OneWay}"/>
+
+    </Grid>
+</Page>

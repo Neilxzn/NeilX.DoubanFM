@@ -1,21 +1,12 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using NeilX.DoubanFM.Core;
+using NeilX.DoubanFM.View.Flyout;
 using NeilX.DoubanFM.ViewModel;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上提供
 
@@ -37,20 +28,9 @@ namespace NeilX.DoubanFM.View
 
         public void InitializeMessenger()
         {
-            Messenger.Default.Register<NotificationMessage>(this, MyMusicViewModel.Token, OpenAddSongListView);
         }
 
-        private void OpenAddSongListView(NotificationMessage obj)
-        {
-            if (obj.Notification=="open")
-            {
-                testList.Visibility = Visibility.Visible;
-            }
-            else if(obj.Notification == "close")
-            {
-                testList.Visibility = Visibility.Collapsed;
-            }
-        }
+
 
 
 
@@ -66,9 +46,9 @@ namespace NeilX.DoubanFM.View
 
         }
 
-        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        private void addSongListBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            ViewModelLocator.Instance.NavigationService.ShowCenterFlyout(new AddSongListFlyout());
         }
     }
 }

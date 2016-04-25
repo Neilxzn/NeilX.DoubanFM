@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeilX.DoubanFM.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,9 +23,26 @@ namespace NeilX.DoubanFM.View.Flyout
     /// </summary>
     public sealed partial class ConfirmFlyout : Page
     {
+        private Action _confirmAction;
         public ConfirmFlyout()
         {
             this.InitializeComponent();
+        }
+
+        public ConfirmFlyout(Action action)
+        {
+            this.InitializeComponent();
+            _confirmAction = action;
+        }
+        private void closeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModelLocator.Instance.NavigationService.CloseCenterFlyout();
+        }
+
+        private void comfirmBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _confirmAction?.Invoke();
+            ViewModelLocator.Instance.NavigationService.CloseCenterFlyout();
         }
     }
 }

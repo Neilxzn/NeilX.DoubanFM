@@ -22,6 +22,7 @@ using NeilX.DoubanFM.Services;
 using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Shapes;
+using NeilX.DoubanFM.View.Flyout;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -45,26 +46,11 @@ namespace NeilX.DoubanFM.View
         #region Helper methods
         private void InitializeMessenger()
         {
-            Messenger.Default.Register<string>(this, "MainPage", OpenSettingView);
+
         }
 
         #endregion
-        
-        #region Update UI Methods
-        private void OpenSettingView(string msg)
-        {
-            if (msg != "OpenSettingView") return;
-            SettingsFlyout settings = new SettingsFlyout();
-            settings.Height = 100;
-            // optionally change header and content background colors away from defaults (recommended)
-            //settings.Background = new SolidColorBrush(Colors.Red);
-            settings.HeaderBackground = new SolidColorBrush(Colors.Orange);
-            settings.Content = new SettingControl();
-            
-            // open it
-            settings.Show();
-        }
-        #endregion
+
 
         #region Title Bar & BackButton
         private void SetupTitleBarAndBackButton()
@@ -246,24 +232,17 @@ namespace NeilX.DoubanFM.View
             ViewModelLocator.Instance.NavigationService.CloseRightFlyout();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            //SplitShell.RightFlyoutContent =new BlankPage1();
-            //BlankPage1 lo = new BlankPage1();
-            //lo.Width = 50;
-            //lo.Height = 60;
-            //if (SplitShell.IsCenterFlyoutOpen)
-            //{
-            //    SplitShell.HideCenterFlyout();
-            //}
-            //else
-            
-            //SplitShell.CenterFlyoutContent = lo;
-        }
+       
 
         private void SplitShell_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModelLocator.Instance.NavigationService.Initialize(SplitShell, navigationFrame);
+        }
+
+        private void OpenSettingBtn_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            ViewModelLocator.Instance.NavigationService.ShowRightFlyout(new SettingFlyout());
+
         }
     }
 }

@@ -50,14 +50,17 @@ namespace NeilX.DoubanFM.Common
             }
         }
 
-        public void ShowCenterFlyout()
+        public void ShowCenterFlyout(DependencyObject content)
         {
-
+            _shell.CenterFlyoutContent = content;
         }
 
         public void CloseCenterFlyout()
         {
-
+            if (_shell.IsCenterFlyoutOpen)
+            {
+                _shell.HideCenterFlyout();
+            }
         }
 
 

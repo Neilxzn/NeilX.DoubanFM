@@ -72,7 +72,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0"  Width="40"  Height="40">
-                            <TextBlock Margin="10" Style="{StaticResource MDL2IconTextStyle}" Text="&#xE713;" PointerPressed="{x:Bind Main.OpenSettingView,Mode=OneWay}"/>
+                            <TextBlock x:Name="OpenSettingBtn" Margin="10" Style="{StaticResource MDL2IconTextStyle}" Text="&#xE713;" PointerPressed="OpenSettingBtn_PointerPressed"/>
                         </Grid>
                         <TextBlock  Grid.Column="1"    Style="{StaticResource paneContentTextStyle}" Text="设置" />
                     </Grid>
@@ -92,7 +92,6 @@
             </controls:SplitShell.FooterContent>
         </controls:SplitShell>
         <!--<Lcontrols:PlayingControl Visibility="{Binding ElementName=Player,Path=IsOpenPlayingView}" CurrentTrack="{x:Bind Main.PlayerSession.CurrentTrack,Mode=OneWay}" Position="{x:Bind Main.PlayerSession.Position,Mode=OneWay}"/>-->
-        <Button Click="Button_Click" Content="test" />
     </Grid>
 
 </Page>

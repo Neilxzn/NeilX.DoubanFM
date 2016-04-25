@@ -136,7 +136,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
             mediaPlayer.SeekCompleted -= MediaPlayer_SeekCompleted;
             mediaPlayer.CurrentStateChanged -= MediaPlayer_CurrentStateChanged;
             BackgroundMediaPlayer.MessageReceivedFromForeground -= BackgroundMediaPlayer_MessageReceivedFromForeground;
-          //  BackgroundMediaPlayer.Shutdown();
+            //  BackgroundMediaPlayer.Shutdown();
 
         }
 
@@ -151,7 +151,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
         }
         private void MediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
         {
-            
+
             CurrentStateChanged(this, args);
         }
 
@@ -175,15 +175,16 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
             MediaOpened(this, args);
         }
 
-        public  async void SetMediaSource(Song song)
+        public async void SetMediaSource(Song song)
         {
             Uri uri;
-            if (Uri.TryCreate(song.Url,UriKind.RelativeOrAbsolute,out uri))
+            if (Uri.TryCreate(song.Url, UriKind.RelativeOrAbsolute, out uri))
             {
                 if (uri.IsFile)
                 {
                     StorageFile file = await StorageFile.GetFileFromPathAsync(uri.LocalPath);
-                    mediaPlayer.SetFileSource(file);     
+                    if (file != null)
+                        mediaPlayer.SetFileSource(file);
                 }
                 else
                 {
@@ -222,7 +223,7 @@ namespace NeilX.DoubanFM.MusicPlayer.Server
                 file = await StorageFile.GetFileFromPathAsync(uri.LocalPath);
             else
                 throw new NotSupportedException("Not supported uri.");
-           
+
         }
     }
 }

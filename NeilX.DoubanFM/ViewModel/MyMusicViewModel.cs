@@ -59,12 +59,23 @@ namespace NeilX.DoubanFM.ViewModel
 
         public void AddSongToSongList()
         {
-            Messenger.Default.Send(new NotificationMessage("open"), MyMusicViewModel.Token);
+            IEnumerable<SongList> list = ViewModelLocator.Instance.MyMusicVM.AllSongList;
+            ViewModelLocator.Instance.NavigationService.ShowCenterFlyout(new AddSongToSongListFlyout(list, Song));
         }
 
         public void LookSongInfo()
         {
             ViewModelLocator.Instance.NavigationService.ShowRightFlyout(new SongInfoFlyout(this));
+        }
+
+        public void DelectThisSong()
+        {
+            Action action = () =>
+            {
+                LocalDataService.DelectSong(Song);
+                ViewModelLocator.Instance.MyMusicVM.ReflashData();
+            };
+            ViewModelLocator.Instance.NavigationService.ShowCenterFlyout(new ConfirmFlyout(action));
         }
 
     }
@@ -120,14 +131,15 @@ namespace NeilX.DoubanFM.ViewModel
                         RaisePropertyChanged(nameof(SelectSong));
                     }
                     _selectSong = value;
-                    ((MusicSongViewModel)_selectSong).IsSelected = true;
+                    if (_selectSong != null)
+                        ((MusicSongViewModel)_selectSong).IsSelected = true;
                     RaisePropertyChanged(nameof(SelectSong));
                 }
             }
         }
 
 
-       
+
 
 
 
@@ -153,32 +165,33 @@ namespace NeilX.DoubanFM.ViewModel
             }
         }
 
-        public void AddNewSongList()
+        public void AddNewSongList(string listName)
         {
+
             SongList list = new SongList()
             {
-                Name = "播放列表测试",
+                Name = listName,
                 BuildTime = DateTime.Now,
-                Thumbnail= "ms-appx:///Assets/Images/m51.jpg"
+                Thumbnail = "ms-appx:///Assets/Images/m51.jpg"
             };
             LocalDataService.AddSongList(list);
-            InitialSongList();
+            ReflashData(false);
         }
 
-        public void AddNewSongToList(object sender, SelectionChangedEventArgs e)
+
+
+        public void ReflashData(bool isBoth = true)
         {
-            SongList list = e.AddedItems[0] as SongList;
-            if (list != null)
+            if (isBoth)
             {
-                LocalDataService.AddSongToSongList(((MusicSongViewModel)SelectSong).Song, list);
+                InitialAllLocalSongs();
+                InitialSongList();
             }
-            Messenger.Default.Send(new NotificationMessage("close"), Token);
-        }
+            else
+            {
+                InitialSongList();
+            }
 
-        public void ReflashData()
-        {
-            InitialAllLocalSongs();
-            InitialSongList();
         }
 
         public override void Cleanup()
@@ -224,6 +237,6 @@ namespace NeilX.DoubanFM.ViewModel
         {
             List<SongList> list = await LocalDataService.GetAllSongListsAsync();
             AllSongList = list != null ? new ObservableCollection<SongList>(list) : null;
-        }     
+        }
     }
 }

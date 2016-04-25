@@ -59,7 +59,7 @@ namespace NeilX.DoubanFM.View.Flyout
 
         private void ActionButton_Click(object sender, RoutedEventArgs e)
         {
-
+            ViewModelLocator.Instance.NavigationService.CloseRightFlyout();
         }
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
