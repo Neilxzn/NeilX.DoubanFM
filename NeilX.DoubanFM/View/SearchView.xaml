@@ -15,25 +15,45 @@
             </StackPanel>
         </DataTemplate>
     </Page.Resources>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{StaticResource ContentBackground}" Margin="20,10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid>
+        <TextBlock Text="搜索电台" 
+                   Style="{StaticResource MainTextGrayStyle14}"
+                   HorizontalAlignment="Left"
+                   Margin="20,0"/>
+        <Grid Grid.Row="1" Margin="10,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBox Margin="5" FontSize="20" Text="{x:Bind SearchVM.Query,Mode=TwoWay}" />
-            <Button Grid.Column="1" Content="Search"  Click="{x:Bind SearchVM.SearchChannel}"/>
+
+            <TextBox Margin="5" 
+                     Grid.Row="1"
+                     FontSize="16" 
+                     Text="{x:Bind SearchVM.Query,Mode=TwoWay}" 
+                     Style="{StaticResource DoubanBaseTextBoxStyle}" 
+                     PlaceholderText="搜索关键词"/>
+            <Button Grid.Column="1"
+                    Grid.Row="1"
+                    Click="{x:Bind SearchVM.SearchChannel}" 
+                    Style="{StaticResource SongItemButtonStyle}">
+                <SymbolIcon Symbol="Zoom"/>
+            </Button>
         </Grid>
-        <GridView x:Name="gridView" Grid.Row="1" ItemsSource="{x:Bind SearchVM.Channels,Mode=OneWay}"
-                    ItemTemplate="{StaticResource ImageOverlayTemplate }"
-                    CanDragItems="False"
-                    IsSwipeEnabled="False"
-                    IsItemClickEnabled="True"
-                   ItemClick="{x:Bind SearchVM.SelectTheChannle}"
-                    SelectionMode=" Single "/>
+       
+        <GridView x:Name="gridView" 
+                  Grid.Row="2" 
+                  Margin="10,0"
+                  ItemsSource="{x:Bind SearchVM.Channels,Mode=OneWay}"
+                  ItemTemplate="{StaticResource ImageOverlayTemplate }"
+                  CanDragItems="False"
+                  IsSwipeEnabled="False"
+                  IsItemClickEnabled="True"
+                  ItemClick="{x:Bind SearchVM.SelectTheChannle}"
+                  SelectionMode="None"/>
     </Grid>
 </Page>

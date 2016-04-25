@@ -42,7 +42,7 @@
             </Grid.RowDefinitions>
             <TextBox x:Name="txtContent"
                      PlaceholderText="新歌单名称"
-                       Margin="10"
+                       Margin="12"
                      HorizontalContentAlignment="Left"
                      VerticalContentAlignment="Center"
                        Style="{StaticResource DoubanBaseTextBoxStyle}"/>

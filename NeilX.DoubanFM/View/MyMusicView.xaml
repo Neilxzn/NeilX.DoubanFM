@@ -10,7 +10,7 @@
     xmlns:converter="using:NeilX.DoubanFM.Convertors"
     xmlns:selector="using:NeilX.DoubanFM.Selector"
     mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator},Path=MyMusicVM}">
-    <UserControl.Resources>
+    <Page.Resources>
         <converter:IntToTimeSpanStringConverter x:Key="IntToTimeSpanStringConverter"/>
         <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
@@ -173,7 +173,7 @@
         <selector:SongsItemTemplateSelector x:Key="SongsItemTemplateSelector"
                                             DeepHeaderTemplate="{StaticResource songDeepDataTemplate}"
                                             LightHeaderTemplate="{StaticResource songLightDataTemplate}"/>
-    </UserControl.Resources>
+    </Page.Resources>
     <Grid Background="{StaticResource ContentBackground}" Margin="20,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

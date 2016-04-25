@@ -6,6 +6,7 @@
     "Microsoft.ApplicationInsights.WindowsApps": "1.0.0",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0",
     "MvvmLightLibs": "5.2.0",
+    "WeChatSDK": "2.0.1",
     "XPShadow": "0.1.2"
   },
   "frameworks": {

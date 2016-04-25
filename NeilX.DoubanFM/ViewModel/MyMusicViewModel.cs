@@ -12,6 +12,8 @@ using GalaSoft.MvvmLight.Messaging;
 using NeilX.DoubanFM.View;
 using Windows.UI.Xaml.Controls;
 using NeilX.DoubanFM.View.Flyout;
+using MicroMsg.sdk;
+using System.Diagnostics;
 
 namespace NeilX.DoubanFM.ViewModel
 {
@@ -66,6 +68,29 @@ namespace NeilX.DoubanFM.ViewModel
         public void LookSongInfo()
         {
             ViewModelLocator.Instance.NavigationService.ShowRightFlyout(new SongInfoFlyout(this));
+        }
+
+
+        public async void ShareSong()
+        {
+            try
+            {
+                var scene = SendMessageToWX.Req.WXSceneTimeline;
+                var message = new WXTextMessage
+                {
+                    Title = "Sharing a text title!",
+                    Text = "This is text content",
+                    Description = "This is a text message.这是一个文本消息。",
+                    ThumbData = null
+                };
+                SendMessageToWX.Req req = new SendMessageToWX.Req(message, scene);
+                IWXAPI api = WXAPIFactory.CreateWXAPI("[YOUR APP ID]");
+                var isValid = await api.SendReq(req);
+            }
+            catch (WXException ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         public void DelectThisSong()
