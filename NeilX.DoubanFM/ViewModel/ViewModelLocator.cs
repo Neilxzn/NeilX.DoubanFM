@@ -7,6 +7,7 @@ using Windows.UI.Xaml;
 using NeilX.DoubanFM.MusicPlayer.Controller;
 using NeilX.DoubanFM.Services;
 using NeilX.DoubanFM.View;
+using NeilX.DoubanFM.Common;
 
 namespace NeilX.DoubanFM.ViewModel
 {
@@ -23,7 +24,7 @@ namespace NeilX.DoubanFM.ViewModel
         public ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
-            
+
             //if (ViewModelBase.IsInDesignModeStatic)
             //{
             //    // Create design time view services and models
@@ -42,9 +43,7 @@ namespace NeilX.DoubanFM.ViewModel
             SimpleIoc.Default.Register<SongListViewModel>();
             SimpleIoc.Default.Register<SongListEditViewModel>();
             SimpleIoc.Default.Register<PlayerSessionService>(true);
-
-
-          //  SimpleIoc.Default.Register(CreateNavigationService);
+            SimpleIoc.Default.Register(CreateNavigationService);
 
         }
 
@@ -107,12 +106,21 @@ namespace NeilX.DoubanFM.ViewModel
                 return ServiceLocator.Current.GetInstance<SongListEditViewModel>();
             }
         }
-        private INavigationService CreateNavigationService()
+
+
+        public VMNavigationService NavigationService
         {
-            var navigationService = new NavigationService();
+            get
+            {
+                return ServiceLocator.Current.GetInstance<VMNavigationService>();
+            }
+        }
+
+        private VMNavigationService CreateNavigationService()
+        {
+            var navigationService = new VMNavigationService();
             navigationService.Configure("MainPage", typeof(MainPage));
-            //  navigationService.Configure("PlayerPage", typeof(PlayerPage));
-            
+
             return navigationService;
         }
 

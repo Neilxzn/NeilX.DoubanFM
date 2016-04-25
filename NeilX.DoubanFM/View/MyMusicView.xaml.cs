@@ -65,5 +65,10 @@ namespace NeilX.DoubanFM.View
             Messenger.Default.Send(new NotificationMessage<SongList>(list, "GotoSongListView"), Token);
 
         }
+
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

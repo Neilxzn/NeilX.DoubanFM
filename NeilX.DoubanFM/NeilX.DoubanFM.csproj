@@ -100,6 +100,7 @@
     </Compile>
     <Compile Include="Common\IVMNavigate.cs" />
     <Compile Include="Common\LocalSongHelper.cs" />
+    <Compile Include="Common\VMNavigationService.cs" />
     <Compile Include="Convertors\BooleanToVisibilityConverter.cs" />
     <Compile Include="Convertors\DoubleToTimeSpanStringConverter.cs" />
     <Compile Include="Convertors\IsPlayingConverter.cs" />
@@ -137,14 +138,14 @@
     <Compile Include="ViewModel\SongListEditViewModel.cs" />
     <Compile Include="ViewModel\SongListViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Compile Include="View\BlankPage1.xaml.cs">
-      <DependentUpon>BlankPage1.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\Flyout\AddSongListFlyout.xaml.cs">
       <DependentUpon>AddSongListFlyout.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Flyout\ConfirmFlyout.xaml.cs">
       <DependentUpon>ConfirmFlyout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Flyout\SettingFlyout.xaml.cs">
+      <DependentUpon>SettingFlyout.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Flyout\SongInfoFlyout.xaml.cs">
       <DependentUpon>SongInfoFlyout.xaml</DependentUpon>
@@ -265,15 +266,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\BlankPage1.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\Flyout\AddSongListFlyout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Flyout\ConfirmFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Flyout\SettingFlyout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

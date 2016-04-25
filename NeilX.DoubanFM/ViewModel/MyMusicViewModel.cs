@@ -11,6 +11,7 @@ using GalaSoft.MvvmLight.Threading;
 using GalaSoft.MvvmLight.Messaging;
 using NeilX.DoubanFM.View;
 using Windows.UI.Xaml.Controls;
+using NeilX.DoubanFM.View.Flyout;
 
 namespace NeilX.DoubanFM.ViewModel
 {
@@ -59,6 +60,11 @@ namespace NeilX.DoubanFM.ViewModel
         public void AddSongToSongList()
         {
             Messenger.Default.Send(new NotificationMessage("open"), MyMusicViewModel.Token);
+        }
+
+        public void LookSongInfo()
+        {
+            ViewModelLocator.Instance.NavigationService.ShowRightFlyout(new SongInfoFlyout(this));
         }
 
     }

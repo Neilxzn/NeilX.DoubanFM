@@ -5,9 +5,94 @@
     xmlns:local="using:NeilX.DoubanFM.View.Flyout"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:xp="using:XP"
     mc:Ignorable="d">
+    <xp:Shadow Z_Depth="5" BorderThickness="10,0,0,0">
+        <Grid  Background="{StaticResource ContentBackground}"  
+           Loaded="Grid_Loaded">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="220" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Image Grid.Column="0"
+                   Grid.RowSpan="2"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   Source="{x:Bind MusicSong.Song.PictureUrl,Mode=OneWay}"
+                   Stretch="UniformToFill" />
+                <Rectangle Grid.RowSpan="2"
+                       Fill="Black"
+                       Opacity="0.5"/>
+                <StackPanel Orientation="Horizontal" Margin="10,20">
+                    <Button  Foreground="White"
+                         Style="{StaticResource SongItemButtonStyle}">
+                        <SymbolIcon Symbol="Back"/>
+                    </Button>
+                    <TextBlock Text="{x:Bind MusicSong.Song.Title,Mode=OneWay}"
+                           Margin="5,0"
+                           Style="{StaticResource MainWhiteTextStyle16}"/>
+                </StackPanel>
+            </Grid>
+            <Grid  Grid.Row="1" Background="{StaticResource DoubanGreenBrush}" >
+                <StackPanel Orientation="Horizontal"
+                        Margin="5,0"
+                        HorizontalAlignment="Right">
+                    <Button x:Name="playBtn" Click="{x:Bind MusicSong.PlayLocalSong}" 
+                    Foreground="White"
+                    Style="{StaticResource SongItemButtonStyle}">
+                        <SymbolIcon Symbol="Play" />
+                    </Button>
+                    <TextBlock Text="播放" Style="{StaticResource MainWhiteTextStyle14}"/>
+                    <Button x:Name="addToListBtn" 
+                        Click="{x:Bind MusicSong.AddSongToSongList}" 
+                        Foreground="White"
+                        Margin="10,0,0,0"
+                        Style="{StaticResource SongItemButtonStyle}">
+                        <SymbolIcon Symbol="Add"/>
+                    </Button>
+                    <TextBlock Text="添加到歌单" Style="{StaticResource MainWhiteTextStyle14}"/>
+                </StackPanel>
+            </Grid>
+            <StackPanel Grid.Row="2" Margin="10">
+                <TextBlock  Style="{StaticResource MainGray14WrapStyle}">
+                    <Run Text="时长："  FontWeight="Bold"/>
+                    <Run Text="{x:Bind MusicSong.Song.Length,Mode=OneWay}"/>
+                </TextBlock>
+                <TextBlock  Style="{StaticResource MainGray14WrapStyle}">
+                    <Run Text="歌曲类型："  FontWeight="Bold"/>
+                    <Run Text="{x:Bind MusicSong.Song.SubType,Mode=OneWay}"/>
+                </TextBlock>
+                <TextBlock  Style="{StaticResource MainGray14WrapStyle}">
+                    <Run Text="歌手："  FontWeight="Bold"/>
+                    <Run Text="{x:Bind MusicSong.Song.Artist,Mode=OneWay}"/>
+                </TextBlock>
+                <TextBlock  Style="{StaticResource MainGray14WrapStyle}">
+                    <Run Text="歌曲所在专辑："  FontWeight="Bold"/>
+                    <Run Text="{x:Bind MusicSong.Song.AlbumTitle,Mode=OneWay}"/>
+                </TextBlock>
+                <TextBlock  Style="{StaticResource MainGray14WrapStyle}">
+                    <Run Text="发行时间："  FontWeight="Bold"/>
+                    <Run Text="{x:Bind MusicSong.Song.PublishTime,Mode=OneWay}"/>
+                </TextBlock>
+                <TextBlock  Style="{StaticResource MainGray14WrapStyle}">
+                    <Run Text="公司："  FontWeight="Bold"/>
+                    <Run Text="{x:Bind MusicSong.Song.Company,Mode=OneWay}"/>
+                </TextBlock>
+                <TextBlock  Style="{StaticResource MainGray14WrapStyle}">
+                    <Run Text="比特率："  FontWeight="Bold"/>
+                    <Run Text="{x:Bind MusicSong.Song.Kbps,Mode=OneWay}"/>
+                    <Run Text="bit/s"/>
+                </TextBlock>
+            </StackPanel>
+        </Grid>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    </Grid>
+    </xp:Shadow>
 </Page>

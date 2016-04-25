@@ -51,6 +51,7 @@
         <controls:SplitShell x:Name="SplitShell"
                              Foreground="{StaticResource GrayForeground}"
                              x:FieldModifier="public"
+                             Loaded="SplitShell_Loaded"
                              FlyoutCloseRequested="SplitShell_FlyoutCloseRequested"
                              IsTabStop="False">
             <controls:SplitShell.LeftPaneContent>

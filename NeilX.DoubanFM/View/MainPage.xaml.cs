@@ -243,25 +243,27 @@ namespace NeilX.DoubanFM.View
 
         private void SplitShell_FlyoutCloseRequested(object sender, EventArgs e)
         {
-            if (SplitShell.IsRightFlyoutOpen)
-            {
-                SplitShell.HideRightFlyout();
-            }
+            ViewModelLocator.Instance.NavigationService.CloseRightFlyout();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             //SplitShell.RightFlyoutContent =new BlankPage1();
-            BlankPage1 lo = new BlankPage1();
-            lo.Width = 50;
-            lo.Height = 60;
-            if (SplitShell.IsCenterFlyoutOpen)
-            {
-                SplitShell.HideCenterFlyout();
-            }
-            else
+            //BlankPage1 lo = new BlankPage1();
+            //lo.Width = 50;
+            //lo.Height = 60;
+            //if (SplitShell.IsCenterFlyoutOpen)
+            //{
+            //    SplitShell.HideCenterFlyout();
+            //}
+            //else
+            
+            //SplitShell.CenterFlyoutContent = lo;
+        }
 
-            SplitShell.CenterFlyoutContent = lo;
+        private void SplitShell_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModelLocator.Instance.NavigationService.Initialize(SplitShell, navigationFrame);
         }
     }
 }

@@ -306,14 +306,14 @@ namespace NeilX.DoubanFM.Controls
 
         void Responsive()
         {
-            if (Window.Current.Bounds.Width < 650)
+            if (Window.Current.Bounds.Width < 450)
             {
                 _rightFlyoutContentPresenter.Height = Window.Current.Bounds.Height;
                 _rightFlyoutContentPresenter.Width = Window.Current.Bounds.Width;
             }
             else
             {
-                _rightFlyoutContentPresenter.Width = 650;
+                _rightFlyoutContentPresenter.Width = 450;
                 _rightFlyoutContentPresenter.Height = Window.Current.Bounds.Height < 800 * 0.9 ? Window.Current.Bounds.Height : Window.Current.Bounds.Height * 0.9;
             }
             _windowResizerTimer.Stop();
@@ -368,7 +368,7 @@ namespace NeilX.DoubanFM.Controls
             private set
             {
                 _isRightFlyoutOpen = value;
-                _flyoutBackgroundRectangle.IsHitTestVisible = !value;
+                _flyoutBackgroundRectangle.IsHitTestVisible = value;
             }
         }
 

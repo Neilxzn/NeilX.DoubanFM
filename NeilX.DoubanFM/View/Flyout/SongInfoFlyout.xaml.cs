@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeilX.DoubanFM.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,9 +23,48 @@ namespace NeilX.DoubanFM.View.Flyout
     /// </summary>
     public sealed partial class SongInfoFlyout : Page
     {
+
+
+
+
+
+
+
+        public MusicSongViewModel MusicSong
+        {
+            get { return (MusicSongViewModel)GetValue(MusicSongProperty); }
+            set { SetValue(MusicSongProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MusicSong.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty MusicSongProperty =
+            DependencyProperty.Register("MusicSong", typeof(MusicSongViewModel), typeof(SongInfoFlyout), new PropertyMetadata(null));
+
+
+
+
         public SongInfoFlyout()
         {
             this.InitializeComponent();
+        }
+
+
+        public SongInfoFlyout(MusicSongViewModel musicsong)
+        {
+            this.InitializeComponent();
+            MusicSong = musicsong;
+            DataContext = this;
+        }
+
+
+        private void ActionButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Grid_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
