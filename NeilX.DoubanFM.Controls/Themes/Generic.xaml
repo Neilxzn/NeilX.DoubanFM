@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:controls="using:NeilX.DoubanFM.Controls">
 
     <Style TargetType="controls:SplitShell">
@@ -8,6 +9,41 @@
                 <ControlTemplate TargetType="controls:SplitShell">
                     <Grid>
                         <Grid.Resources>
+                            <Storyboard x:Name="SplitViewSwapContentIn">
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SplitViewSwapContentPresenter"
+                                                               Storyboard.TargetProperty="Visibility">
+                                    <DiscreteObjectKeyFrame KeyTime="0"
+                                                            Value="Visible" />
+                                </ObjectAnimationUsingKeyFrames>
+                                <DoubleAnimation Duration="0:0:0.4" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="SplitViewSwapContentPresenter" >
+                                    <DoubleAnimation.EasingFunction>
+                                        <QuadraticEase EasingMode="EaseIn"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                                <DoubleAnimation Duration="0:0:0.4" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="SplitViewSwapContentPresenter" >
+                                    <DoubleAnimation.EasingFunction>
+                                        <QuadraticEase EasingMode="EaseIn"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                            <Storyboard x:Name="SplitViewSwapContentOut">
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SplitViewSwapContentPresenter"
+                                                               Storyboard.TargetProperty="Visibility">
+                                    <DiscreteObjectKeyFrame KeyTime="0:0:0.4"
+                                                            Value="Collapsed" />
+                                </ObjectAnimationUsingKeyFrames>
+                                <DoubleAnimation Duration="0:0:0.4" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="SplitViewSwapContentPresenter" >
+                                    <DoubleAnimation.EasingFunction>
+                                        <QuadraticEase EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                                <DoubleAnimation Duration="0:0:0.4" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="SplitViewSwapContentPresenter" >
+                                    <DoubleAnimation.EasingFunction>
+                                        <QuadraticEase EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+
                             <Storyboard x:Name="RightFlyoutFadeIn">
                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RightFlyoutGridContainer"
                                                                Storyboard.TargetProperty="Visibility">
@@ -196,6 +232,15 @@
 
                         </SplitView>
 
+                        <ContentPresenter x:Name="SplitViewSwapContentPresenter"
+                                          Visibility="Collapsed"
+                                          VerticalAlignment="Stretch"
+                                          HorizontalAlignment="Stretch"
+                                          RenderTransformOrigin="0,1">
+                            <ContentPresenter.RenderTransform>
+                                <CompositeTransform ScaleX="0" ScaleY="0"/>
+                            </ContentPresenter.RenderTransform>
+                        </ContentPresenter>
                         <ContentPresenter x:Name="FooterContentPresenter"
                                           Grid.Row="1"
                                           VerticalAlignment="Bottom"

@@ -23,16 +23,15 @@ namespace NeilX.DoubanFM.UserControls
     {
 
 
-
-        public Visibility IsOpenPlayingView
+        public bool IsOpenPlayingView
         {
-            get { return (Visibility)GetValue(IsOpenPlayingViewProperty); }
+            get { return (bool)GetValue(IsOpenPlayingViewProperty); }
             set { SetValue(IsOpenPlayingViewProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for IsOpenPlayingView.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsOpenPlayingViewProperty =
-            DependencyProperty.Register("IsOpenPlayingView", typeof(Visibility), typeof(PlayerControl), new PropertyMetadata(Visibility.Collapsed));
+            DependencyProperty.Register("IsOpenPlayingView", typeof(bool), typeof(PlayerControl), new PropertyMetadata(false));
+
 
 
 
@@ -52,20 +51,36 @@ namespace NeilX.DoubanFM.UserControls
         public PlayerControl()
         {
             this.InitializeComponent();
+            RegisterMessenger();
         }
 
 
         public void ChangeIsOpenPlayingView()
         {
-            if (IsOpenPlayingView == Visibility.Collapsed)
-                IsOpenPlayingView = Visibility.Visible;
-            else
-                IsOpenPlayingView = Visibility.Collapsed;
+            IsOpenPlayingView = !IsOpenPlayingView;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        #region Messenget Helper Methods
+        private void RegisterMessenger()
         {
+           // Messenger.Default.Register<NotificationMessage>(this, PlayingControl.Token, HandlePlayingViewMsg);
 
         }
+
+        private void UnRegisterMessenger()
+        {
+            Messenger.Default.Unregister(this);
+        }
+
+        private void HandlePlayingViewMsg(NotificationMessage msg)
+        {
+            if (msg.Notification == "HidePlayingView")
+            {
+                ChangeIsOpenPlayingView();
+            }
+        }
+
+
+        #endregion
     }
 }

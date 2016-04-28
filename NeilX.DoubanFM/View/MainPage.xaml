@@ -13,7 +13,7 @@
     mc:Ignorable="d"  DataContext="{Binding Source={StaticResource Locator},Path=Main}">
     <Page.Resources>
         <convert:IsPlayingConverter x:Key="IsPlayConverter"/>
-
+        <convert:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <DataTemplate x:Key="MenuListItemDataTemplate" x:DataType="controlsModel:MenuListItem">
             <Grid HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
@@ -53,7 +53,8 @@
                              x:FieldModifier="public"
                              Loaded="SplitShell_Loaded"
                              FlyoutCloseRequested="SplitShell_FlyoutCloseRequested"
-                             IsTabStop="False">
+                             IsTabStop="False"
+                             SwapContentVisibility="{Binding ElementName=Player,Path=IsOpenPlayingView,Converter={StaticResource BooleanToVisibilityConverter}}">
             <controls:SplitShell.LeftPaneContent>
                 <RelativePanel>
                     <ListView x:Name="FunctionsListView"
@@ -90,8 +91,12 @@
                                  PlayerSession="{x:Bind Main.PlayerSession,Mode=OneWay}"
                                  Background="{StaticResource PaneBackground}"/>
             </controls:SplitShell.FooterContent>
+            <controls:SplitShell.SwapContent>
+                <Lcontrols:PlayingControl IsOpen="{Binding ElementName=Player,Path=IsOpenPlayingView,Mode=TwoWay}"
+                                          CurrentTrack="{x:Bind Main.PlayerSession.CurrentTrack,Mode=OneWay}"
+                                          Position="{x:Bind Main.PlayerSession.Position,Mode=OneWay}"/>
+            </controls:SplitShell.SwapContent>
         </controls:SplitShell>
-        <!--<Lcontrols:PlayingControl Visibility="{Binding ElementName=Player,Path=IsOpenPlayingView}" CurrentTrack="{x:Bind Main.PlayerSession.CurrentTrack,Mode=OneWay}" Position="{x:Bind Main.PlayerSession.Position,Mode=OneWay}"/>-->
     </Grid>
 
 </Page>

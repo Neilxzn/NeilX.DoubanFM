@@ -46,6 +46,10 @@ namespace NeilX.DoubanFM.Controls
         private const string CenterFlyoutFadeInName = "CenterFlyoutFadeIn";
         private const string CenterFlyoutFadeOutName = "CenterFlyoutFadeOut";
 
+        private const string SplitViewSwapContentPresenterName = "SplitViewSwapContentPresenter";
+        private const string SplitViewSwapContentInName = "SplitViewSwapContentIn";
+        private const string SplitViewSwapContentOutName = "SplitViewSwapContentOut";
+
         private const string RightFlyoutPlaneProjectionName = "RightFlyoutPlaneProjection";
         private const string RightFlyoutGridContainerName = "RightFlyoutGridContainer";
         private const string FlyoutBackgroundRectangleName = "FlyoutBackgroundRectangle";
@@ -59,6 +63,7 @@ namespace NeilX.DoubanFM.Controls
         private ContentPresenter _rightFlyoutContentPresenter;
         private ContentPresenter _footerContentPresenter;
         private ContentPresenter _centerFlyoutPlanePresenter;
+        private ContentPresenter _splitViewSwapContent;
 
         private PlaneProjection _rightFlyoutPlaneProjection;
         private Storyboard _rightFlyoutFadeIn;
@@ -67,9 +72,31 @@ namespace NeilX.DoubanFM.Controls
         private Storyboard _centerFlyoutFadeIn;
         private Storyboard _centerFlyoutFadeOut;
 
+        private Storyboard _splitViewSwapContentIn;
+        private Storyboard _splitViewSwapContentOut;
         private bool _isRightFlyoutOpen;
         private bool _isCenterFlyoutOpen;
 
+        public async void SetSwapContentPresenter(object contentPresenter)
+        {
+            await TemplateApplied.Task;
+            _splitViewSwapContent.Content = contentPresenter;
+
+        }
+        public async void SetSwapContentVisiblity(object visibility)
+        {
+            await TemplateApplied.Task;
+            Visibility v = (Visibility)visibility;
+            if (v == Visibility.Visible)
+            {
+                ShowSwapContent();
+            }
+            else
+            {
+                HideSwapContent();
+            }
+
+        }
         public async void SetLeftPaneContentPresenter(object contentPresenter)
         {
             await TemplateApplied.Task;
@@ -104,8 +131,41 @@ namespace NeilX.DoubanFM.Controls
             _centerFlyoutPlanePresenter.Content = content;
             ShowCenterFlyout();
         }
+        #region SwapContent Property
 
-        #region LeftPaneContent
+
+        public Visibility SwapContentVisibility
+        {
+            get { return (Visibility)GetValue(SwapContentVisibilityProperty); }
+            set { SetValue(SwapContentVisibilityProperty, value); }
+        }
+
+        public static readonly DependencyProperty SwapContentVisibilityProperty =
+            DependencyProperty.Register("SwapContentVisibility", typeof(Visibility), typeof(SplitShell), new PropertyMetadata(Visibility.Collapsed, SwapContentVisibilityPropertyChangedCallback));
+
+        private static void SwapContentVisibilityPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        {
+            var that = (SplitShell)dependencyObject;
+            that.SetSwapContentVisiblity(dependencyPropertyChangedEventArgs.NewValue);
+        }
+        public DependencyObject SwapContent
+        {
+            get { return (DependencyObject)GetValue(SwapContentProperty); }
+            set { SetValue(SwapContentProperty, value); }
+        }
+
+        public static readonly DependencyProperty SwapContentProperty =
+            DependencyProperty.Register("SwapContent", typeof(DependencyObject), typeof(SplitShell), new PropertyMetadata(default(DependencyObject), SwapContentPropertyChangedCallback));
+
+        private static void SwapContentPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        {
+            var that = (SplitShell)dependencyObject;
+            that.SetSwapContentPresenter(dependencyPropertyChangedEventArgs.NewValue);
+        }
+
+        #endregion
+
+        #region LeftPaneContent Property
 
 
         public bool IsLeftPaneContentOpen
@@ -247,8 +307,9 @@ namespace NeilX.DoubanFM.Controls
             _centerFlyoutPlanePresenter = (ContentPresenter)GetTemplateChild(CenterFlyoutPlanePresenterName);
             _centerFlyoutFadeIn = (Storyboard)GetTemplateChild(CenterFlyoutFadeInName);
             _centerFlyoutFadeOut = (Storyboard)GetTemplateChild(CenterFlyoutFadeOutName);
-
-
+            _splitViewSwapContent = (ContentPresenter)GetTemplateChild(SplitViewSwapContentPresenterName);
+            _splitViewSwapContentIn = (Storyboard)GetTemplateChild(SplitViewSwapContentInName);
+            _splitViewSwapContentOut = (Storyboard)GetTemplateChild(SplitViewSwapContentOutName);
             Responsive();
 
             Window.Current.SizeChanged += Current_SizeChanged;
@@ -269,15 +330,18 @@ namespace NeilX.DoubanFM.Controls
 
             _centerFlyoutFadeIn.Completed += _centerFlyoutFadeIn_Completed;
             _centerFlyoutFadeOut.Completed += _centerFlyoutFadeOut_Completed;
+
         }
 
 
 
-      
         private void HambegerGridPressed(object sender, PointerRoutedEventArgs e)
         {
             IsLeftPaneContentOpen = !IsLeftPaneContentOpen;
         }
+
+
+
 
         private void _rightFlyoutFadeIn_Completed(object sender, object e)
         {
@@ -332,6 +396,18 @@ namespace NeilX.DoubanFM.Controls
             FlyoutCloseRequested?.Invoke(null, new EventArgs());
         }
 
+        void ShowSwapContent()
+        {
+            _splitViewSwapContentIn.Begin();
+            IsSwapContentOpen = true;
+        }
+
+        public void HideSwapContent()
+        {
+            _splitViewSwapContentOut.Begin();
+            IsSwapContentOpen = false;
+        }
+
         void ShowRightFlyout()
         {
             _rightFlyoutFadeIn.Begin();
@@ -358,6 +434,7 @@ namespace NeilX.DoubanFM.Controls
             IsCenterFlyoutOpen = false;
         }
 
+        public bool IsSwapContentOpen { get; private set; }
 
         public bool IsRightFlyoutOpen
         {

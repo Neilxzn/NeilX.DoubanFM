@@ -255,7 +255,7 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}"/>
+        <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="8,4,8,4"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -270,7 +270,7 @@
                             Background="{TemplateBinding Background}" 
                             CornerRadius="4"
                             BorderBrush="{StaticResource GrayForeground}"
-                            BorderThickness="1">
+                            BorderThickness="{TemplateBinding BorderThickness}">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal">

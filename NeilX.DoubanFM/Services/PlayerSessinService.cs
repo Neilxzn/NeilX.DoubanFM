@@ -44,6 +44,7 @@ namespace NeilX.DoubanFM.Services
 
         #region Properties
         public static bool IsActived;
+        public EventHandler<bool> IsPlayingChanged;
         public bool CanPrevious
         {
             get { return _canPrevious; }
@@ -69,7 +70,11 @@ namespace NeilX.DoubanFM.Services
         public bool IsPlaying
         {
             get { return _isPlay; }
-            private set { Set(ref _isPlay, value); }
+            private set
+            {
+                Set(ref _isPlay, value);
+                IsPlayingChanged?.Invoke(this, value);
+            }
         }
 
         public bool CanNext
@@ -467,7 +472,7 @@ namespace NeilX.DoubanFM.Services
                  () =>
                  {
                      Volume = _volumn;
-                     if (list!=null)
+                     if (list != null)
                      {
                          PlayMode = list.PlayMode;
                      }
@@ -515,7 +520,7 @@ namespace NeilX.DoubanFM.Services
             }
             else
                 CanPlay = CanPause = CanPrevious = CanNext = false;
-        } 
+        }
         #endregion
 
         #endregion
@@ -523,7 +528,7 @@ namespace NeilX.DoubanFM.Services
 
 
 
-   
+
 
 
     }
