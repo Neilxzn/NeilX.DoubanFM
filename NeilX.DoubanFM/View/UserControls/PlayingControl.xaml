@@ -1,11 +1,12 @@
 ﻿<UserControl x:Name="userControl"
-    x:Class="NeilX.DoubanFM.UserControls.PlayingControl"
+    x:Class="NeilX.DoubanFM.View.UserControls.PlayingControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:NeilX.DoubanFM.UserControls"
+    xmlns:local="using:NeilX.DoubanFM.View.UserControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lyric="using:Kfstorm.LrcParser"
+    xmlns:placeholder="using:NeilX.DoubanFM.View.UserControls.PlaceHolders"             
     xmlns:win2d="using:Microsoft.Graphics.Canvas.UI.Xaml"
     mc:Ignorable="d"
     SizeChanged="UserControl_SizeChanged"
@@ -178,6 +179,9 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
+                    <placeholder:NoLyric  Grid.Row="3"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Center"/>
                 </Grid>
             </RelativePanel>
             <Button x:Name="HideButton"

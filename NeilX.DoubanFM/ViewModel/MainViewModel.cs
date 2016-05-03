@@ -8,7 +8,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using NeilX.DoubanFM.Services;
-using NeilX.DoubanFM.UserControls.ControlsModel;
+using NeilX.DoubanFM.View.UserControls.ControlsModel;
 using NeilX.DoubanFM.View;
 using System;
 using NeilX.DoubanFM.Core;

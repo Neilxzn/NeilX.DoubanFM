@@ -110,8 +110,10 @@
     <Compile Include="Convertors\DoubleToTimeSpanStringConverter.cs" />
     <Compile Include="Convertors\IsPlayingConverter.cs" />
     <Compile Include="Convertors\PlayModeToStringConverter.cs" />
+    <Compile Include="Convertors\StringToVisibilityConverter.cs" />
     <Compile Include="Convertors\TimeSpanToDoubleConverter.cs" />
     <Compile Include="Convertors\TimeSpanToStringConverter.cs" />
+    <Compile Include="Behaviors\PlayChannelBehavior.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Selector\ChlGpHeaderTemplateSelector.cs" />
     <Compile Include="Selector\FMsItemTemplateSelector.cs" />
@@ -124,13 +126,16 @@
     <Compile Include="Services\LyricService\LyricsService.cs" />
     <Compile Include="Services\LyricService\TrackMetadata.cs" />
     <Compile Include="Services\PlayerSessinService.cs" />
-    <Compile Include="UserControls\ControlsModel\MenuListItem.cs" />
+    <Compile Include="View\UserControls\ControlsModel\MenuListItem.cs" />
     <Compile Include="CustomControl\Helper\PointBehaviorHelper.cs" />
     <Compile Include="CustomControl\PointServiceContentControl.cs" />
-    <Compile Include="UserControls\PlayerControl.xaml.cs">
+    <Compile Include="View\UserControls\PlaceHolders\NoLyric.xaml.cs">
+      <DependentUpon>NoLyric.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserControls\PlayerControl.xaml.cs">
       <DependentUpon>PlayerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\PlayingControl.xaml.cs">
+    <Compile Include="View\UserControls\PlayingControl.xaml.cs">
       <DependentUpon>PlayingControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\MainViewModel.cs" />
@@ -253,6 +258,11 @@
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
+    <Page Include="Themes\DoubanSkin\Convertors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
     <Page Include="Themes\DoubanSkin\DoubanSkin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -298,11 +308,15 @@
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
-    <Page Include="UserControls\PlayerControl.xaml">
+    <Page Include="View\UserControls\PlaceHolders\NoLyric.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserControls\PlayerControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\PlayingControl.xaml">
+    <Page Include="View\UserControls\PlayingControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -378,6 +392,7 @@
       <HintPath>..\..\NeilSoft.UWP\NeilSoft.UWP\bin\Debug\NeilSoft.UWP.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

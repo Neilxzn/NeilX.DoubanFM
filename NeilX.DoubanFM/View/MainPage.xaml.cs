@@ -12,7 +12,7 @@ using NeilX.DoubanFM.ViewModel;
 using NeilX.DoubanFM.MusicPlayer;
 using GalaSoft.MvvmLight.Messaging;
 using Windows.UI;
-using NeilX.DoubanFM.UserControls;
+using NeilX.DoubanFM.View.UserControls;
 using NeilX.DoubanFM.Core;
 using Kfstorm.LrcParser;
 using Windows.Storage.Pickers;

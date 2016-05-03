@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NeilX.DoubanFM.UserControls.ControlsModel
+namespace NeilX.DoubanFM.View.UserControls.ControlsModel
 {
     public enum MenuGotoView
     {
