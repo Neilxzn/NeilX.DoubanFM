@@ -17,6 +17,24 @@ namespace NeilX.DoubanFM.Behaviors
         {
 
             AssociatedObject.PointerReleased += AssociatedObject_PointerReleased;
+            AssociatedObject.PointerEntered += AssociatedObject_PointerEntered;
+            AssociatedObject.PointerExited += AssociatedObject_PointerExited;
+        }
+
+        private void AssociatedObject_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            AssociatedObject.Opacity = 1;
+        }
+
+        private void AssociatedObject_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            AssociatedObject.Opacity = 0.7;
+        }
+
+        protected override void OnDetaching()
+        {
+     
+            AssociatedObject.PointerReleased -= AssociatedObject_PointerReleased;
         }
 
         private async void AssociatedObject_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
@@ -27,12 +45,6 @@ namespace NeilX.DoubanFM.Behaviors
                 List<Song> songs = await DoubanFMService.GetSongsFromChannel(channel);
                 ViewModelLocator.Instance.Main.PlayerSession.SetPlaylist(songs, songs[0]);
             }
-        }
-
-        protected override void OnDetaching()
-        {
-     
-            AssociatedObject.PointerReleased -= AssociatedObject_PointerReleased;
         }
     }
 }

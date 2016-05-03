@@ -6,6 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:convert="using:NeilX.DoubanFM.Convertors"
+        xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:behavior="using:NeilX.DoubanFM.Behaviors"
     mc:Ignorable="d"
     d:DesignHeight="60" 
     d:DesignWidth="450">
@@ -59,7 +62,11 @@
                HorizontalAlignment="Left"
                Stretch="UniformToFill"
                Source="{x:Bind PlayerSession.CurrentTrack.PictureUrl,Mode=OneWay,TargetNullValue='ms-appx:///Assets/Images/m51.jpg',FallbackValue='ms-appx:///Assets/Images/m51.jpg'}"
-               PointerPressed="{x:Bind ChangeIsOpenPlayingView}"/>
+               PointerPressed="{x:Bind ChangeIsOpenPlayingView}">
+                <Interactivity:Interaction.Behaviors>
+                    <behavior:PlayAnimationSetTargetBehavior/>
+                </Interactivity:Interaction.Behaviors>
+            </Image>
             <StackPanel Grid.Column="1" 
                     Orientation="Horizontal"
                     Margin="10,0,0,0">

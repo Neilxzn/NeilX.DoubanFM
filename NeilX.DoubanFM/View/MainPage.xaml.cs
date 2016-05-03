@@ -16,7 +16,6 @@ using NeilX.DoubanFM.View.UserControls;
 using NeilX.DoubanFM.Core;
 using Kfstorm.LrcParser;
 using Windows.Storage.Pickers;
-using NeilX.DoubanFM.CustomControl;
 using NeilX.DoubanFM.Core.LocalData;
 using NeilX.DoubanFM.Services;
 using Windows.ApplicationModel.Core;

@@ -102,6 +102,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Behaviors\PlayAnimationBehavior.cs" />
+    <Compile Include="Behaviors\PlayAnimationSetTargetBehavior.cs" />
     <Compile Include="Common\CanvasImg.cs" />
     <Compile Include="Common\IVMNavigate.cs" />
     <Compile Include="Common\LocalSongHelper.cs" />
@@ -127,8 +129,6 @@
     <Compile Include="Services\LyricService\TrackMetadata.cs" />
     <Compile Include="Services\PlayerSessinService.cs" />
     <Compile Include="View\UserControls\ControlsModel\MenuListItem.cs" />
-    <Compile Include="CustomControl\Helper\PointBehaviorHelper.cs" />
-    <Compile Include="CustomControl\PointServiceContentControl.cs" />
     <Compile Include="View\UserControls\PlaceHolders\NoLyric.xaml.cs">
       <DependentUpon>NoLyric.xaml</DependentUpon>
     </Compile>

@@ -7,7 +7,6 @@
     xmlns:convert="using:NeilX.DoubanFM.Convertors"
     xmlns:Lcontrols="using:NeilX.DoubanFM.View.UserControls"
     xmlns:controls="using:NeilX.DoubanFM.Controls"
-    xmlns:custom="using:NeilX.DoubanFM.CustomControl"
     xmlns:controlsModel="using:NeilX.DoubanFM.View.UserControls.ControlsModel"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="NeilX.DoubanFM.View.MainPage"
@@ -47,7 +46,7 @@
     <Page.DataContext>
         <Binding Path="Main" Source="{StaticResource Locator}"/>
     </Page.DataContext>
-    <Grid Background="{StaticResource ContentBackground}">
+    <Grid x:Name="RootContainer" Background="{StaticResource ContentBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
