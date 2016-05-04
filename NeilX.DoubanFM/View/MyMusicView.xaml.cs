@@ -3,6 +3,8 @@ using NeilX.DoubanFM.Core;
 using NeilX.DoubanFM.View.Flyout;
 using NeilX.DoubanFM.ViewModel;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -49,6 +51,19 @@ namespace NeilX.DoubanFM.View
         private void addSongListBtn_Click(object sender, RoutedEventArgs e)
         {
             ViewModelLocator.Instance.NavigationService.ShowCenterFlyout(new AddSongListFlyout());
+        }
+
+
+
+        private void playListButton_Click(object sender, RoutedEventArgs e)
+        {
+            var allSongs = ViewModelLocator.Instance.MyMusicVM.AllMusicSongs;
+            SongList list = ((Button)sender).DataContext as SongList;
+            List<Song> songs = (from s in allSongs
+                         where s.Song.ListId == list.Id
+                         select s.Song).ToList();
+            if (songs == null&&songs.Count<1) return;
+            ViewModelLocator.Instance.Main.PlayerSession.SetPlaylist(songs, songs[0]);
         }
     }
 }

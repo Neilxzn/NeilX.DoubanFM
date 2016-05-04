@@ -5,9 +5,8 @@
     xmlns:local="using:NeilX.DoubanFM.View.Flyout"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:xp="using:XP"
     mc:Ignorable="d">
-    <xp:Shadow Z_Depth="5" BorderThickness="10,0,0,0">
+
         <Grid  Background="{StaticResource ContentBackground}"  
            Loaded="Grid_Loaded">
             <Grid.RowDefinitions>
@@ -94,5 +93,5 @@
             </StackPanel>
         </Grid>
 
-    </xp:Shadow>
+
 </Page>

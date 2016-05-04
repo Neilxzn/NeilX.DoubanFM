@@ -56,6 +56,12 @@ namespace NeilX.DoubanFM.ViewModel
             }
         }
 
+        public void PlayListSongs()
+        {
+            if (ListMusicSongs == null && ListMusicSongs.Count < 1) return;
+            List<Song> songs = ListMusicSongs.Select(o => o.Song).ToList();
+            ViewModelLocator.Instance.Main.PlayerSession.SetPlaylist(songs, songs[0]);
+        }
 
         public void DelectSongLits()
         {

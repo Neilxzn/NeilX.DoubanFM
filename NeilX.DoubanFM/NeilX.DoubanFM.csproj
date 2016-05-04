@@ -128,6 +128,9 @@
     <Compile Include="Services\LyricService\LyricsService.cs" />
     <Compile Include="Services\LyricService\TrackMetadata.cs" />
     <Compile Include="Services\PlayerSessinService.cs" />
+    <Compile Include="View\UserControls\AnimationMusic.xaml.cs">
+      <DependentUpon>AnimationMusic.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\UserControls\ControlsModel\MenuListItem.cs" />
     <Compile Include="View\UserControls\PlaceHolders\NoLyric.xaml.cs">
       <DependentUpon>NoLyric.xaml</DependentUpon>
@@ -193,14 +196,13 @@
     <Content Include="Assets\Images\添加列表.png" />
     <Content Include="Assets\Images\红心.png" />
     <Content Include="Assets\Images\豆瓣精选.png" />
-    <Content Include="Assets\Images\音乐Title.png" />
+    <Content Include="Assets\Images\音乐动画.png" />
     <Content Include="Assets\Images\音乐Title2.png" />
     <Content Include="Assets\NewStoreLogo.scale-100.png" />
     <Content Include="Assets\NewStoreLogo.scale-125.png" />
     <Content Include="Assets\NewStoreLogo.scale-150.png" />
     <Content Include="Assets\NewStoreLogo.scale-200.png" />
     <Content Include="Assets\NewStoreLogo.scale-400.png" />
-    <Content Include="Assets\splashLogo.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-125.png" />
     <Content Include="Assets\SplashScreen.scale-150.png" />
@@ -307,6 +309,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="View\UserControls\AnimationMusic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\UserControls\PlaceHolders\NoLyric.xaml">
       <SubType>Designer</SubType>

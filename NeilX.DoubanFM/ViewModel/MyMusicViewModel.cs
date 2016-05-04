@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Controls;
 using NeilX.DoubanFM.View.Flyout;
 using MicroMsg.sdk;
 using System.Diagnostics;
+using Windows.UI.Xaml;
 
 namespace NeilX.DoubanFM.ViewModel
 {
@@ -189,6 +190,7 @@ namespace NeilX.DoubanFM.ViewModel
 
             }
         }
+
 
         public void AddNewSongList(string listName)
         {

@@ -7,6 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:NeilX.DoubanFM.ViewModel"
     xmlns:core="using:NeilX.DoubanFM.Core"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:behavior="using:NeilX.DoubanFM.Behaviors"
     xmlns:converter="using:NeilX.DoubanFM.Convertors"
     xmlns:selector="using:NeilX.DoubanFM.Selector"
     mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator},Path=MyMusicVM}">
@@ -83,7 +86,7 @@
                         <MenuFlyoutItem Text="收藏" Click="{x:Bind AddSongToSongList}"/>
                         <MenuFlyoutItem Text="分享" />
                         <MenuFlyoutItem Text="查看信息" Click="{x:Bind LookSongInfo}"/>
-                        <MenuFlyoutItem Text="删除歌曲" />
+                        <MenuFlyoutItem Text="删除歌曲" Click="{x:Bind DelectThisSong}"/>
                     </MenuFlyout>
                 </Grid.Resources>
                 <Grid x:Name="SongGrid" 
@@ -159,8 +162,11 @@
                            HorizontalAlignment="Left"
                            VerticalAlignment="Center"
                            Grid.Column="2"/>
-                <Button Grid.Column="3" 
+                <Button x:Name="playListButton"
+                        Grid.Column="3" 
                         HorizontalAlignment="Center"
+                        DataContext="{Binding}"
+                        Click="playListButton_Click"
                         Style="{StaticResource PlayAllButtonStyle}">
                     <Image Width="18"
                            Height="18"

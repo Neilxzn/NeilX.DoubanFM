@@ -112,6 +112,7 @@
 
         <Button  Grid.Row="2" 
                  Margin="10,3"
+                 Click="{x:Bind SongListVM.PlayListSongs}"
                  Style="{StaticResource PlayAllButtonStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -127,7 +128,9 @@
                            Margin="2"
                            Style="{StaticResource MainTextStyle16}">
                     <Run Text="播放全部"/>
-                    <Run Text="{x:Bind SongListVM.SelectList.SongCount,Mode=OneWay}"/>
+                     <Run Text="共" FontSize="14"/>
+                    <Run Text="{x:Bind SongListVM.SelectList.SongCount,Mode=OneWay}" FontSize="14"/>
+                    <Run Text="首" FontSize="14"/>
                 </TextBlock>
             </Grid>
         </Button>

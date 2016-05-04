@@ -1,0 +1,25 @@
+﻿<UserControl
+    x:Class="NeilX.DoubanFM.View.UserControls.AnimationMusic"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NeilX.DoubanFM.View.UserControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Width="40"
+    Height="40"
+    HorizontalAlignment="Left"
+    VerticalAlignment="Top"
+    RenderTransformOrigin="0.5,0.5"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.RenderTransform>
+        <CompositeTransform/>
+    </UserControl.RenderTransform>
+    <Grid >
+        <Grid.Background>
+            <ImageBrush Stretch="Fill" ImageSource="ms-appx:///Assets/Images/音乐动画.png"/>
+        </Grid.Background>
+
+    </Grid>
+</UserControl>

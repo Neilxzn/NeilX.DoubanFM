@@ -6,13 +6,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:core="using:NeilX.DoubanFM.Core"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:behavior="using:NeilX.DoubanFM.Behaviors"
+    xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
     mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator},Path=SearchVM}">
     <Page.Resources>
         <DataTemplate x:Key="ImageOverlayTemplate" x:DataType="core:Channel">
-            <StackPanel Margin="5" Orientation="Vertical" >
-                <TextBlock Text="{x:Bind Name}" Style="{StaticResource BaseTextBlockStyle}" />
-                <Image Source="{x:Bind CoverUrl}" Stretch="Fill" Height="110" Width="110" />
-            </StackPanel>
+            <Grid>
+                <Interactivity:Interaction.Behaviors>
+                    <behavior:PlayChannelBehavior/>
+                    <behavior:PlayAnimationBehavior/>
+                </Interactivity:Interaction.Behaviors>
+                <StackPanel   Background="Transparent"   Orientation="Vertical"  >
+                    <Image Source="{Binding CoverUrl}" Stretch="Fill" Height="120" Width="120" />
+                    <TextBlock Margin="2" Text="{Binding Name}" Style="{StaticResource MainTextStyle14}" />
+                </StackPanel>
+            </Grid>
         </DataTemplate>
     </Page.Resources>
     <Grid Background="{StaticResource ContentBackground}" Margin="20,10">

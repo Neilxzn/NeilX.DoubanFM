@@ -8,8 +8,7 @@
     "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
     "MvvmLightLibs": "5.2.0",
     "WeChatSDK": "2.0.1",
-    "Win2D.uwp": "1.17.0",
-    "XPShadow": "0.1.2"
+    "Win2D.uwp": "1.17.0"
   },
   "frameworks": {
     "uap10.0": {}
